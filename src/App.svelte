@@ -1,10 +1,11 @@
 <script lang="ts">
     import Button from "./components/Button.svelte"
+    import CurrentTime from "./components/CurrentTime.svelte";
 </script>
 
 <main class="flex flex-col bg-white w-full h-full">
     <div class="flex flex-col p-4">
-        <h1 class="text-gray-900 font-bold text-2xl">09:00 AM</h1>
+        <CurrentTime />
         <h3 class="text-gray-500 font-semibold text-lg">300ml water</h3>
     </div>
     <div class="flex h-full bg-[#68B6FF]">
