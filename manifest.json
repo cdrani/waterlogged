@@ -4,5 +4,13 @@
     "manifest_version": 3,
     "action": {
         "default_popup": "src/popup/index.html"
-    }
+    },
+    "background": {
+        "type": "module",
+        "service_worker": "src/background.ts"
+    },
+    "permissions": [
+        "storage",
+        "unlimitedStorage"
+    ]
 }
