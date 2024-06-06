@@ -9,13 +9,9 @@
     const store = new DataStore(PORT)
 
     onMount(async () => {
-        store.populate()
-        PORT.onMessage.addListener(async () => {
-            console.log('port listening on popup')
-        })
-
         return() => {
             PORT = null
+            store.disconnect()
         }
     })
 

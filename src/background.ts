@@ -23,9 +23,17 @@ chrome.runtime.onConnect.addListener(async (port) => {
 
     POPUP_PORT = port
 
-    POPUP_PORT.onMessage.addListener(async (message) => {
-        console.log('background: ', { message }) 
-        // port.postMessage({ type: 'controls', data: { key: message.key, result } })
+    POPUP_PORT.onMessage.addListener(async ({ key, data }) => {
+        let response
+        if (key == 'get:defaults') {
+            response = await getState(['defaults'])
+        } else if (key == 'set:total') {
+            const { defaults } = await getState(['defaults'])
+            console.log({ defaults, data })
+            await setState({ key: 'defaults', values: { ...defaults, total: data } })
+        }
+
+        response && port.postMessage({ key: `${key}:response`, response })
     })
 
     POPUP_PORT.onDisconnect.addListener(() => (POPUP_PORT = null))

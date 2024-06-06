@@ -1,10 +1,9 @@
-export function stateResolver({ resolve, reject, result, key, values }) {
+export function stateResolver({ resolve, reject, result = null, values = null }) {
     if (chrome.runtime.lastError) {
         console.error({ error: chrome.runtime.lastError })
         return reject({ error: chrome.runtime.lastError })
     }
 
-    if (key) return resolve(result?.[key])
     if (values) return resolve(values)
 
     return resolve(result)
@@ -12,22 +11,16 @@ export function stateResolver({ resolve, reject, result, key, values }) {
 
 export function setState({ key, values }) {
     return new Promise((resolve, reject) => {
-        chrome.storage.local.set({ [key]: values }, (result) =>
-            stateResolver({ resolve, reject, result, values })
+        chrome.storage.local.set({ [key]: values }, () =>
+            stateResolver({ resolve, reject, values })
         )
     })
 }
 
-export function getState(key: string) {
+export function getState(keys: string[]) {
     return new Promise((resolve, reject) => {
-        chrome.storage.local.get(key, (result) => stateResolver({ key, resolve, reject, result }))
-    })
-}
-
-export function removeState(key: string) {
-    return new Promise((resolve, reject) => {
-        chrome.storage.local.remove(key, (result) =>
-            stateResolver({ key, resolve, reject, result })
+        chrome.storage.local.get(keys, (result) => 
+            stateResolver({ resolve, reject, result })
         )
     })
 }
