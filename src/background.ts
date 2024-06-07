@@ -8,6 +8,7 @@ chrome.runtime.onInstalled.addListener(async () => {
             key: 'defaults', 
             values: {
                 total: 0,
+                goal: 1800,
                 intake: 100,
                 enabled: true,
                 measurement: 'ml',
@@ -29,7 +30,6 @@ chrome.runtime.onConnect.addListener(async (port) => {
             response = await getState(['defaults'])
         } else if (key == 'set:total') {
             const { defaults } = await getState(['defaults'])
-            console.log({ defaults, data })
             await setState({ key: 'defaults', values: { ...defaults, total: data } })
         }
 
