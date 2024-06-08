@@ -40,8 +40,7 @@
         </div>
     </div>
 
-    <div 
-        style="--height: {Math.max(3, $waterLevel)}%"
-        class="flex -z-10 absolute left-0 bottom-0 bg-[#68B6FF] w-full wave"
-    />
+    <div class="flex -z-10 absolute left-0 bottom-0 w-full h-[150px] overflow-hidden">
+        <div class="wave" style="--wave-height: {Math.max(0, $waterLevel)}%" />
+    </div>
 </main>
