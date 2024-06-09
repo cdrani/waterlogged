@@ -22,14 +22,17 @@
     $: measurement = store.measurement
 </script>
 
-<section class="relative -z-100 bg-cyan-500 flex flex-col p-4 w-full h-[150px]">
-    <div class="flex relative z-10 flex-col mb-4 w-full">
+<section class="relative -z-100 bg-cyan-500 flex flex-col p-4 w-full h-[120px]">
+    <div class="flex relative z-10 mb-4 w-full justify-between">
         <CurrentTime />
-        <h3 
-            class="font-semibold text-lg text-white"
-        >
-            {$total} / {$goal} {$measurement} drank
-        </h3>
+        <div>
+            <p class="font-semibold text-[14px] text-black">
+                Total: {$total}{$measurement}
+            </p>
+            <p class="font-semibold text-[14px] text-black">
+                Goal: {$goal}{$measurement}
+            </p>
+        </div>
     </div>
     <div class="flex relative z-10">
         <div class="flex gap-x-4 w-1/2">
@@ -38,7 +41,7 @@
         </div>
     </div>
 
-    <div class="flex z-0 absolute left-0 bottom-0 w-full h-[150px] overflow-hidden">
+    <div class="flex z-0 absolute left-0 bottom-0 w-full h-[120px] overflow-hidden">
         <div class="wave" style="--wave-height: {Math.max(0, $waterLevel)}%" />
     </div>
 </section>

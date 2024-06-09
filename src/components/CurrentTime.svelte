@@ -17,4 +17,4 @@
     $: showTime = `${getHour(currentDateTime)}:${getMinute(currentDateTime)} ${getMeridiem(currentDateTime)}`
 </script>
 
-<h1 class="text-gray-900 font-bold text-2xl">{showTime}</h1>
+<h1 class="text-gray-900 font-bold text-xl">{showTime}</h1>
