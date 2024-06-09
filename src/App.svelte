@@ -1,46 +1,22 @@
 <script lang="ts">
-    import { get, derived } from "svelte/store";
-    import { onMount } from "svelte";
-    import Button from "./components/Button.svelte"
-    import CurrentTime from "./components/CurrentTime.svelte";
+    import { onMount } from 'svelte'
+    import { writable } from 'svelte/store'
 
-    import DataStore from './stores'
+    import DefaultView from "./views/Default.svelte"
 
     let PORT = chrome.runtime.connect({ name: 'popup' })
-    const store = new DataStore(PORT)
+    
+    let view = writable<'default'>('default')
 
     onMount(async () => {
         return() => {
-            PORT = null
-            store.disconnect()
+            PORT.onDisconnect.addListener(() => (PORT = null))
         }
     })
-
-    $: goal = store.goal
-    $: total = store.total
-    $: waterLevel = store.waterLevel
-    $: measurement = store.measurement
 </script>
 
-<main class="relative flex flex-col bg-transparent p-4 w-full h-[150px]">
-    <div class="flex flex-col mb-4">
-        <CurrentTime />
-        <h3 
-            class="font-semibold text-lg"
-            class:text-slate-600={$waterLevel < 65}
-            class:text-slate-200={$waterLevel >= 65}
-        >
-            {$total} / {$goal} {$measurement} drank
-        </h3>
-    </div>
-    <div class="flex">
-        <div class="flex gap-x-4 w-1/2">
-            <Button text="-" handler={() => store.decrementAmount() } />
-            <Button text="+" handler={() => store.incrementAmount() } />
-        </div>
-    </div>
-
-    <div class="flex -z-10 absolute left-0 bottom-0 w-full h-[150px] overflow-hidden">
-        <div class="wave" style="--wave-height: {Math.max(0, $waterLevel)}%" />
-    </div>
+<main class="relative -z-100 bg-cyan-500 flex flex-col bg-transparent p-4 w-full h-full">
+    {#if $view == 'default' && PORT}
+        <DefaultView port={PORT} />
+    {/if}
 </main>
