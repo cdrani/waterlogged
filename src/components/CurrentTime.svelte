@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { onMount } from "svelte";
-    import { getHour, getMinute, getMeridiem } from '../utils/time'
+    import { onMount } from "svelte"
 
     export let classList: string = ''
     export let format: 'time' | 'date' = 'time'
