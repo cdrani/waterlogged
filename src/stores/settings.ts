@@ -1,5 +1,7 @@
 import { writable, get } from "svelte/store"
 
+type Alert = 'notification' | 'alarm' | 'both'
+
 type Settings = {
     goal: number,
     intake: number,
@@ -8,6 +10,7 @@ type Settings = {
     end_time: string,
     start_time: string,
     measurement: string,
+    alert_type: Alert
 }
 
 const defaultSettings = {
@@ -16,8 +19,9 @@ const defaultSettings = {
     interval: 60, // minutes
     enabled: true,
     measurement: 'ml',
-    end_time: '8:00AM',
-    start_time: '6:00PM',
+    end_time: '08:00',
+    start_time: '18:00',
+    alert_type: 'notification'
 }
 
 export default class SettingsStore {
