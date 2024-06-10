@@ -4,10 +4,10 @@
     import Aquarium from "../components/Aquarium.svelte"
     import LogList from "../components/LogList.svelte"
 
-    import DataStore from '../stores'
+    import TodayStore from '../stores/today'
 
     export let port: any
-    const store = new DataStore(port)
+    const store = new TodayStore(port)
 
     onMount(async () => {
         return() => {
@@ -15,10 +15,9 @@
             store.disconnect()
         }
     })
-
 </script>
 
 <div>
-    <Aquarium port={port} />
-    <LogList />
+    <Aquarium store={store} />
+    <LogList store={store} />
 </div>
