@@ -19,8 +19,8 @@ const defaultSettings = {
     interval: 60, // minutes
     enabled: true,
     measurement: 'ml',
-    end_time: '08:00',
-    start_time: '18:00',
+    end_time: '18:00',
+    start_time: '08:00',
     alert_type: 'notification'
 }
 
@@ -40,6 +40,10 @@ export default class SettingsStore {
                 this.#updateDefaults(data)
             }
         })
+    }
+
+    get settings() {
+        return this._settings
     }
 
     #populate() {
