@@ -17,7 +17,7 @@
     })
 </script>
 
-<main class="relative -z-100 bg-cyan-500 flex flex-col bg-transparent p-4 pb-0 w-[280px] h-[360px]">
+<main class="relative -z-100 bg-cyan-500 flex flex-col bg-transparent p-4 w-[280px] h-[360px]">
     {#if $view == 'default'}
         <DefaultView port={PORT} />
     {:else}

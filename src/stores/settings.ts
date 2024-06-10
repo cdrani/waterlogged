@@ -13,7 +13,7 @@ type Settings = {
     alert_type: Alert
 }
 
-const defaultSettings = {
+const defaultSettings: Settings = {
     goal: 1800,
     intake: 100,
     interval: 60, // minutes

@@ -17,16 +17,15 @@ chrome.runtime.onConnect.addListener(async (port) => {
         let response
         if (type == 'get:settings') {
             response = await getState(['settings'])
-            if (!response && data) {
+            if ((!response || !Object.keys(response).length) && data) {
                 await setState({ key: 'settings', values: data })
-                response = { settings: data }
             }
         } else if (type == 'set:settings') {
             await setState({ key: 'settings', values: data })
         } else if (type == 'get:today') {
             const dateKey = getDateKey()
             response = await getState([dateKey])
-            if (!response && data) {
+            if ((!response || !Object.keys(response).length) && data) {
                 await setState({ key: dateKey, values: data })
                 response = { [dateKey]: data }
             }
