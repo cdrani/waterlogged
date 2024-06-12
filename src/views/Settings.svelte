@@ -2,9 +2,12 @@
     import { onMount } from "svelte"
 
     import SettingsStore from '../stores/settings'
+    import Toggle from "../components/Toggle.svelte";
 
     export let port: any
     const store = new SettingsStore(port)
+
+    $: settings = store.settings
 
     onMount(async () => {
         return() => {
@@ -13,32 +16,25 @@
         }
     })
 
-    $: settings = store.settings
-
     function handleInput(e: Event) {
-        let { name: key , value } = e.target
-        if (key == "enabled") {
-            value = !$settings.enabled
-        }
-
+        const { name: key , value } = e.target
         store.updateSetting({ key, value })
     }
 
-    const inputClass = "px-0.5 h-7 text-[14px] rounded-[4px]"
+    function handleToggle(event: CustomEvent) {
+        const state = event.detail
+        store.updateSetting(state)
+    }
 
+    const inputClass = "px-0.5 h-7 text-[14px] rounded-[4px]"
 </script>
 
 <section class="flex flex-col gap-4 bg-cyan-400 h-full w-full p-4 rounded-md">
     <form class="flex flex-col w-full gap-4">
-        <label class="flex justify-between">
+        <div class="flex justify-between">
             <span class="text-[14px]">Enabled</span>
-            <input 
-                type="checkbox"
-                name="enabled"
-                checked={$settings.enabled}
-                on:change={handleInput}
-            />
-        </label>
+            <Toggle name="enabled" on:toggle={handleToggle} enabled={$settings.enabled} />
+        </div>
 
         <div class="flex justify-between w-full gap-x-6">
             <label class="flex flex-col w-1/2 gap-y-1">
@@ -98,7 +94,7 @@
             <select name="alert_type" value={$settings.alert_type} class="w-1/2 text-end {inputClass}"
                     on:change={handleInput}
             >
-                <option value="notification">Notification</option>
+                <option value="notification">Notify</option>
                 <option value="alarm">Alarm</option>
                 <option value="both">Both</option>
             </select>
