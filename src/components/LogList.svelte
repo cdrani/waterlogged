@@ -1,14 +1,17 @@
 <script lang="ts">
-    import CurrentTime from "./CurrentTime.svelte";
+    import CurrentTime from './CurrentTime.svelte'
 
     export let store: any;
-    const timeHeader = 'sticky top-0 mx-auto w-full px-4 text-[18px] font-semibold mb-1.5'
 
     $: today = store.today
 </script>
 
 <section class="flex absolute left-0 flex-col mt-2 mx-auto w-[280px] h-[220px]">
-    <CurrentTime format="date" classList={timeHeader} />
+    <div class="flex justify-between items-center sticky top-0 mx-auto w-full px-4 font-semibold mb-1.5">
+        <CurrentTime format="date" />
+        <h2 class="text-[18px]">({$today.logs.length})</h2>
+    </div>
+
     <div class="relative left-0 flex flex-col p-4 pt-0 overflow-y-auto w-full mx-auto">
         {#if !$today?.logs?.length}
             <div class="flex flex-col w-full items-center justify-center h-[180px]">
