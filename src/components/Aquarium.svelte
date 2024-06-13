@@ -25,8 +25,11 @@
     </div>
     <div class="flex relative z-10">
         <div class="flex gap-x-4 w-1/2">
-            <Button text="-" handler={() => store.logIntake(false) } />
-            <Button text="+" handler={() => store.logIntake(true) } />
+            <button on:click={() => store.logIntake(true)} class="w-7 h-7">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path class="fill-cyan-800" d="M17 13h-4v4h-2v-4H7v-2h4V7h2v4h4m-5-9A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2" />
+                </svg>
+            </button>
         </div>
     </div>
 
