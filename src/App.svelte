@@ -2,6 +2,7 @@
     import { onMount } from 'svelte'
     import { writable } from 'svelte/store'
 
+    import Nav from './components/Nav.svelte'
     import DefaultView from "./views/Default.svelte"
     import SettingsView from './views/Settings.svelte'
 
@@ -16,9 +17,10 @@
     type View = 'default' | 'settings'
     let view = writable<View>('default')
 
-    function switchView() {
-        view.update(prev => prev == 'default' ? 'settings' : 'default') 
-        $view == 'default' ? today.populate() : settings.populate()
+    function setView(event: CustomEvent) {
+        const { newView } = event.detail
+        view.set(newView) 
+        newView == 'default' ? today.populate() : settings.populate()
     }
 
     onMount(() => {
@@ -29,8 +31,8 @@
     })
 </script>
 
-<main class="relative -z-100 bg-cyan-500 flex flex-col bg-transparent p-4 w-[280px] h-[360px]">
-    <button class="w-12 h-4 bg-green-500 text-xs" on:click={switchView}>Switch</button>
+<main class="relative -z-100 bg-cyan-500 flex flex-col bg-transparent p-4 pt-0 w-[280px] h-[360px]">
+    <Nav view={$view} on:view={setView} />
 
     {#if $view == 'default'}
         <DefaultView store={today} />
