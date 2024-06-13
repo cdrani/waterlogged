@@ -25,12 +25,12 @@ const defaultSettings: Settings = {
 }
 
 export default class SettingsStore {
-    constructor(port) {
+    constructor(port, observer) {
         this._PORT = port
+        this._observer = observer
         this._settings = writable<Settings>(defaultSettings)
 
         this.#init()
-        this.#populate()
     }
 
     #init() {
@@ -38,15 +38,20 @@ export default class SettingsStore {
             if (type == 'get:settings:response') {
                 const data = response.settings
                 this.#updateDefaults(data)
+                this.#notifyObserver(data)
             }
         })
+    }
+
+    #notifyObserver(data) {
+        this._observer.syncWithSettings(data)
     }
 
     get settings() {
         return this._settings
     }
 
-    #populate() {
+    populate() {
         this._PORT?.postMessage({ type: 'get:settings', data: get(this._settings) })
     }
 
@@ -58,9 +63,10 @@ export default class SettingsStore {
         this._settings.update(previous => ({ ...previous, [key]: value }))
         const settings = get(this._settings)
         this._PORT?.postMessage({ type: 'set:settings', data: settings })
+        this.#notifyObserver(settings)
     }
 
     disconnect() {
-        this._PORT.onDisconnect.addListener(() => (this._PORT = null))
+        // this._PORT.onDisconnect.addListener(() => (this._PORT = null))
     }
 }

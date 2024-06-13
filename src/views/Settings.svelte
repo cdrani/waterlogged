@@ -1,20 +1,9 @@
 <script lang="ts">
-    import { onMount } from "svelte"
-
-    import SettingsStore from '../stores/settings'
     import Toggle from "../components/Toggle.svelte";
 
-    export let port: any
-    const store = new SettingsStore(port)
+    export let store
 
     $: settings = store.settings
-
-    onMount(async () => {
-        return() => {
-            port = null
-            store.disconnect()
-        }
-    })
 
     function handleInput(e: Event) {
         const { name: key , value } = e.target

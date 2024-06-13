@@ -8,6 +8,15 @@ function getDateKey() {
     }).format(new Date())
 }
 
+function mergeObjects(base, other) {
+    for (const key in other) {
+        if (base.hasOwnProperty(key) && other[key] !== undefined) {
+            base[key] = other[key]
+        }
+    }
+    return base
+}
+
 chrome.runtime.onConnect.addListener(async (port) => {
     if (port.name !== 'popup') return
 
@@ -19,15 +28,21 @@ chrome.runtime.onConnect.addListener(async (port) => {
             response = await getState(['settings'])
             if ((!response || !Object.keys(response).length) && data) {
                 await setState({ key: 'settings', values: data })
+                response = { settings: data }
             }
         } else if (type == 'set:settings') {
             await setState({ key: 'settings', values: data })
+            response = { settings: data }
         } else if (type == 'get:today') {
             const dateKey = getDateKey()
-            response = await getState([dateKey])
-            if ((!response || !Object.keys(response).length) && data) {
-                await setState({ key: dateKey, values: data })
-                response = { [dateKey]: data }
+            const stateData = await getState([dateKey, 'settings'])
+            if (stateData?.settings && stateData?.[dateKey]) {
+                const mergedData = mergeObjects(stateData[dateKey], stateData.settings)
+                response = { [dateKey]: mergedData }
+            } else {
+                const mergedData = mergeObjects(data, stateData?.settings ?? {})
+                await setState({ key: dateKey, values: mergedData })
+                response = { [dateKey]: mergedData }
             }
         } else if (type == 'set:today') {
             const dateKey = getDateKey()

@@ -25,22 +25,28 @@ export default class TodayStore {
         this._today = writable<Today>(defaultToday)
 
         this.#init()
-        this.#populate()
     }
 
     #init() {
-        this._PORT?.onMessage.addListener(async ({ key, response }) => {
-            if (key == 'get:today:response') {
+        this._PORT?.onMessage.addListener(async ({ type, response }) => {
+            if (type == 'get:today:response') {
                 const data = response[this.#dateKey]
                 this.#updateToday(data)
             }
         })
-
-        this.#populate()
     }
 
-    #populate() {
-        this._PORT?.postMessage({ key: 'get:today', data: defaultToday })
+    populate() {
+        this._PORT?.postMessage({ type: 'get:today', data: get(this._today) })
+    }
+
+    syncWithSettings({ measurement, goal, intake }) {
+        this.populate()
+
+        const today = get(this._today) as Today
+        const data = { ...today, measurement, goal, intake }
+        this._today.set(data)
+        this._PORT?.postMessage({ type: 'set:today', data })
     }
 
     #updateToday(data: Today) {
@@ -69,20 +75,24 @@ export default class TodayStore {
             this._today.update(previous => ({ ...previous, logs: [...previous.logs.slice(1)] }))
         }
 
-        this._PORT?.postMessage({ key: 'set:today', data: get(this._today) })
+        this._PORT?.postMessage({ type: 'set:today', data: get(this._today) })
     }
 
     get today() {
         return this._today
     }
 
-    get total() {
+    get #derivedTotal() {
         return derived(this._today, () => {
             const { logs = [] } = get(this._today) as Today
             if (!logs.length) return 0
 
-            return logs.reduce((acc: number, curr: Log) => acc + curr.amount, 0)
+            return logs.reduce((acc: number, curr: Log) => acc + parseInt(curr.amount, 10), 0)
         })
+    }
+
+    get total() {
+        return this.#derivedTotal
     }
 
     get waterLevel() {
@@ -90,12 +100,12 @@ export default class TodayStore {
             const { logs = [], goal } = get(this._today) as Today
             if (!logs.length) return 0
 
-            const total = logs.reduce((acc: number, curr: Log) => acc + curr.amount, 0)
-            return (total / goal) * 100
+            const total = logs.reduce((acc: number, curr: Log) => acc + Number(curr.amount), 0)
+            return (total / Number(goal)) * 100
         })
     }
 
     disconnect() {
-        this._PORT.onDisconnect.addListener(() => (this._PORT = null))
+        // this._PORT.onDisconnect.addListener(() => (this._PORT = null))
     }
 }
