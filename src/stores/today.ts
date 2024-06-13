@@ -66,13 +66,19 @@ export default class TodayStore {
         }).format(new Date())
     }
 
-    logIntake(add = true) {
+    logIntake(add = true, index) {
         if (add) {
             const { intake: amount } = get(this._today)
             const log = { amount, time: this.#timeStamp } 
             this._today.update(previous => ({ ...previous, logs: [log, ...previous.logs] }))
         } else {
-            this._today.update(previous => ({ ...previous, logs: [...previous.logs.slice(1)] }))
+            if (index != undefined) {
+                const { logs } = get(this._today)
+                logs.splice(index, 1)
+                this._today.update(previous => ({ ...previous, logs }))
+            } else {
+                this._today.update(previous => ({ ...previous, logs: [...previous.logs.slice(1)] }))
+            }
         }
 
         this._PORT?.postMessage({ type: 'set:today', data: get(this._today) })
