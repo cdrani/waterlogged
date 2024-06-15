@@ -7,7 +7,7 @@
     import DefaultView from "./views/Default.svelte"
     import SettingsView from './views/Settings.svelte'
 
-    import { initModal, getModal } from './stores/modal'
+    import { initModal, getModal, closeModal } from './stores/modal'
     import TodayStore from './stores/today'
     import SettingsStore from './stores/settings'
 
@@ -28,6 +28,15 @@
         newView == 'default' ? today.populate() : settings.populate()
     }
 
+    function saveCustomLog(e: SubmitEvent) {
+        const formData = new FormData(e.target as HTMLFormElement)
+        const [time, amount] = [...formData.values()]
+        const log = { time, amount }
+        
+        today.logCustomIntake(log)
+        closeModal()
+    }
+
     onMount(() => {
         $pageView == 'default' ? today.populate() : settings.populate()
         return() => {
@@ -38,7 +47,7 @@
 
 <main class="relative -z-100 bg-cyan-500 flex flex-col bg-transparent p-4 pt-0 w-[280px] h-[360px]">
     <Nav view={$pageView} on:view={setView} />
-    <Modal />
+    <Modal actionHandler={(e) => saveCustomLog(e)} />
 
     <div 
         class="{$modal.visible ? 'shadow-black blur-md opacity-75' : ''}"
