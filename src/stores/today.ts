@@ -66,7 +66,76 @@ export default class TodayStore {
         }).format(new Date())
     }
 
-    logIntake(add = true, index) {
+    formatTime(timeString: string): string {
+        const [hours, minutes] = timeString.split(':').map(Number);
+        const now = new Date();
+        now.setHours(hours, minutes, 0, 0);
+
+        const locales = navigator.languages as string[];
+        return new Intl.DateTimeFormat(locales, {
+            timeStyle: 'short'
+        }).format(now);
+    }
+
+    convertTo24HourFormat(timeStr) {
+        const [time, modifier] = timeStr.split(' ');
+        let [hours, minutes] = time.split(':');
+        
+        hours = parseInt(hours, 10) // remove zero-padding
+
+        if (hours === '12') {
+            hours = '00';
+        }
+        if (modifier === 'PM') {
+            hours = parseInt(hours, 10) + 12;
+        }
+        
+        return `${hours}:${minutes}`;
+    }
+
+    convertToDate(timeStr) {
+        const [time, modifier] = timeStr.split(' ');
+        let [hours, minutes] = time.split(':');
+        hours = parseInt(hours, 10);
+        if (modifier === 'PM' && hours !== 12) {
+            hours += 12;
+        }
+        if (modifier === 'AM' && hours === 12) {
+            hours = 0;
+        }
+        
+        const date = new Date();
+        date.setHours(hours);
+        date.setMinutes(minutes);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        
+        return date;
+    }
+
+    findInsertionIndex(times: string[], newTime: string) {
+        const newDateTime = this.convertToDate(newTime)
+
+        for (let i = 0; i < times.length; i++) {
+            if (newDateTime >= this.convertToDate(times[i])) {
+                return i
+            }
+        }
+        return times.length
+    }
+
+    logCustomIntake({ amount, time }: Log) {
+        const { logs } = get(this._today)
+        const formatedLogTimes = logs.map(({ time }: Log) => this.convertTo24HourFormat(time))
+        const insertIndex = this.findInsertionIndex(formatedLogTimes, time)
+
+        logs.splice(insertIndex, 0, { amount, time: this.formatTime(time) })
+
+        this._today.update(previous => ({ ...previous, logs }))
+        this._PORT?.postMessage({ type: 'set:today', data: get(this._today) })
+    }
+
+    logIntake(add = true, index: number = undefined) {
         if (add) {
             const { intake: amount } = get(this._today)
             const log = { amount, time: this.#timeStamp } 
