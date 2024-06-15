@@ -1,7 +1,9 @@
 <script lang="ts">
     import { clickOutside } from '../utils/click-outside'
     import { closeModal, getModal } from "../stores/modal";
+
     import CustomLogForm from './modal-views/CustomLogForm.svelte'
+    import Congratulation from './modal-views/Congratulation.svelte'
 
     export let actionHandler: (e: SubmitEvent) => void | null
     const modal = getModal()
@@ -40,6 +42,8 @@
 
             {#if view == 'add' && actionHandler}
                 <CustomLogForm onSubmit={actionHandler} />
+            {:else if view == 'complete'}
+                <Congratulation />
             {/if}
         </div>
     </div>
