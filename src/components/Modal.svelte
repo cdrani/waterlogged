@@ -35,7 +35,7 @@
         use:clickOutside
         on:click_outside={handleClose}
     >
-        <div class="relative flex flex-col w-[248px] mx-auto h-[200px] bg-cyan-500 rounded-md">
+        <div class="relative flex flex-col w-[248px] mx-auto h-[225px] bg-cyan-500 rounded-md">
             <button class="absolute z-10 top-1 right-1 w-5 h-5 cursor justify-end" on:click={handleClose}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <g fill="none" stroke="white" stroke-dasharray="22" stroke-dashoffset="22" stroke-linecap="round" stroke-width="3px">
