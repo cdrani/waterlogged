@@ -1,3 +1,5 @@
+import type { Writable } from 'svelte/store'
+import { getContext, setContext } from 'svelte'
 import { writable, get, derived } from 'svelte/store'
 
 type Log = {
@@ -23,8 +25,35 @@ export default class TodayStore {
     constructor(port) {
         this._PORT = port
         this._today = writable<Today>(defaultToday)
+        this._party = writable<boolean>(this.partied)
 
         this.#init()
+    }
+
+    get partied() {
+        const hasPartied = JSON.parse(localStorage.getItem('party_shown'))
+        if (hasPartied == null) {
+            localStorage.setItem('party_shown', false)
+            return false
+        }
+        return hasPartied
+    }
+
+    set partied(partied: boolean) {
+        localStorage.setItem('party_shown', partied)
+        this._party.set(partied)
+    }
+
+    get canParty() {
+        return derived([this._party, this._today], () => {
+            if (this.partied) return false
+
+            const { logs = [], goal } = get(this._today) as Today
+            if (!logs.length) return false 
+
+            const total = logs.reduce((acc: number, curr: Log) => acc + Number(curr.amount), 0)
+            return (total / Number(goal)) * 100 >= 100
+        }) 
     }
 
     #init() {
@@ -157,6 +186,10 @@ export default class TodayStore {
         return this._today
     }
 
+    get party() {
+        return this._party
+    }
+
     get #derivedTotal() {
         return derived(this._today, () => {
             const { logs = [] } = get(this._today) as Today
@@ -179,8 +212,14 @@ export default class TodayStore {
             return (total / Number(goal)) * 100
         })
     }
+}
 
-    disconnect() {
-        // this._PORT.onDisconnect.addListener(() => (this._PORT = null))
-    }
+const STORE = 'today'
+
+export function initToday(port) {
+    setContext(STORE, new TodayStore(port))
+}
+
+export function getToday() {
+    return getContext(STORE)
 }

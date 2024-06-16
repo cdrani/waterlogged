@@ -1,8 +1,9 @@
 <script lang="ts">
+    import { getToday } from '../stores/today'
     import { openModal } from '../stores/modal'
-    import CurrentTime from './CurrentTime.svelte';
+    import CurrentTime from './CurrentTime.svelte'
 
-    export let store: any
+    const store = getToday()
 
     function showAddModal() {
         openModal('add')

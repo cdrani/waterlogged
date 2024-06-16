@@ -6,18 +6,21 @@
     import Modal from './components/Modal.svelte'
     import DefaultView from "./views/Default.svelte"
     import SettingsView from './views/Settings.svelte'
+    import Celebrate from './components/Celebrate.svelte'
 
-    import { initModal, getModal, closeModal } from './stores/modal'
-    import TodayStore from './stores/today'
     import SettingsStore from './stores/settings'
+    import { initToday, getToday } from './stores/today'
+    import { initModal, getModal, openModal } from './stores/modal'
 
     let PORT = chrome.runtime.connect({ name: 'popup' })
     
     initModal()
+    initToday(PORT)
 
     const modal = getModal()
-    const today = new TodayStore(PORT)
-    const settings = new SettingsStore(PORT, today)
+    const todayStore = getToday()
+
+    const settings = new SettingsStore(PORT, todayStore)
 
     type PageView = 'default' | 'settings'
     let pageView = writable<PageView>('default')
@@ -25,35 +28,35 @@
     function setView(event: CustomEvent) {
         const { newView } = event.detail
         pageView.set(newView) 
-        newView == 'default' ? today.populate() : settings.populate()
-    }
-
-    function saveCustomLog(e: SubmitEvent) {
-        const formData = new FormData(e.target as HTMLFormElement)
-        const [time, amount] = [...formData.values()]
-        const log = { time, amount }
-        
-        today.logCustomIntake(log)
-        closeModal()
+        newView == 'default' ? todayStore.populate() : settings.populate()
     }
 
     onMount(() => {
-        $pageView == 'default' ? today.populate() : settings.populate()
+        $pageView == 'default' ? todayStore.populate() : settings.populate()
         return() => {
             PORT.onDisconnect.addListener(() => (PORT = null))
         }
     })
+
+    $: party = todayStore.canParty
+    $: {
+        if ($party) {
+            openModal('complete')
+        }
+    }
 </script>
 
 <main class="relative -z-100 bg-cyan-500 flex flex-col bg-transparent p-4 pt-0 w-[280px] h-[360px]">
     <Nav view={$pageView} on:view={setView} />
-    <Modal actionHandler={(e) => saveCustomLog(e)} />
+    <Modal />
+
+    <Celebrate party={$party} />
 
     <div 
         class="{$modal.visible ? 'shadow-black blur-md opacity-75' : ''}"
     >
         {#if $pageView == 'default'}
-            <DefaultView store={today} />
+            <DefaultView />
         {:else}
             <SettingsView store={settings} />
         {/if}

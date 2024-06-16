@@ -1,15 +1,24 @@
 <script lang="ts">
+    import { getToday } from '../stores/today'
+    import { openModal, closeModal, getModal } from '../stores/modal'
+
     import { clickOutside } from '../utils/click-outside'
-    import { closeModal, getModal } from "../stores/modal";
 
     import CustomLogForm from './modal-views/CustomLogForm.svelte'
     import Congratulation from './modal-views/Congratulation.svelte'
 
-    export let actionHandler: (e: SubmitEvent) => void | null
     const modal = getModal()
+    const todayStore = getToday()
 
     $: visible = $modal.visible
-    $: view = $modal.view
+
+    function handleClose() {
+        const view = $modal.view
+        if (view == 'complete') {
+            todayStore.partied = true
+        }
+        closeModal()
+    }
 </script>
 
 <div
@@ -24,10 +33,10 @@
         id="modal-content"
         class="absolute z-50"
         use:clickOutside
-        on:click_outside={closeModal}
+        on:click_outside={handleClose}
     >
         <div class="relative flex flex-col w-[248px] mx-auto h-[200px] bg-cyan-500 rounded-md">
-            <button class="absolute z-10 top-1 right-1 w-5 h-5 cursor justify-end" on:click={closeModal}>
+            <button class="absolute z-10 top-1 right-1 w-5 h-5 cursor justify-end" on:click={handleClose}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <g fill="none" stroke="white" stroke-dasharray="22" stroke-dashoffset="22" stroke-linecap="round" stroke-width="3px">
                         <path d="M19 5L5 19">
@@ -40,9 +49,9 @@
                 </svg>
             </button>
 
-            {#if view == 'add' && actionHandler}
-                <CustomLogForm onSubmit={actionHandler} />
-            {:else if view == 'complete'}
+            {#if $modal.view == 'add'}
+                <CustomLogForm />
+            {:else if $modal.view == 'complete'}
                 <Congratulation />
             {/if}
         </div>

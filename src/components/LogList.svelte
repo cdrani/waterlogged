@@ -1,15 +1,16 @@
 <script lang="ts">
+    import { getToday } from '../stores/today'
     import CurrentTime from './CurrentTime.svelte'
 
-    export let store: any;
-
-    $: today = store.today
+    const store = getToday()
 
     function handleRemove(e: MouseEvent) {
         const button = e.currentTarget 
         const index = button.getAttribute('data-index') 
         store.logIntake(false, index)
     }
+
+    $: today = store.today
 </script>
 
 <section class="flex absolute left-0 flex-col mt-2 mx-auto w-[280px] h-[220px]">
