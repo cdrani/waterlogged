@@ -77,8 +77,17 @@ export default class TodayStore {
         this._PORT?.postMessage({ type: 'set:today', data })
     }
 
+    #resetParty(data: Today) {
+        const { logs, goal } = data
+        const total = logs.reduce((acc: number, log: Log) => acc + Number(log.amount), 0)
+        if (logs.length == 0 || total <= Number(goal)) {
+            this.partied = false
+        }
+    }
+
     #updateToday(data: Today) {
         this._today.set(data)
+        this.#resetParty(data)
     }
 
     get #dateKey() {
@@ -160,7 +169,14 @@ export default class TodayStore {
         logs.splice(insertIndex, 0, { amount, time: this.formatTime(time) })
 
         this._today.update(previous => ({ ...previous, logs }))
-        this._PORT?.postMessage({ type: 'set:today', data: get(this._today) })
+
+        this.#updateStorage()
+    }
+
+    #updateStorage() {
+        const data = get(this._today)
+        this.#resetParty(data)
+        this._PORT?.postMessage({ type: 'set:today', data  })
     }
 
     logIntake(add = true, index: number = undefined) {
@@ -178,7 +194,7 @@ export default class TodayStore {
             }
         }
 
-        this._PORT?.postMessage({ type: 'set:today', data: get(this._today) })
+        this.#updateStorage()
     }
 
     get today() {
