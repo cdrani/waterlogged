@@ -5,7 +5,6 @@
     const todayStore = getToday()
     const inputClass = "px-0.5 h-7 text-[14px] rounded-[4px]"
 
-
     function saveCustomLog(e: SubmitEvent) {
         const formData = new FormData(e.target as HTMLFormElement)
         const [time, amount] = [...formData.values()]
@@ -14,6 +13,8 @@
         todayStore.logCustomIntake(log)
         closeModal()
     }
+
+    $: today = todayStore.today
 </script>
 
 <form on:submit|preventDefault={saveCustomLog} class="absolute flex flex-col h-full p-4 pt-6">
@@ -29,8 +30,8 @@
         </label>
 
         <label for="amount" class="flex justify-between items-center gap-y-1">
-            <span class="text-white text-[16px] text-end">Amount (ml)</span>
-            <input id="amount" name="amount" type="number" value={250} class="w-1/2 text-end {inputClass}" />
+            <span class="text-white text-[16px] text-end">Amount ({$today.measurement})</span>
+            <input id="amount" name="amount" type="number" value={$today.intake} class="w-1/2 text-end {inputClass}" />
         </label>
     </div>
 
