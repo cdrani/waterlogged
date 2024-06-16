@@ -1,4 +1,5 @@
 import { writable, get } from "svelte/store"
+import { getContext, setContext } from 'svelte'
 
 type Alert = 'notification' | 'alarm' | 'both'
 
@@ -69,4 +70,14 @@ export default class SettingsStore {
     disconnect() {
         // this._PORT.onDisconnect.addListener(() => (this._PORT = null))
     }
+}
+
+const STORE = 'settings'
+
+export function initSettings(port, today) {
+    setContext(STORE, new SettingsStore(port, today))
+}
+
+export function getSettings() {
+    return getContext(STORE)
 }

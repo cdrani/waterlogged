@@ -8,8 +8,8 @@
     import SettingsView from './views/Settings.svelte'
     import Celebrate from './components/Celebrate.svelte'
 
-    import SettingsStore from './stores/settings'
     import { initToday, getToday } from './stores/today'
+    import { initSettings, getSettings } from './stores/settings'
     import { initModal, getModal, openModal } from './stores/modal'
 
     let PORT = chrome.runtime.connect({ name: 'popup' })
@@ -19,8 +19,10 @@
 
     const modal = getModal()
     const todayStore = getToday()
+    initSettings(PORT, todayStore)
 
-    const settings = new SettingsStore(PORT, todayStore)
+
+    const settingsStore = getSettings()
 
     type PageView = 'default' | 'settings'
     let pageView = writable<PageView>('default')
@@ -28,11 +30,11 @@
     function setView(event: CustomEvent) {
         const { newView } = event.detail
         pageView.set(newView) 
-        newView == 'default' ? todayStore.populate() : settings.populate()
+        newView == 'default' ? todayStore.populate() : settingsStore.populate()
     }
 
     onMount(() => {
-        $pageView == 'default' ? todayStore.populate() : settings.populate()
+        $pageView == 'default' ? todayStore.populate() : settingsStore.populate()
         return() => {
             PORT.onDisconnect.addListener(() => (PORT = null))
         }
@@ -58,7 +60,7 @@
         {#if $pageView == 'default'}
             <DefaultView />
         {:else}
-            <SettingsView store={settings} />
+            <SettingsView />
         {/if}
     </div>
 </main>

@@ -1,8 +1,8 @@
 <script lang="ts">
-    import Toggle from "../components/Toggle.svelte";
+    import { getSettings } from '../stores/settings'
+    import Toggle from '../components/Toggle.svelte'
 
-    export let store
-
+    const store = getSettings()
     $: settings = store.settings
 
     function handleInput(e: Event) {
