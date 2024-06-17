@@ -15,9 +15,12 @@
     }
 
     $: today = todayStore.today
+
     const getTime = () => {
         const date = new Date()
-        return `${date.getHours()}:${date.getMinutes()}`
+        const minutes = date.getMinutes()
+        const paddedMinutes = minutes <= 9 ? `0${minutes}` : minutes
+        return `${date.getHours()}:${paddedMinutes}`
     }
 </script>
 
