@@ -1,6 +1,7 @@
 <script lang="ts">
     import { getToday } from '../../stores/today'
     import { closeModal } from '../../stores/modal'
+
     const store = getToday()
 
     $: today = store.today
@@ -10,7 +11,6 @@
         store.partied = true 
         closeModal()
     }
-
 </script>
 
 <section class="absolute flex flex-col h-full p-4 pt-6">
