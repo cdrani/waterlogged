@@ -80,7 +80,7 @@ export default class TodayStore {
     #resetParty(data: Today) {
         const { logs, goal } = data
         const total = logs.reduce((acc: number, log: Log) => acc + Number(log.amount), 0)
-        if (logs.length == 0 || total <= Number(goal)) {
+        if (logs.length == 0 || total < Number(goal)) {
             this.partied = false
         }
     }
