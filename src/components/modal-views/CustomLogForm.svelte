@@ -15,6 +15,10 @@
     }
 
     $: today = todayStore.today
+    const getTime = () => {
+        const date = new Date()
+        return `${date.getHours()}:${date.getMinutes()}`
+    }
 </script>
 
 <form on:submit|preventDefault={saveCustomLog} class="absolute flex flex-col h-full p-4 pt-6">
@@ -24,7 +28,9 @@
             <span class="text-white text-[16px]">Log Time</span>
             <input
                 id="time"
-                type="time" name="time" value="17:38"
+                type="time" 
+                name="time"
+                value={getTime()}
                 class="text-end {inputClass} w-1/2"
             />
         </label>
