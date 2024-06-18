@@ -1,7 +1,7 @@
 import { writable, get } from "svelte/store"
 import { getContext, setContext } from 'svelte'
 
-type Alert = 'notification' | 'alarm' | 'both'
+type Alert = 'notify' | 'alarm' | 'both' | 'none'
 
 type Settings = {
     goal: number,
@@ -22,7 +22,7 @@ const defaultSettings: Settings = {
     measurement: 'ml',
     end_time: '18:00',
     start_time: '08:00',
-    alert_type: 'notification'
+    alert_type: 'notify'
 }
 
 export default class SettingsStore {

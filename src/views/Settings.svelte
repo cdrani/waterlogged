@@ -6,7 +6,8 @@
     $: settings = store.settings
 
     function handleInput(e: Event) {
-        const { name: key , value } = e.target
+        let { name: key , value } = e.target
+        value = key == 'interval' ? Number(value) : value
         store.updateSetting({ key, value })
     }
 
@@ -83,9 +84,10 @@
             <select name="alert_type" value={$settings.alert_type} class="w-1/2 text-end {inputClass}"
                     on:change={handleInput}
             >
-                <option value="notification">Notify</option>
+                <option value="notify">Notify</option>
                 <option value="alarm">Alarm</option>
                 <option value="both">Both</option>
+                <option value="none">None</option>
             </select>
         </label>
     </form>
