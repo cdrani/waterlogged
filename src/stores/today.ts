@@ -7,16 +7,16 @@ type Log = {
 }
 
 type Today = {
-    intake: number,
     logs: Log[],
     goal: number,
+    amount: number,
     measurement: 'ml' | 'cup',
 }
 
 const defaultToday: Today = {
-    intake: 100,
     logs: [],
     goal: 1800,
+    amount: 250,
     measurement: 'ml'
 }
 
@@ -68,11 +68,11 @@ export default class TodayStore {
         this._PORT?.postMessage({ type: 'get:today', data: get(this._today) })
     }
 
-    syncWithSettings({ measurement, goal, intake }) {
+    syncWithSettings({ measurement, goal, amount }) {
         this.populate()
 
         const today = get(this._today) as Today
-        const data = { ...today, measurement, goal, intake }
+        const data = { ...today, measurement, goal, amount }
         this._today.set(data)
         this._PORT?.postMessage({ type: 'set:today', data })
     }
@@ -161,7 +161,7 @@ export default class TodayStore {
         return times.length
     }
 
-    logCustomIntake({ amount, time }: Log) {
+    logCustomAmount({ amount, time }: Log) {
         const { logs } = get(this._today)
         const formatedLogTimes = logs.map(({ time }: Log) => this.convertTo24HourFormat(time))
         const insertIndex = this.findInsertionIndex(formatedLogTimes, time)
@@ -179,9 +179,9 @@ export default class TodayStore {
         this._PORT?.postMessage({ type: 'set:today', data  })
     }
 
-    logIntake(add = true, index: number = undefined) {
+    logAmount(add = true, index: number = undefined) {
         if (add) {
-            const { intake: amount } = get(this._today)
+            const { amount } = get(this._today)
             const log = { amount, time: this.#timeStamp } 
             this._today.update(previous => ({ ...previous, logs: [log, ...previous.logs] }))
         } else {

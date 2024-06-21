@@ -31,7 +31,7 @@
 
     <div class="flex absolute z-10 bottom-2 h-6 w-1/2">
         <div class="flex gap-x-2 w-full">
-            <button on:click={() => store.logIntake(true)} class="w-6 h-6">
+            <button on:click={() => store.logAmount(true)} class="w-6 h-6">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path class="fill-cyan-800" d="M17 13h-4v4h-2v-4H7v-2h4V7h2v4h4m-5-9A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2" />
                 </svg>

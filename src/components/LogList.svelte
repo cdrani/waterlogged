@@ -7,7 +7,7 @@
     function handleRemove(e: MouseEvent) {
         const button = e.currentTarget 
         const index = button.getAttribute('data-index') 
-        store.logIntake(false, index)
+        store.logAmount(false, index)
     }
 
     $: today = store.today

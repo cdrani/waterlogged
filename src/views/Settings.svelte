@@ -64,8 +64,8 @@
             </label>
 
             <label class="flex flex-col w-1/2 gap-y-1">
-                <span class="text-[14px] text-end">Intake (in ml)</span>
-                <input name="intake" type="number" value={$settings.intake} class="w-full text-end {inputClass}"
+                <span class="text-[14px] text-end">Amount (in ml)</span>
+                <input name="amount" type="number" value={$settings.amount} class="w-full text-end {inputClass}"
                     on:change={handleInput}
                 />
             </label>

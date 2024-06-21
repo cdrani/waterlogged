@@ -25,7 +25,7 @@ chrome.runtime.onInstalled.addListener(async () => {
         key: 'settings', 
         values: {
             goal: 1800,
-            intake: 100,
+            amount: 250,
             interval: 60, // minutes
             enabled: true,
             measurement: 'ml',
@@ -38,9 +38,9 @@ chrome.runtime.onInstalled.addListener(async () => {
     await setState({ 
         key: 'today', 
         values: {
-            intake: 100,
             logs: [],
             goal: 1800,
+            amount: 250,
             measurement: 'ml'
         }
     })
@@ -53,7 +53,7 @@ chrome.runtime.onInstalled.addListener(async () => {
         alert_type: 'notify'
     })
 
-    Notifier.welcome()
+    // Notifier.welcome()
     await Notifier.startTimer()
 })
 

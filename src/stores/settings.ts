@@ -5,7 +5,7 @@ type Alert = 'notify' | 'alarm' | 'both' | 'none'
 
 type Settings = {
     goal: number,
-    intake: number,
+    amount: number,
     enabled: boolean,
     interval: number,
     end_time: string,
@@ -16,7 +16,7 @@ type Settings = {
 
 const defaultSettings: Settings = {
     goal: 1800,
-    intake: 100,
+    amount: 250,
     interval: 60, // minutes
     enabled: true,
     measurement: 'ml',
