@@ -28,6 +28,7 @@ chrome.runtime.onInstalled.addListener(async () => {
             amount: 250,
             interval: 60, // minutes
             enabled: true,
+            sound: 'bubble1',
             measurement: 'ml',
             end_time: '18:00',
             start_time: '08:00',

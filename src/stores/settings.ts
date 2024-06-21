@@ -5,6 +5,7 @@ type Alert = 'notify' | 'alarm' | 'both' | 'none'
 
 type Settings = {
     goal: number,
+    sound: string,
     amount: number,
     enabled: boolean,
     interval: number,
@@ -19,6 +20,7 @@ const defaultSettings: Settings = {
     amount: 250,
     interval: 60, // minutes
     enabled: true,
+    sound: 'bubble1',
     measurement: 'ml',
     end_time: '18:00',
     start_time: '08:00',
