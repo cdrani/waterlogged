@@ -31,8 +31,8 @@ chrome.runtime.onInstalled.addListener(async () => {
             sound: 'bubble1',
             measurement: 'ml',
             end_time: '18:00',
+            alert_type: 'both',
             start_time: '08:00',
-            alert_type: 'notify'
         }
     })
 
@@ -56,10 +56,11 @@ chrome.storage.onChanged.addListener(async (changes) => {
 
     const { oldValue, newValue } = changes.settings
 
-    if ((oldValue.enabled !== newValue.enabled)) {
-        newValue.enabled && newValue.alert_type !== 'none' ? Notifier.startTimer() : Notifier.clearTimer()
-    } else if (oldValue.alert_type !== newValue.alert_type) {
-        newValue.enabled && newValue.alert_type !== 'none' ? Notifier.startTimer() : Notifier.clearTimer()
+    const enabledChanged = oldValue?.enabled !== newValue?.enabled
+    const alertChanged = oldValue?.alert_type !== newValue?.alert_type
+
+    if (enabledChanged || alertChanged) {
+        newValue?.enabled && newValue?.alert_type !== 'none' ? Notifier.startTimer() : Notifier.clearTimer()
     }
 })
 
