@@ -2,31 +2,18 @@ type NotificationType = 'install' | 'notify'
 
 import { getState } from './state'
 
-type Alert = 'notify' | 'alarm' | 'both' | 'none'
-
-type NotificationConfig = {
-    enabled: boolean,
-    start_time: string,
-    end_time: string,
-    interval: number,
-    alert_type: Alert,
-}
-
 export default class Notification {
     constructor() {
         this._timer = null
-        this._config = null
-    }
-
-    updateConfig(config: NotificationConfig) {
-        this._config = config
     }
 
     async startTimer() {
         let iteration = 0
 
-        this._timer = setInterval(() => {
-            const { enabled, start_time, end_time, interval, alert_type } = this._config
+        this._timer = setInterval(async () => {
+            const { settings } = await getState(['settings'])
+            if (!settings) return
+            const { enabled, sound, start_time, end_time, interval, alert_type } = settings
 
             if (!enabled || alert_type == 'none') return this.clearTimer()
             if (!this.checkWithinBoundary({ start_time, end_time })) return

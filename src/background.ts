@@ -46,14 +46,6 @@ chrome.runtime.onInstalled.addListener(async () => {
         }
     })
 
-    Notifier.updateConfig({
-        interval: 60, // minutes
-        enabled: true,
-        end_time: '18:00',
-        start_time: '08:00',
-        alert_type: 'notify'
-    })
-
     // Notifier.welcome()
     await Notifier.startTimer()
 })
@@ -63,8 +55,6 @@ chrome.storage.onChanged.addListener(async (changes) => {
     if (!isSettings) return
 
     const { oldValue, newValue } = changes.settings
-    const { enabled, end_time, start_time, interval, alert_type } = newValue
-    Notifier.updateConfig({ enabled, end_time, start_time, interval, alert_type })
 
     if ((oldValue.enabled !== newValue.enabled)) {
         newValue.enabled && newValue.alert_type !== 'none' ? Notifier.startTimer() : Notifier.clearTimer()
