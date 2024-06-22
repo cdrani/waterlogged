@@ -2,6 +2,8 @@
     import { getSettings } from '../stores/settings'
     import Toggle from '../components/Toggle.svelte'
 
+    import { playAlarm } from '../utils/alarm'
+
     const store = getSettings()
     $: settings = store.settings
 
@@ -16,12 +18,8 @@
         store.updateSetting(state)
     }
 
-    function playSound(e: MouseEvent) {
-        e.preventDefault()
-
-        const source = chrome.runtime.getURL(`sounds/${$settings.sound}.mp3`)
-        const audio = new Audio(source)
-        audio.play()
+    function playSound() {
+        playAlarm($settings.sound)
     }
 
     const inputClass = "px-0.5 pl-2 h-7 text-[14px] rounded-[4px]"
@@ -91,7 +89,7 @@
         <label class="flex justify-between gap-y-1 gap-x-6">
             <div class="flex items-center w-1/2">
                 <span class="text-[14px] mr-3">Sound</span>
-                <button class="inline-flex items-center place-content-center rounded-full w-6 h-6 bg-white" on:click={playSound}>
+                <button class="inline-flex items-center place-content-center rounded-full w-6 h-6 bg-white" on:click|preventDefault={playSound}>
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24">
                         <path fill="currentColor" d="M15.533 16.414h-3.694l-2.672 2.67q-.46.46-1.143.46t-1.143-.46l-1.96-1.959q-.46-.46-.46-1.146q0-.687.46-1.146l2.666-2.647V8.473zm-2.421-1l-4.526-4.526v1.7L5.63 15.547q-.173.173-.173.433t.173.433l1.96 1.96q.172.172.432.172t.433-.173l2.957-2.957zM8.147 5.182q2.329-1.2 4.893-.853q2.565.347 4.411 2.193t2.193 4.41t-.853 4.894l-.758-.738q.952-1.993.605-4.146t-1.9-3.706q-1.555-1.554-3.707-1.901t-4.146.605zm2.623 2.623q1.175-.252 2.318.027q1.142.279 1.98 1.117t1.115 1.978t.005 2.295l-.854-.854q.038-.76-.197-1.462q-.236-.703-.776-1.243q-.546-.547-1.25-.795t-1.468-.171zm-1.513 6.936" />
                     </svg>
