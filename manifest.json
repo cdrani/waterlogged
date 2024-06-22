@@ -20,8 +20,11 @@
         "type": "module",
         "service_worker": "src/background.ts"
     },
+    "host_permissions": ["<all_urls>"],
     "permissions": [
         "storage",
+        "activeTab",
+        "scripting",
         "notifications",
         "unlimitedStorage"
     ]
