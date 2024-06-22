@@ -3,7 +3,7 @@
     import { closeModal } from '../../stores/modal'
 
     const todayStore = getToday()
-    const inputClass = "px-0.5 h-7 text-[14px] rounded-[4px]"
+    const inputClass = "px-0.5 pl-2 h-7 text-[14px] rounded-[4px]"
 
     function saveCustomLog(e: SubmitEvent) {
         const formData = new FormData(e.target as HTMLFormElement)
@@ -19,8 +19,10 @@
     const getTime = () => {
         const date = new Date()
         const minutes = date.getMinutes()
+        const hours = date.getHours()
         const paddedMinutes = minutes <= 9 ? `0${minutes}` : minutes
-        return `${date.getHours()}:${paddedMinutes}`
+        const paddedHours = hours <= 9 ? `0${hours}` : hours
+        return `${paddedHours}:${paddedMinutes}`
     }
 </script>
 
@@ -34,13 +36,13 @@
                 type="time" 
                 name="time"
                 value={getTime()}
-                class="text-end {inputClass} w-1/2"
+                class="{inputClass} w-1/2"
             />
         </label>
 
         <label for="amount" class="flex justify-between items-center gap-y-1">
-            <span class="text-white text-[16px] text-end">Amount ({$today.measurement})</span>
-            <input id="amount" name="amount" type="number" value={$today.amount} class="w-1/2 text-end {inputClass}" />
+            <span class="text-white text-[16px]">Amount ({$today.measurement})</span>
+            <input id="amount" name="amount" type="number" value={$today.amount} class="w-1/2 {inputClass}" />
         </label>
     </div>
 
