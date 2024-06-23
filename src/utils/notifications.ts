@@ -1,6 +1,8 @@
-type NotificationType = 'install' | 'notify'
-
 import { getState } from './state'
+import { ensureOffscreenDocument, sendOffscreenMessage } from './offscreen'
+
+type NotificationType = 'install' | 'notify'
+const OFFSCREEN_FILE_PATH = 'src/offscreen.html'
 
 export default class Notification {
     constructor() {
@@ -20,7 +22,8 @@ export default class Notification {
             iteration++
 
             if (iteration >= Number(interval)) {
-                this.notify()
+                ;['notify', 'both'].includes(alert_type) && this.notify()
+                ;['alarm', 'both'].includes(alert_type) && this.playSound(sound)
                 iteration = 0
             }
         }, 60_000)
@@ -34,7 +37,7 @@ export default class Notification {
         return withinBoundary
     }
 
-    getDateMS(timeStr) {
+    getDateMS(timeStr: string) {
         const [hour, min] = timeStr.split(':')
         const date = new Date()
         date.setHours(Number(hour))
@@ -53,6 +56,11 @@ export default class Notification {
 
     notify() {
         this.create('notify')
+    }
+
+    async playSound(sound: string) {
+        await ensureOffscreenDocument(OFFSCREEN_FILE_PATH)
+        await sendOffscreenMessage(sound)
     }
 
     create(type: NotificationType) {
