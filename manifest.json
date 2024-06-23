@@ -20,10 +20,11 @@
         "type": "module",
         "service_worker": "src/background.ts"
     },
+    "web_accessible_resources": [ { "resources": [ "src/offscreen.html", "src/offscreen.ts" ], "matches": [] } ],
     "host_permissions": ["<all_urls>"],
     "permissions": [
         "storage",
-        "activeTab",
+        "offscreen",
         "scripting",
         "notifications",
         "unlimitedStorage"
