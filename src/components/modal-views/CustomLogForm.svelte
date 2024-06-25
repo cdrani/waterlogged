@@ -8,7 +8,7 @@
     function saveCustomLog(e: SubmitEvent) {
         const formData = new FormData(e.target as HTMLFormElement)
         const [time, amount] = [...formData.values()]
-        const log = { time, amount }
+        const log = { time, amount: Number(amount) }
         
         todayStore.logCustomAmount(log)
         closeModal()
