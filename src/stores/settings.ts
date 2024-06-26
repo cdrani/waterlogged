@@ -1,37 +1,22 @@
 import { writable, get } from "svelte/store"
+import type { Writable } from "svelte/store"
 import { getContext, setContext } from 'svelte'
 
-type Alert = 'notify' | 'alarm' | 'both' | 'none'
+import type TodayStore from "./today"
+import type { SETTINGS } from "src/utils/types"
+import { SETTINGS_DEFAULT } from "../utils/defaults"
 
-type Settings = {
-    goal: number,
-    sound: string,
-    amount: number,
-    enabled: boolean,
-    interval: number,
-    end_time: string,
-    start_time: string,
-    measurement: string,
-    alert_type: Alert
-}
-
-const defaultSettings: Settings = {
-    goal: 1800,
-    amount: 250,
-    interval: 60, // minutes
-    enabled: true,
-    sound: 'bubble1',
-    measurement: 'ml',
-    end_time: '18:00',
-    start_time: '08:00',
-    alert_type: 'notify'
-}
+type SettingsStoreParams = { port: chrome.runtime.Port, observer: TodayStore }
 
 export default class SettingsStore {
-    constructor(port, observer) {
+    _PORT: chrome.runtime.Port
+    _observer: TodayStore
+    _settings: Writable<SETTINGS>
+
+    constructor({ port , observer }: SettingsStoreParams) {
         this._PORT = port
         this._observer = observer
-        this._settings = writable<Settings>(defaultSettings)
+        this._settings = writable<SETTINGS>(SETTINGS_DEFAULT)
 
         this.#init()
     }
@@ -46,7 +31,7 @@ export default class SettingsStore {
         })
     }
 
-    #notifyObserver(data) {
+    #notifyObserver(data: SETTINGS) {
         this._observer.syncWithSettings(data)
     }
 
@@ -58,7 +43,7 @@ export default class SettingsStore {
         this._PORT?.postMessage({ type: 'get:settings', data: get(this._settings) })
     }
 
-    #updateDefaults(data: Settings) {
+    #updateDefaults(data: SETTINGS) {
         this._settings.set(data)
     }
 
@@ -68,16 +53,12 @@ export default class SettingsStore {
         this._PORT?.postMessage({ type: 'set:settings', data: settings })
         this.#notifyObserver(settings)
     }
-
-    disconnect() {
-        // this._PORT.onDisconnect.addListener(() => (this._PORT = null))
-    }
 }
 
 const STORE = 'settings'
 
-export function initSettings(port, today) {
-    setContext(STORE, new SettingsStore(port, today))
+export function initSettings({ port, observer }) {
+    setContext(STORE, new SettingsStore({ port, observer }))
 }
 
 export function getSettings() {

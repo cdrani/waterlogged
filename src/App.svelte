@@ -19,7 +19,7 @@
 
     const modal = getModal()
     const todayStore = getToday()
-    initSettings(PORT, todayStore)
+    initSettings({ port: PORT, observer: todayStore })
 
 
     const settingsStore = getSettings()

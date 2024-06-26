@@ -1,29 +1,20 @@
 import { getContext, setContext } from 'svelte'
 import { writable, get, derived } from 'svelte/store'
+import type { Writable } from 'svelte/store'
 
-type Log = {
-    time: string,
-    amount: number,
-}
+import type { LOG, TODAY } from '../utils/types'
+import { TODAY_DEFAULT } from '../utils/defaults'
 
-type Today = {
-    logs: Log[],
-    goal: number,
-    amount: number,
-    measurement: 'ml' | 'cup',
-}
-
-const defaultToday: Today = {
-    logs: [],
-    goal: 1800,
-    amount: 250,
-    measurement: 'ml'
-}
+import { getDateKey, getTimeStamp, convertToDate, convertTo24HourFormat, formatTime } from '../utils/date'
 
 export default class TodayStore {
-    constructor(port) {
+    _PORT: chrome.runtime.Port
+    _today: Writable<TODAY>
+    _party: Writable<boolean>
+
+    constructor(port: chrome.runtime.Port) {
         this._PORT = port
-        this._today = writable<Today>(defaultToday)
+        this._today = writable<TODAY>(TODAY_DEFAULT)
         this._party = writable<boolean>(this.partied)
 
         this.#init()
@@ -32,14 +23,14 @@ export default class TodayStore {
     get partied() {
         const hasPartied = JSON.parse(localStorage.getItem('party_shown'))
         if (hasPartied == null) {
-            localStorage.setItem('party_shown', false)
+            localStorage.setItem('party_shown', `${false}`)
             return false
         }
         return hasPartied
     }
 
     set partied(partied: boolean) {
-        localStorage.setItem('party_shown', partied)
+        localStorage.setItem('party_shown', `${partied}`)
         this._party.set(partied)
     }
 
@@ -47,10 +38,10 @@ export default class TodayStore {
         return derived([this._party, this._today], () => {
             if (this.partied) return false
 
-            const { logs = [], goal } = get(this._today) as Today
+            const { logs = [], goal } = get(this._today) as TODAY
             if (!logs.length) return false 
 
-            const total = logs.reduce((acc: number, curr: Log) => acc + Number(curr.amount), 0)
+            const total = logs.reduce((acc: number, curr: LOG) => acc + Number(curr.amount), 0)
             return (total / Number(goal)) * 100 >= 100
         }) 
     }
@@ -58,7 +49,7 @@ export default class TodayStore {
     #init() {
         this._PORT?.onMessage.addListener(async ({ type, response }) => {
             if (type == 'get:today:response') {
-                const data = response[this.#dateKey]
+                const data = response[getDateKey()]
                 this.#updateToday(data)
             }
         })
@@ -71,102 +62,42 @@ export default class TodayStore {
     syncWithSettings({ measurement, goal, amount }) {
         this.populate()
 
-        const today = get(this._today) as Today
+        const today = get(this._today) as TODAY
         const data = { ...today, measurement, goal, amount }
         this._today.set(data)
         this._PORT?.postMessage({ type: 'set:today', data })
     }
 
-    #resetParty(data: Today) {
+    #resetParty(data: TODAY) {
         const { logs, goal } = data
-        const total = logs.reduce((acc: number, log: Log) => acc + Number(log.amount), 0)
+        const total = logs.reduce((acc: number, log: LOG) => acc + Number(log.amount), 0)
         if (logs.length == 0 || total < Number(goal)) {
             this.partied = false
         }
     }
 
-    #updateToday(data: Today) {
+    #updateToday(data: TODAY) {
         this._today.set(data)
         this.#resetParty(data)
     }
 
-    get #dateKey() {
-        return new Intl.DateTimeFormat('sv-SE', {
-            dateStyle: 'short'
-        }).format(new Date())
-    }
-
-    get #timeStamp() {
-        const locales = navigator.languages as string[]
-        return new Intl.DateTimeFormat(locales, {
-            timeStyle: 'short'
-        }).format(new Date())
-    }
-
-    formatTime(timeString: string): string {
-        const [hours, minutes] = timeString.split(':').map(Number);
-        const now = new Date();
-        now.setHours(hours, minutes, 0, 0);
-
-        const locales = navigator.languages as string[];
-        return new Intl.DateTimeFormat(locales, {
-            timeStyle: 'short'
-        }).format(now);
-    }
-
-    convertTo24HourFormat(timeStr) {
-        const [time, modifier] = timeStr.split(' ');
-        let [hours, minutes] = time.split(':');
-        
-        hours = parseInt(hours, 10) // remove zero-padding
-
-        if (hours === '12') {
-            hours = '00';
-        }
-        if (modifier === 'PM') {
-            hours = parseInt(hours, 10) + 12;
-        }
-        
-        return `${hours}:${minutes}`;
-    }
-
-    convertToDate(timeStr) {
-        const [time, modifier] = timeStr.split(' ');
-        let [hours, minutes] = time.split(':');
-        hours = parseInt(hours, 10);
-        if (modifier === 'PM' && hours !== 12) {
-            hours += 12;
-        }
-        if (modifier === 'AM' && hours === 12) {
-            hours = 0;
-        }
-        
-        const date = new Date();
-        date.setHours(hours);
-        date.setMinutes(minutes);
-        date.setSeconds(0);
-        date.setMilliseconds(0);
-        
-        return date;
-    }
-
     findInsertionIndex(times: string[], newTime: string) {
-        const newDateTime = this.convertToDate(newTime)
+        const newDateTime = convertToDate(newTime)
 
         for (let i = 0; i < times.length; i++) {
-            if (newDateTime >= this.convertToDate(times[i])) {
+            if (newDateTime >= convertToDate(times[i])) {
                 return i
             }
         }
         return times.length
     }
 
-    logCustomAmount({ amount, time }: Log) {
+    logCustomAmount({ amount, time }: LOG) {
         const { logs } = get(this._today)
-        const formatedLogTimes = logs.map(({ time }: Log) => this.convertTo24HourFormat(time))
+        const formatedLogTimes = logs.map(({ time }: LOG) => convertTo24HourFormat(time))
         const insertIndex = this.findInsertionIndex(formatedLogTimes, time)
 
-        logs.splice(insertIndex, 0, { amount, time: this.formatTime(time) })
+        logs.splice(insertIndex, 0, { amount, time: formatTime(time) })
 
         this._today.update(previous => ({ ...previous, logs }))
 
@@ -182,7 +113,7 @@ export default class TodayStore {
     logAmount(add = true, index: number = undefined) {
         if (add) {
             const { amount } = get(this._today)
-            const log = { amount, time: this.#timeStamp } 
+            const log = { amount, time: getTimeStamp() } 
             this._today.update(previous => ({ ...previous, logs: [log, ...previous.logs] }))
         } else {
             if (index != undefined) {
@@ -207,10 +138,10 @@ export default class TodayStore {
 
     get #derivedTotal() {
         return derived(this._today, () => {
-            const { logs = [] } = get(this._today) as Today
+            const { logs = [] } = get(this._today) as TODAY
             if (!logs.length) return 0
 
-            return logs.reduce((acc: number, curr: Log) => acc + parseInt(curr.amount, 10), 0)
+            return logs.reduce((acc: number, curr: LOG) => acc + curr.amount, 0)
         })
     }
 
@@ -220,10 +151,10 @@ export default class TodayStore {
 
     get waterLevel() {
         return derived(this._today, () => {
-            const { logs = [], goal } = get(this._today) as Today
+            const { logs = [], goal } = get(this._today) as TODAY
             if (!logs.length) return 0
 
-            const total = logs.reduce((acc: number, curr: Log) => acc + Number(curr.amount), 0)
+            const total = logs.reduce((acc: number, curr: LOG) => acc + curr.amount, 0)
             return (total / Number(goal)) * 100
         })
     }
@@ -231,7 +162,7 @@ export default class TodayStore {
 
 const STORE = 'today'
 
-export function initToday(port) {
+export function initToday(port: chrome.runtime.Port) {
     setContext(STORE, new TodayStore(port))
 }
 
