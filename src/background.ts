@@ -1,15 +1,15 @@
+import { getDateKey } from './utils/date'
 import { setState, getState } from './utils/state'
 import Notification from './utils/notifications'
+import { SETTINGS_DEFAULT, TODAY_DEFAULT } from './utils/defaults'
 
-let POPUP_PORT = null
+import type { SETTINGS, TODAY, STORAGE_RESPONSE, TODAY_RESPONSE } from './utils/types.d'
 
-function getDateKey() {
-    return new Intl.DateTimeFormat('sv-SE', {
-        dateStyle: 'short'
-    }).format(new Date())
-}
+const Notifier = new Notification()
+let POPUP_PORT: chrome.runtime.Port | null = null
 
-function mergeObjects(base, other) {
+type MergeableObject = TODAY | SETTINGS
+function mergeObjects(base: MergeableObject, other: Partial<MergeableObject>): MergeableObject {
     for (const key in other) {
         if (base.hasOwnProperty(key) && other[key] !== undefined) {
             base[key] = other[key]
@@ -18,35 +18,11 @@ function mergeObjects(base, other) {
     return base
 }
 
-const Notifier = new Notification()
-
 chrome.runtime.onInstalled.addListener(async () => {
-    await setState({ 
-        key: 'settings', 
-        values: {
-            goal: 1800,
-            amount: 250,
-            interval: 60, // minutes
-            enabled: true,
-            sound: 'bubble1',
-            measurement: 'ml',
-            end_time: '18:00',
-            alert_type: 'both',
-            start_time: '08:00',
-        }
-    })
+    await setState({ key: 'settings',  values: SETTINGS_DEFAULT })
+    await setState({ key: 'today', values: TODAY_DEFAULT })
 
-    await setState({ 
-        key: 'today', 
-        values: {
-            logs: [],
-            goal: 1800,
-            amount: 250,
-            measurement: 'ml'
-        }
-    })
-
-    // Notifier.welcome()
+    Notifier.welcome()
     await Notifier.startTimer()
 })
 
@@ -70,9 +46,10 @@ chrome.runtime.onConnect.addListener(async (port) => {
     POPUP_PORT = port
 
     POPUP_PORT.onMessage.addListener(async ({ type, data = null }) => {
-        let response
+        let response: STORAGE_RESPONSE = null
+
         if (type == 'get:settings') {
-            response = await getState(['settings'])
+            response = await getState('settings')
             if ((!response || !Object.keys(response).length) && data) {
                 await setState({ key: 'settings', values: data })
                 response = { settings: data }
@@ -85,11 +62,11 @@ chrome.runtime.onConnect.addListener(async (port) => {
             const stateData = await getState([dateKey, 'settings'])
             if (stateData?.settings && stateData?.[dateKey]) {
                 const mergedData = mergeObjects(stateData[dateKey], stateData.settings)
-                response = { [dateKey]: mergedData }
+                response = { [dateKey]: mergedData } as TODAY_RESPONSE
             } else {
                 const mergedData = mergeObjects(data, stateData?.settings ?? {})
                 await setState({ key: dateKey, values: mergedData })
-                response = { [dateKey]: mergedData }
+                response = { [dateKey]: mergedData } as TODAY_RESPONSE
             }
         } else if (type == 'set:today') {
             const dateKey = getDateKey()
