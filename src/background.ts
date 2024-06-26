@@ -26,18 +26,15 @@ chrome.runtime.onInstalled.addListener(async () => {
     await Notifier.startTimer()
 })
 
-chrome.storage.onChanged.addListener(async (changes) => {
-    const isSettings = Object.keys(changes)?.at(0) == 'settings'
-    if (!isSettings) return
+chrome.storage.onChanged.addListener(changes => {
+    const settingsChanged = changes.hasOwnProperty('settings')
+    if (!settingsChanged) return
 
     const { oldValue, newValue } = changes.settings
+    const hasSettingChanged = ['enabled', 'alert_type', 'interval', 'start_time', 'end_time']
+        .some(key => oldValue?.[key] !== newValue?.[key])
 
-    const enabledChanged = oldValue?.enabled !== newValue?.enabled
-    const alertChanged = oldValue?.alert_type !== newValue?.alert_type
-
-    if (enabledChanged || alertChanged) {
-        newValue?.enabled && newValue?.alert_type !== 'none' ? Notifier.startTimer() : Notifier.clearTimer()
-    }
+    hasSettingChanged && Notifier.startTimer()
 })
 
 chrome.runtime.onConnect.addListener(async (port) => {
