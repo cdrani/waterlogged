@@ -1,15 +1,17 @@
 <script lang="ts">
+    import { playAlarm } from '../utils/alarm'
     import { getSettings } from '../stores/settings'
     import Toggle from '../components/Toggle.svelte'
 
-    import { playAlarm } from '../utils/alarm'
+    import type SettingsStore from '../stores/settings'
 
-    const store = getSettings()
+    const store = getSettings() as SettingsStore
     $: settings = store.settings
 
     function handleInput(e: Event) {
-        let { name: key , value } = e.target
-        value = key == 'interval' ? Number(value) : value
+        const target = e.target as HTMLSelectElement | HTMLSelectElement
+        const { name: key , value: rawValue } = target
+        const value = key == 'interval' ? Number(rawValue) : rawValue
         store.updateSetting({ key, value })
     }
 
