@@ -10,7 +10,7 @@ export default defineConfig({
     build: {
         rollupOptions: {
             input: {
-                offscreen: './offscreen.html'
+                offscreen: 'src/offscreen.html'
             }
         }
     }
