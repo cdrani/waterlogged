@@ -2,8 +2,9 @@
     import { getToday } from '../stores/today'
     import { openModal } from '../stores/modal'
     import CurrentTime from './CurrentTime.svelte'
+    import type TodayStore from '../stores/today'
 
-    const store = getToday()
+    const store = getToday() as TodayStore
 
     function showAddModal() {
         openModal('add')
@@ -14,7 +15,7 @@
     $: waterLevel = store.waterLevel
 </script>
 
-<section class="relative -z-100 bg-cyan-500 flex flex-col p-4 w-full h-[120px]">
+<section class="overflow-hidden rounded-md relative -z-100 bg-cyan-500 flex flex-col p-4 w-full h-[120px]">
     <div class="flex relative z-10 w-full justify-between">
         <CurrentTime />
         <div class="flex flex-col min-w-[100px] max-w-3/5 items-end">

@@ -1,13 +1,14 @@
 <script lang="ts">
     import { getToday } from '../stores/today'
+    import type TodayStore from '../stores/today'
     import CurrentTime from './CurrentTime.svelte'
 
-    const store = getToday()
+    const store = getToday() as TodayStore
 
     function handleRemove(e: MouseEvent) {
-        const button = e.currentTarget 
+        const button = e.target as HTMLButtonElement
         const index = button.getAttribute('data-index') 
-        store.logAmount(false, index)
+        store.logAmount(false, Number(index))
     }
 
     $: today = store.today
@@ -29,7 +30,7 @@
         {:else}
             <ul class="relative flex flex-col gap-2 w-full mx-auto">
                 {#each $today?.logs as item, i (i)}
-                    <li class="flex gap-x-2 h-12 bg-cyan-500 items-center p-2">
+                    <li class="rounded-md flex gap-x-2 h-12 bg-cyan-500 items-center p-2">
                         <div class="flex w-full justify-between items-center">
                             <p class="font-bold text-lg">{item.time}</p>
                             <p class="font-bold text-lg">{item.amount}{$today.measurement}</p>
