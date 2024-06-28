@@ -136,26 +136,21 @@ export default class TodayStore {
         return this._party
     }
 
-    get #derivedTotal() {
-        return derived(this._today, () => {
-            const { logs = [] } = get(this._today) as TODAY
-            if (!logs.length) return 0
+    #calculateTotal(logs: LOG[]) {
+        if (!logs.length) return 0
 
-            return logs.reduce((acc: number, curr: LOG) => acc + curr.amount, 0)
-        })
+        return logs.reduce((acc, curr) => acc + Number(curr.amount), 0)
     }
 
     get total() {
-        return this.#derivedTotal
+        return derived(this._today, () => this.#calculateTotal(get(this._today).logs))
     }
 
     get waterLevel() {
         return derived(this._today, () => {
-            const { logs = [], goal } = get(this._today) as TODAY
-            if (!logs.length) return 0
-
-            const total = logs.reduce((acc: number, curr: LOG) => acc + curr.amount, 0)
-            return (total / Number(goal)) * 100
+            const { goal, logs } = get(this._today)
+            const total = this.#calculateTotal(logs)
+            return total == 0 ? 0 : (total / Number(goal)) * 100
         })
     }
 }
