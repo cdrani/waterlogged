@@ -11,7 +11,7 @@
     function handleInput(e: Event) {
         const target = e.target as HTMLSelectElement | HTMLSelectElement
         const { name: key , value: rawValue } = target
-        const value = key == 'interval' ? Number(rawValue) : rawValue
+        const value = ['goal', 'interval', 'amount'].includes(key) ? Number(rawValue) : rawValue
         store.updateSetting({ key, value })
     }
 
