@@ -1,22 +1,20 @@
 <script lang="ts">
     import { getToday } from '../stores/today'
-    import { openModal, closeModal, getModal } from '../stores/modal'
-
+    import type TodayStore from '../stores/today'
+    import { closeModal, getModal } from '../stores/modal'
     import { clickOutside } from '../utils/click-outside'
 
     import CustomLogForm from './modal-views/CustomLogForm.svelte'
     import Congratulation from './modal-views/Congratulation.svelte'
 
     const modal = getModal()
-    const todayStore = getToday()
+    const todayStore = getToday() as TodayStore
 
     $: visible = $modal.visible
 
     function handleClose() {
         const view = $modal.view
-        if (view == 'complete') {
-            todayStore.partied = true
-        }
+        if (view == 'complete') (todayStore.partied = true)
         closeModal()
     }
 </script>

@@ -1,8 +1,9 @@
 <script lang="ts">
     import { getToday } from '../../stores/today'
     import { closeModal } from '../../stores/modal'
+    import type TodayStore from '../../stores/today'
 
-    const store = getToday()
+    const store = getToday() as TodayStore
 
     $: today = store.today
     $: total = store.total
