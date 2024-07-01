@@ -8,7 +8,9 @@
     import SettingsView from './views/Settings.svelte'
     import Celebrate from './components/Celebrate.svelte'
 
+    import type TodayStore from './stores/today'
     import { initToday, getToday } from './stores/today'
+    import type SettingsStore from './stores/settings'
     import { initSettings, getSettings } from './stores/settings'
     import { initModal, getModal, openModal } from './stores/modal'
 
@@ -18,11 +20,11 @@
     initToday(PORT)
 
     const modal = getModal()
-    const todayStore = getToday()
+    const todayStore = getToday() as TodayStore
     initSettings({ port: PORT, observer: todayStore })
 
 
-    const settingsStore = getSettings()
+    const settingsStore = getSettings() as SettingsStore
 
     type PageView = 'default' | 'settings'
     let pageView = writable<PageView>('default')
