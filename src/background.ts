@@ -21,10 +21,17 @@ function keepAlive() {
     }, 25_000)
 }
 
+function setBadgeInfo(enabled = true) {
+    chrome.action.setBadgeText({ text: enabled ? 'on' : 'off' })
+    chrome.action.setBadgeTextColor({ color: 'white' })
+    chrome.action.setBadgeBackgroundColor({ color: enabled ? '#22d3ee' : 'gray' })
+}
+
 chrome.runtime.onInstalled.addListener(async () => {
     await setState({ key: 'settings',  values: SETTINGS_DEFAULT })
     await setState({ key: 'today', values: TODAY_DEFAULT })
 
+    setBadgeInfo(true)
     Notifier.welcome()
     await Notifier.startTimer()
     keepAlive()
@@ -46,6 +53,10 @@ chrome.storage.onChanged.addListener(async changes => {
     const { oldValue, newValue } = changes.settings
     const hasSettingChanged = ['enabled', 'alert_type', 'interval', 'start_time', 'end_time']
         .some(key => oldValue?.[key] !== newValue?.[key])
+
+    if (oldValue.enabled !== newValue.enabled) {
+        setBadgeInfo(newValue.enabled)
+    }
 
     hasSettingChanged && await Notifier.startTimer()
 })
