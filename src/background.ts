@@ -1,21 +1,24 @@
 import { getDateKey } from './utils/date'
-import { setState, getState } from './utils/state'
+import { sendMessage } from './utils/messages'
 import Notification from './utils/notifications'
+import { setState, getState } from './utils/state'
+import { mergeObjects } from './utils/merge-objects'
+import { ensureOffscreenDocument } from './utils/offscreen'
 import { SETTINGS_DEFAULT, TODAY_DEFAULT } from './utils/defaults'
+import type { STORAGE_RESPONSE, TODAY_RESPONSE } from './utils/types.d'
 
-import type { SETTINGS, TODAY, STORAGE_RESPONSE, TODAY_RESPONSE } from './utils/types.d'
-
+let keepAliveTimer: Timer
 const Notifier = new Notification()
 let POPUP_PORT: chrome.runtime.Port | null = null
 
-type MergeableObject = TODAY | SETTINGS
-function mergeObjects(base: MergeableObject, other: Partial<MergeableObject>): MergeableObject {
-    for (const key in other) {
-        if (base.hasOwnProperty(key) && other[key] !== undefined) {
-            base[key] = other[key]
-        }
-    }
-    return base
+function keepAlive() {
+    if (keepAliveTimer) return
+
+    keepAliveTimer = setInterval(async () => {
+        const message = { data: null, type: 'keepalive', target: 'offscreen' }
+        await ensureOffscreenDocument()
+        await sendMessage(message)
+    }, 25_000)
 }
 
 chrome.runtime.onInstalled.addListener(async () => {
@@ -24,9 +27,19 @@ chrome.runtime.onInstalled.addListener(async () => {
 
     Notifier.welcome()
     await Notifier.startTimer()
+    keepAlive()
 })
 
-chrome.storage.onChanged.addListener(changes => {
+chrome.runtime.onStartup.addListener(keepAlive)
+chrome.tabs.onActivated.addListener(keepAlive)
+chrome.tabs.onUpdated.addListener(keepAlive)
+
+chrome.runtime.onMessage.addListener((_message, _sender, sendResponse) => {
+    sendResponse({ status: true })
+    return true
+})
+
+chrome.storage.onChanged.addListener(async changes => {
     const settingsChanged = changes.hasOwnProperty('settings')
     if (!settingsChanged) return
 
@@ -34,7 +47,7 @@ chrome.storage.onChanged.addListener(changes => {
     const hasSettingChanged = ['enabled', 'alert_type', 'interval', 'start_time', 'end_time']
         .some(key => oldValue?.[key] !== newValue?.[key])
 
-    hasSettingChanged && Notifier.startTimer()
+    hasSettingChanged && await Notifier.startTimer()
 })
 
 chrome.runtime.onConnect.addListener(async (port) => {
@@ -70,7 +83,7 @@ chrome.runtime.onConnect.addListener(async (port) => {
             await setState({ key: dateKey, values: data })
         }
 
-        response && port.postMessage({ type: `${type}:response`, response })
+        response && POPUP_PORT?.postMessage({ type: `${type}:response`, response })
     })
 
     POPUP_PORT.onDisconnect.addListener(() => (POPUP_PORT = null))
