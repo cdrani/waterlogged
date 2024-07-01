@@ -1,6 +1,8 @@
-const OFFSCREEN_FILE_PATH = 'src/offscreen.html'
+import { sendMessage } from './messages'
 
 let creating: Promise<void> | void | null
+
+const OFFSCREEN_FILE_PATH = 'src/offscreen.html'
 
 export async function ensureOffscreenDocument() {
     const filePath = chrome.runtime.getURL(OFFSCREEN_FILE_PATH)
@@ -14,22 +16,18 @@ export async function ensureOffscreenDocument() {
     if (creating) {
         await creating 
     } else {
-        creating = await chrome.offscreen.createDocument({
+        creating = chrome.offscreen.createDocument({
             url: OFFSCREEN_FILE_PATH,
             reasons: [chrome.offscreen.Reason.AUDIO_PLAYBACK],
             justification: 'Play alarm sound to notify water break.'
         })
 
+        await creating
         creating = null
     }
 }
 
 export async function sendOffscreenMessage(sound: string) {
-    return new Promise((resolve, reject) => {
-        const message = { data: sound, type: 'alarm', target: 'offscreen'} 
-        chrome.runtime.sendMessage(message, response => {
-            if (chrome.runtime.lastError) return reject({ error: chrome.runtime.lastError })
-            return resolve(response)
-        })
-    })
+    const message = { data: sound, type: 'alarm', target: 'offscreen' }
+    return await sendMessage(message)
 }
