@@ -32,4 +32,4 @@
     $: showTime = format == 'time' ? getShortTime() : getShortDate()
 </script>
 
-<h1 class="text-gray-900 font-bold text-xl {classList}">{showTime}</h1>
+<h1 class="font-bold text-xl {classList}">{showTime}</h1>
