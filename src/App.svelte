@@ -50,7 +50,7 @@
     }
 </script>
 
-<main class="relative -z-100 bg-cyan-500 flex flex-col bg-transparent p-4 pt-0 w-[280px] h-[360px]">
+<main class="relative -z-100 bg-cyan-200 flex flex-col p-4 pt-0 w-[280px] h-full max-h-[360px]">
     <Nav view={$pageView} on:view={setView} />
     <Modal />
 
