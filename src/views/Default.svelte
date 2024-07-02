@@ -3,7 +3,5 @@
     import LogList from "../components/LogList.svelte"
 </script>
 
-<div>
     <Aquarium />
     <LogList />
-</div>
