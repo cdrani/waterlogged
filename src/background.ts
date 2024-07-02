@@ -69,6 +69,7 @@ chrome.runtime.onConnect.addListener(async (port) => {
     POPUP_PORT.onMessage.addListener(async ({ type, data = null }) => {
         let response: STORAGE_RESPONSE = null
 
+        const dateKey = getDateKey()
         if (type == 'get:settings') {
             response = await getState('settings')
             if ((!response || !Object.keys(response).length) && data) {
@@ -76,10 +77,18 @@ chrome.runtime.onConnect.addListener(async (port) => {
                 response = { settings: data }
             }
         } else if (type == 'set:settings') {
+            const todayState = await getState([dateKey, 'today'])
             await setState({ key: 'settings', values: data })
+            const syncedTodayWithSettings = mergeObjects(todayState.today, data)
+            await setState({ key: 'today', values: syncedTodayWithSettings })
+
+            if (todayState[dateKey]) {
+                const syncedDateKeyWithSettings = mergeObjects(todayState.today, data)
+                await setState({ key: dateKey, values: syncedDateKeyWithSettings })
+            }
+
             response = { settings: data }
         } else if (type == 'get:today') {
-            const dateKey = getDateKey()
             const stateData = await getState([dateKey, 'settings'])
             if (stateData?.settings && stateData?.[dateKey]) {
                 const mergedData = mergeObjects(stateData[dateKey], stateData.settings)
@@ -90,7 +99,6 @@ chrome.runtime.onConnect.addListener(async (port) => {
                 response = { [dateKey]: mergedData } as TODAY_RESPONSE
             }
         } else if (type == 'set:today') {
-            const dateKey = getDateKey()
             await setState({ key: dateKey, values: data })
         }
 
