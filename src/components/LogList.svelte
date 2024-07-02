@@ -14,8 +14,8 @@
     $: today = store.today
 </script>
 
-<section class="flex absolute left-0 flex-col mt-2 mx-auto w-[280px] h-[220px]">
-    <div class="flex justify-between items-center sticky top-0 mx-auto w-full px-4 font-semibold mb-1.5">
+<section class="flex absolute left-0 flex-col mt-2 bg-cyan-200 mx-auto w-[280px] h-[220px]">
+    <div class="flex justify-between items-center sticky mx-auto w-full px-4 font-semibold pb-1.5">
         <CurrentTime format="date" />
         <h2 class="text-[18px]">({$today.logs.length})</h2>
     </div>
@@ -37,13 +37,9 @@
                         </div>
                         <button data-index={i} class="w-6 h-6 justify-end" on:click={handleRemove}>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <g fill="none" stroke="black" stroke-dasharray="22" stroke-dashoffset="22" stroke-linecap="round" stroke-width="3px">
-                                    <path d="M19 5L5 19">
-                                        <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.3s" dur="0.3s" values="22;0" />
-                                    </path>
-                                    <path d="M5 5L19 19">
-                                        <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="22;0" />
-                                    </path>
+                                <g fill="none" stroke="black" stroke-dasharray="22" stroke-dashoffset="0" stroke-linecap="round" stroke-width="3px">
+                                    <path d="M19 5L5 19" />
+                                    <path d="M5 5L19 19" />
                                 </g>
                             </svg>
                         </button>
