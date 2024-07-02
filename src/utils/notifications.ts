@@ -92,9 +92,17 @@ export default class Notification {
     }
 
     async #getToday() {
+        let data: TODAY
         const key = getDateKey()
-        const response = await getState(key) as DAILY_RESPONSE
-        const data = response[key]
+        let response = await getState([key, 'today']) as DAILY_RESPONSE
+        if (response[key]) {
+            data = response[key]
+        } else {
+            const { amount, goal } = response.today
+            data = { logs: [], amount, goal, measurement: 'ml' }
+            await setState({ key, values: data })
+        }
+        
         this._today = data
         return data
     }
