@@ -1,7 +1,10 @@
 <script lang="ts">
-    import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
-    injectSpeedInsights()
+	import { inject } from '@vercel/analytics'
+	import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
 	import '../app.css'
+
+	inject()
+	injectSpeedInsights()
 </script>
 
 <slot></slot>
