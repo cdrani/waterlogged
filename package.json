@@ -1,6 +1,12 @@
 {
     "name": "waterlog",
     "private": true,
+    "scripts": {
+        "site-dev": "bun run --filter './packages/site' dev",
+        "site-build": "bun run --filter './packages/site' build",
+        "ext-dev": "bun run --filter './packages/extension' dev",
+        "ext-build": "bun run --filter './packages/extension' build"
+    },
     "workspaces": [
         "packages/*"
     ]
