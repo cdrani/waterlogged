@@ -54,7 +54,7 @@ chrome.storage.onChanged.addListener(async changes => {
     const hasSettingChanged = ['enabled', 'alert_type', 'interval', 'start_time', 'end_time']
         .some(key => oldValue?.[key] !== newValue?.[key])
 
-    if (oldValue.enabled !== newValue.enabled) {
+    if (oldValue?.enabled !== newValue?.enabled) {
         setBadgeInfo(newValue.enabled)
     }
 
