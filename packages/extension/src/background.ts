@@ -27,12 +27,17 @@ function setBadgeInfo(enabled = true) {
     chrome.action.setBadgeBackgroundColor({ color: enabled ? '#22d3ee' : 'gray' })
 }
 
-chrome.runtime.onInstalled.addListener(async () => {
-    await setState({ key: 'settings',  values: SETTINGS_DEFAULT })
-    await setState({ key: 'today', values: TODAY_DEFAULT })
+chrome.runtime.onInstalled.addListener(async (details) => {
+    if (details.reason == 'install') {
+        await setState({ key: 'settings',  values: SETTINGS_DEFAULT })
+        await setState({ key: 'today', values: TODAY_DEFAULT })
+        setBadgeInfo(true)
+        Notifier.welcome()
+    } else {
+        const settings = await getState('settings')
+        setBadgeInfo(settings?.enabled || true)
+    }
 
-    setBadgeInfo(true)
-    Notifier.welcome()
     await Notifier.startTimer()
     keepAlive()
 })
