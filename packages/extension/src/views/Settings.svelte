@@ -71,7 +71,7 @@
             </div>
 
             <label class="flex justify-between items-center w-full gap-x-6 bg-cyan-500 p-4 rounded-md">
-                <span class="text-[14px] w-1/2">Timer (mins)</span>
+                <span class="text-[14px] w-1/2">Interval (mins)</span>
                 <input name="interval" type="number" value={$settings.interval} class="w-1/2 {inputClass}"
                         on:change={handleInput}
                 />
