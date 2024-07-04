@@ -5,7 +5,7 @@ import { setState, getState } from './utils/state'
 import { mergeObjects } from './utils/merge-objects'
 import { ensureOffscreenDocument } from './utils/offscreen'
 import { SETTINGS_DEFAULT, TODAY_DEFAULT } from './utils/defaults'
-import type { STORAGE_RESPONSE, TODAY_RESPONSE } from './utils/types.d'
+import type { STORAGE_RESPONSE, TODAY, TODAY_RESPONSE } from './utils/types.d'
 
 let keepAliveTimer: Timer
 const Notifier = new Notification()
@@ -89,7 +89,8 @@ chrome.runtime.onConnect.addListener(async (port) => {
 
             if (todayState[dateKey]) {
                 const syncedDateKeyWithSettings = mergeObjects(todayState.today, data)
-                await setState({ key: dateKey, values: syncedDateKeyWithSettings })
+                const logs = todayState[dateKey].logs
+                await setState({ key: dateKey, values: { ...syncedDateKeyWithSettings, logs } as TODAY })
             }
 
             response = { settings: data }
