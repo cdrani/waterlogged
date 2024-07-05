@@ -10,6 +10,9 @@
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
+  "dependencies": {
+     "common": "workspace:*"
+  },
   "devDependencies": {
     "@crxjs/vite-plugin": "2.0.0-beta.23",
     "@sveltejs/vite-plugin-svelte": "^1.1.0",

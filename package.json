@@ -2,6 +2,7 @@
     "name": "waterlog",
     "private": true,
     "scripts": {
+        "dev": "bun run --filter '*' dev",
         "site-dev": "bun run --filter './packages/site' dev",
         "site-build": "bun run --filter './packages/site' build",
         "ext-dev": "bun run --filter './packages/extension' dev",
