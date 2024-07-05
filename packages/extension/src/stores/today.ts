@@ -1,11 +1,17 @@
+import type { Writable } from 'svelte/store'
 import { getContext, setContext } from 'svelte'
 import { writable, get, derived } from 'svelte/store'
-import type { Writable } from 'svelte/store'
 
 import type { LOG, TODAY } from '../utils/types'
 import { TODAY_DEFAULT } from '../utils/defaults'
 
-import { getDateKey, getTimeStamp, convertToDate, convertTo24HourFormat, formatTime } from '../utils/date'
+import {
+    formatTime,
+    getDateKey,
+    getTimeStamp,
+    convertToDate,
+    convertTo24HourFormat,
+} from 'common/utils/date'
 
 export default class TodayStore {
     _PORT: chrome.runtime.Port

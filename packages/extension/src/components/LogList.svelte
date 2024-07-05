@@ -1,7 +1,7 @@
 <script lang="ts">
     import { getToday } from '../stores/today'
     import type TodayStore from '../stores/today'
-    import CurrentTime from './CurrentTime.svelte'
+    import CurrentTime from 'common/components/CurrentTime.svelte'
 
     const store = getToday() as TodayStore
 
