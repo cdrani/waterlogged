@@ -1,4 +1,4 @@
-import { getDateKey } from './utils/date'
+import { getDateKey } from 'common/utils/date'
 import { sendMessage } from './utils/messages'
 import Notification from './utils/notifications'
 import { setState, getState } from './utils/state'
