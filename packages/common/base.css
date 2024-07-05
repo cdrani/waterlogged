@@ -10,7 +10,7 @@
         opacity: 1;
         bottom: 0;
         width: 3840px; 
-        /* height: var(--wave-height); */
+        height: var(--wave-height);
         max-height: 100%;
         transform: translate3d(0, 0, 0);
         animation: wave 10s linear infinite;
