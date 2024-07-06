@@ -11,7 +11,7 @@
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "dependencies": {
-     "common": "workspace:*"
+    "common": "workspace:*"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "2.0.0-beta.23",
@@ -20,6 +20,7 @@
     "@types/chrome": "^0.0.268",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
+    "postcss-import": "^16.1.0",
     "svelte": "^3.52.0",
     "svelte-check": "^2.9.2",
     "svelte-confetti": "^2.0.1",

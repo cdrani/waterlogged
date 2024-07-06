@@ -27,9 +27,9 @@
     const inputClass = "px-0.5 pl-2 h-7 text-[14px] rounded-[4px]"
 </script>
 
-<section class="flex absolute left-0 flex-col mx-auto w-full h-[348px] max-h-[358] bg-cyan-200">
+<section class="flex relative left-0 flex-col mx-auto w-full h-[340px] max-h-[358] bg-cyan-200">
     <div class="relative flex flex-col w-full mx-auto overflow-y-auto h-full">
-        <form class="relative flex flex-col gap-4 p-4 pt-0 w-full mx-auto">
+        <form class="relative flex flex-col gap-3 p-4 pt-0 w-full mx-auto">
             <div class="flex justify-between items-center bg-cyan-500 py-2 px-4 rounded-md">
                 <span class="text-[14px]">Enabled</span>
                 <Toggle name="enabled" on:toggle={handleToggle} enabled={$settings.enabled} />

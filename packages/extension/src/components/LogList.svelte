@@ -14,13 +14,13 @@
     $: today = store.today
 </script>
 
-<section class="flex absolute left-0 flex-col mt-2 bg-cyan-200 mx-auto w-[280px] h-[220px]">
-    <div class="flex justify-between items-center sticky mx-auto w-full px-4 font-semibold pb-1.5">
+<section class="flex relative left-0 flex-col pt-3 w-full mx-auto h-[220px] bg-cyan-200">
+    <div class="flex justify-between items-center sticky px-4 w-full pb-0 font-semibold">
         <CurrentTime format="date" />
         <h2 class="text-[18px]">({$today.logs.length})</h2>
     </div>
 
-    <div class="relative left-0 flex flex-col p-4 pt-0 overflow-y-auto w-full mx-auto">
+    <div class="relative left-0 flex flex-col pt-2 overflow-y-auto px-4 w-[280px] h-full mx-auto">
         {#if !$today?.logs?.length}
             <div class="flex flex-col w-full items-center justify-center h-[180px]">
                 <h4 class="text-xl text-center">
@@ -28,7 +28,7 @@
                 </h4>
             </div>
         {:else}
-            <ul class="relative flex flex-col gap-2 w-full mx-auto">
+            <ul class="relative flex flex-col gap-2 pb-4 w-[248px]">
                 {#each $today?.logs as item, i (i)}
                     <li class="rounded-md flex gap-x-2 h-12 bg-cyan-500 items-center p-2">
                         <div class="flex w-full justify-between items-center">
