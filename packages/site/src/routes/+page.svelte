@@ -1,9 +1,16 @@
 <script lang="ts">
+    import Tank from 'common/components/Tank.svelte'
 
+    let tank = {
+        total: 1500,
+        waterLevel: 75,
+        goal: 2000,
+        measurement: 'ml'
+    }
 </script>
 
-<main class="flex flex-col w-full h-full xl:max-w-screen-2xl mx-auto p-5 md:p-8 xl:p-16 my-10">
-    <section class="flex flex-col xl:flex-row-reverse w-full gap-8 h-full xl:h-[32rem]">
+<main class="flex flex-col w-full h-full lg:max-w-screen-xl mx-auto p-5 md:p-8 xl:p-16 my-10">
+    <section class="flex flex-col xl:flex-row-reverse w-full gap-8 h-full">
         <div class="flex flex-col justify-evenly gap-6 w-full h-full xl:w-1/2">
             <article class="flex justify-center items-center flex-col gap-3 lg:gap-8 w-full">
                 <h1 class="text-left text-wrap h-fit leading-none text-blue-800 font-bold text-5xl md:text-[6rem] xl:text-[6rem]">
@@ -21,9 +28,9 @@
             </div>
         </div>
 
-        <div class="flex w-full h-[20rem] lg:h-[28rem] xl:h-[32rem] xl:w-1/2 border-4 border-white">
-            <div class="bg-purple-500 w-1/2 h-full"></div>
-            <div class="bg-green-300 w-1/2 h-full"></div>
+        <div class="grid grid-cols-2 gap-4 p-4 w-full xl:w-1/2 border-4 border-white">
+                <Tank tank={tank} />
+                <Tank tank={tank} />
         </div>
     </section>
 
@@ -46,7 +53,7 @@
 
         <div class="flex flex-col md:flex-row justify-between items-center w-full h-[28rem] md:h-[20rem] xl:h-[32rem] gap-4 md:gap-10 xl:gap-16">
             <div class="w-full md:w-1/2 h-full bg-red-600">
-
+                <Tank tank={tank} />
             </div>
 
             <div class="w-full md:w-1/2">

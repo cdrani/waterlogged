@@ -50,14 +50,14 @@
     }
 </script>
 
-<main class="relative -z-100 bg-cyan-200 flex flex-col p-4 pt-0 w-[280px] h-full max-h-[360px]">
+<main class="relative -z-100 bg-cyan-200 flex flex-col pt-0 w-[280px] mx-auto h-full">
     <Nav view={$pageView} on:view={setView} />
     <Modal />
 
     <Celebrate party={$party} />
 
     <div 
-        class="{$modal.visible ? 'shadow-black blur-md opacity-75' : ''}"
+        class="{$modal.visible ? 'shadow-black blur-md opacity-75' : 'flex w-full h-full'}"
     >
         {#if $pageView == 'default'}
             <DefaultView />

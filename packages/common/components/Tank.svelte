@@ -37,7 +37,7 @@
         </div>
     </div>
 
-    <div class="flex z-0 absolute left-0 bottom-0 w-full h-[120px] overflow-hidden">
+    <div class="absolute -z-10 left-0 bottom-0 w-full h-[120px] overflow-hidden">
         <div class="wave" style="--wave-height: {Math.max(0, tank.waterLevel)}%" />
     </div>
 </section>

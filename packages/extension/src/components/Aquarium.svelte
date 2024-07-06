@@ -13,7 +13,7 @@
 
     let tank  = {
         total: 0,
-        waterLevel: 0,
+        waterLevel: 50,
         measurement: 'ml',
         goal: 0
     }
@@ -33,8 +33,10 @@
     })
 </script>
 
-<Tank 
-    tank={tank}
-    handleModal={showAddModal}
-    handleLog={() => store.logAmount(true) }
-/>
+<div class="flex mx-auto w-full h-[120px] px-4 overflow-hidden">
+    <Tank 
+        tank={tank}
+        handleModal={showAddModal}
+        handleLog={() => store.logAmount(true) }
+    />
+</div>

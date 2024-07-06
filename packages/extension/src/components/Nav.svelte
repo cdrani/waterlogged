@@ -17,7 +17,7 @@
     $: isDefault = view == 'default'
 </script>
 
-<nav class="flex justify-end">
+<nav class="flex justify-end px-4">
     <ul class="flex justify-between gap-x-1 p-1 pr-0">
         <li class="w-5 h-5">
             <button name="default" on:click={updateView} class="w-5 h-5">

@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.wave {
+    background: url('data:image/svg+xml,<svg width="1920px" height="150px" viewBox="0 0 1920 150" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>2/1@svg</title><g id="2/1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><path d="M0,0 C240,0 240,5 480,5 C720,5 720,0 960,0 C1200,0 1200,5 1440,5 C1680,5 1680,0 1920,0 L1920,150 L0,150 L0,0 Z" id="Rectangle" fill="%23ADD8E6" fill-rule="evenodd"></path></g></svg>') repeat-x;
+    position: absolute;
+    opacity: 1;
+    bottom: 0;
+    width: 3840px; 
+    height: var(--wave-height);
+    max-height: 100%;
+    transform: translate3d(0, 0, 0);
+    animation: wave 10s linear infinite;
+}
+
+@keyframes wave {
+    0% {
+        margin-left: 0;
+    }
+    100% {
+        margin-left: -1920px;
+    }
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+    display: none;
+}
