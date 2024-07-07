@@ -33,7 +33,7 @@
     })
 </script>
 
-<div class="flex mx-auto w-full h-[120px] px-4 overflow-hidden">
+<div class="flex w-full max-w-[248px] h-[120px] mx-4 overflow-hidden rounded-md">
     <Tank 
         tank={tank}
         handleModal={showAddModal}
