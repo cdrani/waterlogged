@@ -9,8 +9,8 @@
     }
 </script>
 
-<main class="flex flex-col w-full h-full lg:max-w-screen-xl mx-auto p-5 md:p-8 xl:p-16 my-10">
-    <section class="flex flex-col xl:flex-row-reverse w-full gap-8 h-full">
+<main class="flex flex-col relative w-full h-full lg:max-w-screen-xl mx-auto p-5 md:p-8 xl:p-16 my-10">
+    <section class="flex relative flex-col xl:flex-row-reverse items-center w-full gap-8 h-full">
         <div class="flex flex-col justify-evenly gap-6 w-full h-full xl:w-1/2">
             <article class="flex justify-center items-center flex-col gap-3 lg:gap-8 w-full">
                 <h1 class="text-left text-wrap h-fit leading-none text-blue-800 font-bold text-5xl md:text-[6rem] xl:text-[6rem]">
@@ -22,15 +22,14 @@
             </article>
 
             <div class="flex justify-center xl:justify-between gap-4 xl:gap-6 w-full h-10 md:h-12">
-                <button class="rounded-3xl w-32 lg:w-48 xl:w-72 bg-orange-400 text-[1rem] xl:text-2xl text-white font-semibold">Chrome</button>
-                <button class="rounded-3xl w-32 lg:w-48 xl:w-72 bg-yellow-400 text-[1rem] xl:text-2xl text-white font-semibold">FireFox</button>
-                <button class="rounded-3xl w-32 lg:w-48 xl:w-72 bg-blue-400 text-[1rem] xl:text-2xl text-white font-semibold">Desktop</button>
+                <button class="rounded-3xl w-32 lg:w-48 bg-orange-400 text-[1rem] xl:text-2xl text-white font-semibold">Chrome</button>
+                <button class="rounded-3xl w-32 lg:w-48 bg-yellow-400 text-[1rem] xl:text-2xl text-white font-semibold">FireFox</button>
+                <button class="rounded-3xl w-32 lg:w-48 bg-blue-400 text-[1rem] xl:text-2xl text-white font-semibold">Desktop</button>
             </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-4 p-4 w-full xl:w-1/2 border-4 border-white">
-                <Tank tank={tank} />
-                <Tank tank={tank} />
+        <div class="grid grid-cols-2 p-4 border-4 border-white w-full h-[28rem]">
+            <Tank tank={tank} />
         </div>
     </section>
 
