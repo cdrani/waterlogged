@@ -1,7 +1,9 @@
 <script lang="ts">
     import CurrentTime from './CurrentTime.svelte'
 
-    export let tank
+    type Tank = { measurement: string, goal: number, total: number, waterLevel: number }
+
+    export let tank: Tank
     export let handleLog: () => void
     export let handleModal: () => void
 </script>
@@ -29,7 +31,7 @@
                 </svg>
             </button>
 
-            <button on:click={handleLog} class="w-6 h-6">
+            <button on:click={handleModal} class="w-6 h-6">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="#155e75" viewBox="0 0 24 24" width="24" height="24"> 
                     <path d="m5.8 21l1.6-7L2 9.2l7.2-.6L12 2l2.8 6.6l7.2.6l-3.2 2.8H18c-3.1 0-5.6 2.3-6 5.3zM17 14v3h-3v2h3v3h2v-3h3v-2h-3v-3z" />
                 </svg>
