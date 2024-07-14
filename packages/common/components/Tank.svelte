@@ -4,8 +4,8 @@
     type Tank = { measurement: string, goal: number, total: number, waterLevel: number }
 
     export let tank: Tank
-    export let handleLog: () => void
-    export let handleModal: () => void
+    export let handleLog: () => void = () => {}
+    export let handleModal: () => void = () => {}
 </script>
 
 <section class="overflow-hidden rounded-md relative -z-100 bg-cyan-500 flex flex-col p-4 w-full h-[120px]">
