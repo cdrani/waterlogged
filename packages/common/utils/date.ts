@@ -18,6 +18,13 @@ export function getTimeStamp(date?: Date) {
     return new Intl.DateTimeFormat(locales, { timeStyle: 'short' }).format(date ?? new Date())
 }
 
+export function getMediumDate(date?: Date) {
+    const locales = navigator.languages as string[]
+    return new Intl.DateTimeFormat(locales, {
+        dateStyle: 'medium',
+    }).format(date ?? new Date())
+}
+
 export function formatTime(timeString: string): string {
     const [hours, minutes] = timeString.split(':').map(Number)
     const now = new Date()
