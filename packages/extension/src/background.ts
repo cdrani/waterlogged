@@ -7,8 +7,8 @@ import { ensureOffscreenDocument } from './utils/offscreen'
 import { SETTINGS_DEFAULT, TODAY_DEFAULT } from './utils/defaults'
 import type { STORAGE_RESPONSE, TODAY, TODAY_RESPONSE } from './utils/types.d'
 
-let keepAliveTimer: Timer
 const Notifier = new Notification()
+let keepAliveTimer: Timer | null = null
 let POPUP_PORT: chrome.runtime.Port | null = null
 
 function keepAlive() {
@@ -20,6 +20,8 @@ function keepAlive() {
         await sendMessage(message)
     }, 25_000)
 }
+
+keepAlive()
 
 function setBadgeInfo(enabled = true) {
     chrome.action.setBadgeText({ text: enabled ? 'on' : 'off' })
