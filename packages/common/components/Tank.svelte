@@ -8,15 +8,15 @@
     export let handleModal: () => void = () => {}
 </script>
 
-<section class="overflow-hidden rounded-md relative -z-100 bg-cyan-500 flex flex-col p-4 w-full h-[120px]">
+<section class="overflow-hidden rounded-md absolute -z-100 bg-cyan-500 flex flex-col p-4 w-[248px] h-[120px]">
     <div class="flex relative z-50 w-full h-full justify-between">
         <CurrentTime />
         <div class="flex flex-col min-w-[100px] max-w-3/5 items-end">
-            <p class="flex justify-between font-semibold text-[14px] text-black w-full">
+            <p class="flex gap-x-2 justify-between font-semibold text-[14px] text-black w-full">
                 <span class="inline-flex text-left">Total:</span>
                 <span class="inline-flex justify-end">{tank.total}{tank.measurement}</span>
             </p>
-            <p class="flex justify-between font-semibold text-[14px] text-black w-full">
+            <p class="flex gap-x-2 justify-between font-semibold text-[14px] text-black w-full">
                 <span class="inline-flex text-left">Goal:</span>
                 <span class="inline-flex justify-end">{tank.goal}{tank.measurement}</span>
             </p>
@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <div class="absolute -z-10 left-0 bottom-0 w-full h-[120px]">
-        <div class="wave" style="--wave-height: {Math.max(0, tank.waterLevel)}%" />
+    <div class="absolute -z-10 w-full h-[120px]" style="left:0; top: 0;">
+        <div class="wave" style="--wave-height: {Math.min(tank.waterLevel, 100)}%" />
     </div>
 </section>
