@@ -10,5 +10,8 @@
     },
     "workspaces": [
         "packages/*"
-    ]
+    ],
+    "engines": {
+        "node": "20.x"
+    }
 }
