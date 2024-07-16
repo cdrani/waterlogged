@@ -18,7 +18,7 @@ function keepAlive() {
         const message = { data: null, type: 'keepalive', target: 'offscreen' }
         await ensureOffscreenDocument()
         await sendMessage(message)
-    }, 25_000)
+    }, 29_500)
 }
 
 keepAlive()
@@ -34,7 +34,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
         await setState({ key: 'settings',  values: SETTINGS_DEFAULT })
         await setState({ key: 'today', values: TODAY_DEFAULT })
         setBadgeInfo(true)
-        Notifier.welcome()
+        await Notifier.welcome()
     } else {
         const settings = await getState('settings')
         setBadgeInfo(settings?.enabled || true)
