@@ -17,8 +17,8 @@ export default class Notification {
         this._today = null
     }
 
-    welcome() {
-        this.#createWelcome()
+    async welcome() {
+        await this.#createWelcome()
     }
 
     #getTimeBoundaries() {
@@ -82,8 +82,8 @@ export default class Notification {
 
         if (progress.percentage >= 100) return
 
-        ;['alarm', 'both'].includes(alert_type) && this.#playSound(sound)
-        ;['notify', 'both'].includes(alert_type) && this.#notifyProgress(progress)
+        ;['alarm', 'both'].includes(alert_type) && await this.#playSound(sound)
+        ;['notify', 'both'].includes(alert_type) && await this.#notifyProgress(progress)
     }
 
     async #playSound(sound: string) {
@@ -121,10 +121,10 @@ export default class Notification {
         await setState({ key, values: { ...data, logs } })
     }
 
-    #createNotification({ title, message }: { title: string, message: string }) {
+    async #createNotification({ id, title, message }: { id: string, title: string, message: string }) {
         const showButton = title.includes('Time to Hydrate!')
-        chrome.notifications.clear(title)
-        chrome.notifications.create(title, {
+        chrome.notifications.clear(id)
+        chrome.notifications.create(id, {
             title,
             message,
             type: 'basic',
@@ -133,12 +133,15 @@ export default class Notification {
             buttons: showButton ? [{ title: `Log ${this._settings.amount}ml` } ] : []
         })
 
-        chrome.notifications.onButtonClicked.addListener(async (_, btnIdx) => {
+        chrome.notifications.onButtonClicked.addListener(async (id, btnIdx) => {
             const isHydrating = title.includes('Time to Hydrate!')
             if (!isHydrating || btnIdx !== 0) return
 
             await this.#logAmount()
+            chrome.notifications.clear(id)
         })
+
+        chrome.notifications.onClicked.addListener(chrome.notifications.clear)
     }
 
     #getEncouragingMessage(percentage: number): string {
@@ -158,14 +161,16 @@ export default class Notification {
             ? `100%. ${goal} ml reached!`
             : `${percentage}% there. Only ${left}ml to reach goal.`
 
-        this.#createNotification({ 
+        await this.#createNotification({ 
+            id: 'progress',
             title: 'Water Break Time! Time to Hydrate!',
             message: `${encouragement} ${detail}`,
         })
     }
 
-    #createWelcome() {
-        this.#createNotification({ 
+    async #createWelcome() {
+        await this.#createNotification({
+            id: 'welcome',
             title: 'Welcome!',
             message: 'Your journey to a well-hydrated life starts now!',
         })
