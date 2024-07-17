@@ -1,12 +1,4 @@
 <script lang="ts">
-    import Tank from 'common/components/Tank.svelte'
-
-    let tank = {
-        total: 1500,
-        waterLevel: 75,
-        goal: 2000,
-        measurement: 'ml'
-    }
 </script>
 
 <main class="flex flex-col relative w-full h-full lg:max-w-screen-xl mx-auto p-5 md:p-8 xl:p-16 my-10">
@@ -28,9 +20,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-2 p-4 border-4 border-white w-full h-[28rem]">
-            <Tank tank={tank} />
-        </div>
+        <div class="grid grid-cols-2 p-4 border-4 border-white w-full h-[28rem]" />
     </section>
 
     <section class="flex flex-col justify-center w-full h-full py-12 xl:py-10 xl:pt-16 gap-12 xl:gap-16">
@@ -51,9 +41,7 @@
         </div>
 
         <div class="flex flex-col md:flex-row justify-between items-center w-full h-[28rem] md:h-[20rem] xl:h-[32rem] gap-4 md:gap-10 xl:gap-16">
-            <div class="w-full md:w-1/2 h-full bg-red-600">
-                <Tank tank={tank} />
-            </div>
+            <div class="w-full md:w-1/2 h-full bg-red-600" />
 
             <div class="w-full md:w-1/2">
                 <article class="prose">
@@ -67,9 +55,8 @@
         </div>
 
         <div class="flex flex-col md:flex-row-reverse justify-between items-center w-full h-[28rem] md:h-[20rem] xl:h-[32rem] gap-4 md:gap-10 xl:gap-16">
-            <div class="w-full md:w-1/2 h-full bg-green-600">
+            <div class="w-full md:w-1/2 h-full bg-green-600" />
 
-            </div>
             <div class="w-full md:w-1/2">
                 <article class="prose">
                     <h4 class="text-white text-center font-semibold text-3xl md:text-4xl xl:text-5xl">Custom Alert Types</h4>
@@ -83,5 +70,4 @@
     </section>
 </main>
 
-<footer class="fixed bottom-0 flex w-full h-12 bg-gray-800">
-</footer>
+<footer class="fixed bottom-0 flex w-full h-12 bg-gray-800" />
