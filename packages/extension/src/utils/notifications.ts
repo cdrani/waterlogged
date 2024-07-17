@@ -1,7 +1,7 @@
 import { getState, setState } from './state'
 import { ENCOURAGEMENTS } from './encouragements'
-import { getDateKey, getDateMS, getTimeStamp } from './date'
 import type { DAILY_RESPONSE, SETTINGS, TODAY } from './types.d'
+import { getDateKey, getDateMS, getTimeStamp } from 'common/utils/date'
 import { ensureOffscreenDocument, sendOffscreenMessage } from './offscreen'
 
 const FULL_DAY_MS = 60 * 60 * 24 * 1000
