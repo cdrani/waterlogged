@@ -30,7 +30,7 @@
     <section class="flex flex-col justify-center w-full h-full py-12 xl:py-10 xl:pt-16 gap-12 md:gap-20">
         <h3 class="text-blue-800 text-center text-5xl xl:text-7xl font-semibold">Features</h3>
 
-        <div class="rounded-xl border-4 md:border-8 p-4 md:p-6 lg:p-10 border-blue-600 flex flex-col md:flex-row justify-between w-full gap-4 md:gap-8 xl:gap-12">
+        <div class="rounded-xl border-4 md:border-8 p-4 md:p-6 lg:p-10 border-blue-600 flex flex-col md:flex-row justify-between items-center w-full gap-4 md:gap-8 xl:gap-12">
             <div class="w-full md:w-1/2 h-full">
                 <enhanced:img src="../../static/assets/progress.png" alt="View your progress" />
             </div>
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <div class="rounded-xl border-4 md:border-8 p-4 md:p-6 lg:p-10 border-blue-600 flex flex-col md:flex-row-reverse justify-between w-full gap-4 md:gap-10 xl:gap-16">
+        <div class="rounded-xl border-4 md:border-8 p-4 md:p-6 lg:p-10 border-blue-600 flex flex-col md:flex-row-reverse justify-between items-center w-full gap-4 md:gap-10 xl:gap-16">
             <div class="w-full md:w-1/2 h-full">
                 <enhanced:img src="../../static/assets/logs.png" alt="View your progress" />
             </div>
@@ -64,7 +64,7 @@
             </div>
         </div>
 
-        <div class="rounded-xl border-4 md:border-8 p-4 md:p-6 lg:p-10 border-blue-600 flex flex-col md:flex-row justify-between w-full gap-4 md:gap-10 xl:gap-16">
+        <div class="rounded-xl border-4 md:border-8 p-4 md:p-6 lg:p-10 border-blue-600 flex flex-col md:flex-row justify-between items-center w-full gap-4 md:gap-10 xl:gap-16">
             <div class="w-full md:w-1/2">
                 <enhanced:img src="../../static/assets/presets-settings.png" alt="preset settings" />
             </div>
@@ -82,7 +82,7 @@
             </div>
         </div>
 
-        <div class="rounded-xl border-4 md:border-8 p-4 md:p-6 lg:p-10 border-blue-600 flex flex-col md:flex-row-reverse justify-between w-full gap-4 md:gap-10 xl:gap-16">
+        <div class="rounded-xl border-4 md:border-8 p-4 md:p-6 lg:p-10 border-blue-600 flex flex-col md:flex-row-reverse justify-between items-center w-full gap-4 md:gap-10 xl:gap-16">
             <div class="w-full md:w-1/2 h-full">
                 <enhanced:img src="../../static/assets/notification-settings.png" alt="notification settings" />
             </div>
@@ -100,7 +100,7 @@
             </div>
         </div>
 
-        <div class="rounded-xl border-4 md:border-8 p-4 md:p-6 lg:p-10 border-blue-600 flex flex-col md:flex-row-reverse justify-between w-full gap-4 md:gap-10 xl:gap-16">
+        <div class="rounded-xl border-4 md:border-8 p-4 md:p-6 lg:p-10 border-blue-600 flex flex-col md:flex-row-reverse justify-between items-center w-full gap-4 md:gap-10 xl:gap-16">
             <div class="w-full md:w-1/2 h-full">
                 <enhanced:img src="../../static/assets/notification.png" alt="desktop notification" />
             </div>
