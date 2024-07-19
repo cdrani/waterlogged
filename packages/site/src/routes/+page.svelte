@@ -1,4 +1,4 @@
-<main class="flex flex-col relative w-full h-full lg:max-w-screen-xl mx-auto p-5 md:p-8 xl:p-16 my-10">
+<main class="flex flex-col relative w-full h-full max-w-screen-md  lg:max-w-screen-xl mx-auto p-5 md:p-8 xl:p-16 my-10">
     <section class="flex relative flex-col items-center w-full gap-8 h-full">
         <div class="flex flex-col justify-evenly gap-6 w-full h-full xl:w-1/2">
             <article class="flex justify-center items-center flex-col gap-3 lg:gap-8 w-full">
@@ -30,15 +30,15 @@
     <section class="flex flex-col justify-center w-full h-full py-12 xl:py-10 xl:pt-16 gap-12 md:gap-20">
         <h3 class="text-blue-800 text-center text-5xl xl:text-7xl font-semibold">Features</h3>
 
-        <div class="flex flex-col md:flex-row-reverse justify-between w-full gap-4 md:gap-10 xl:gap-16">
+        <div class="rounded-xl border-4 md:border-8 p-4 md:p-6 lg:p-10 border-blue-600 flex flex-col md:flex-row justify-between w-full gap-4 md:gap-8 xl:gap-12">
             <div class="w-full md:w-1/2 h-full">
                 <enhanced:img src="../../static/assets/progress.png" alt="View your progress" />
             </div>
 
             <div class="w-full md:w-1/2">
                 <article class="prose">
-                    <h4 class="text-blue-800 text-center font-semibold text-3xl md:text-4xl xl:text-5xl">Quick Visual of Progress</h4>
-                    <ul class="text-blue-800 text-lg md:text-2xl xl:text-4xl font-sans font-medium">
+                    <h4 class="text-blue-800 text-center font-semibold text-3xl md:text-4xl xl:text-5xl">Visualize Progress</h4>
+                    <ul class="list-outside list-disc marker:text-blue-800 list-disc-blue-800 text-blue-800 text-xl sm:text-3xl xl:text-4xl font-sans font-medium">
                         <li>Quick visual of goal and progress.</li>
                         <li>Add log based on set amount</li>
                         <li>Quickly add custom log</li>
@@ -47,28 +47,32 @@
             </div>
         </div>
 
-        <div class="flex flex-col md:flex-row-reverse justify-between w-full gap-4 md:gap-10 xl:gap-16">
+        <div class="rounded-xl border-4 md:border-8 p-4 md:p-6 lg:p-10 border-blue-600 flex flex-col md:flex-row-reverse justify-between w-full gap-4 md:gap-10 xl:gap-16">
+            <div class="w-full md:w-1/2 h-full">
+                <enhanced:img src="../../static/assets/logs.png" alt="View your progress" />
+            </div>
+
             <div class="w-full md:w-1/2">
                 <article class="prose">
                     <h4 class="text-blue-800 text-center font-semibold text-3xl md:text-4xl xl:text-5xl">View & Edit Logs</h4>
-                    <ul class="text-blue-800 text-lg md:text-2xl xl:text-4xl font-sans font-medium">
+                    <ul class="list-outside list-disc marker:text-blue-800 list-disc-blue-800 text-blue-800 text-xl sm:text-3xl xl:text-4xl font-sans font-medium">
                         <li>View list of drink logs</li>
                         <li>Quickly rdit & delete logs</li>
                         <li>View entire log records (coming soon!)</li>
                     </ul>
                 </article>
             </div>
-
-            <div class="w-full md:w-1/2 h-full">
-                <enhanced:img src="../../static/assets/logs.png" alt="View your progress" />
-            </div>
         </div>
 
-        <div class="flex flex-col md:flex-row justify-between w-full gap-4 md:gap-10 xl:gap-16">
+        <div class="rounded-xl border-4 md:border-8 p-4 md:p-6 lg:p-10 border-blue-600 flex flex-col md:flex-row justify-between w-full gap-4 md:gap-10 xl:gap-16">
+            <div class="w-full md:w-1/2">
+                <enhanced:img src="../../static/assets/presets-settings.png" alt="preset settings" />
+            </div>
+
             <div class="w-full md:w-1/2">
                 <article class="prose">
                     <h4 class="text-blue-800 text-center font-semibold text-3xl md:text-4xl xl:text-5xl">Set Custom Presets</h4>
-                    <ul class="text-blue-800 text-lg md:text-2xl xl:text-4xl font-sans font-medium">
+                    <ul class="list-outside list-disc marker:text-blue-800 list-disc-blue-800 text-blue-800 text-xl sm:text-3xl xl:text-4xl font-sans font-medium">
                         <li>Quick on/off toggle</li>
                         <li>Set custom start and end times</li>
                         <li>Set defaults for daily goal</li>
@@ -76,17 +80,17 @@
                     </ul>
                 </article>
             </div>
-
-            <div class="w-full md:w-1/2">
-                <enhanced:img src="../../static/assets/presets-settings.png" alt="preset settings" />
-            </div>
         </div>
 
-        <div class="flex flex-col md:flex-row-reverse justify-between w-full gap-4 md:gap-10 xl:gap-16">
+        <div class="rounded-xl border-4 md:border-8 p-4 md:p-6 lg:p-10 border-blue-600 flex flex-col md:flex-row-reverse justify-between w-full gap-4 md:gap-10 xl:gap-16">
+            <div class="w-full md:w-1/2 h-full">
+                <enhanced:img src="../../static/assets/notification-settings.png" alt="notification settings" />
+            </div>
+
             <div class="w-full md:w-1/2">
                 <article class="prose">
                     <h4 class="text-blue-800 text-center font-semibold text-3xl md:text-4xl xl:text-5xl">Custom Alert Types</h4>
-                    <ul class="text-blue-800 text-lg md:text-2xl xl:text-4xl font-sans font-medium">
+                    <ul class="list-outside list-disc marker:text-blue-800 list-disc-blue-800 text-blue-800 text-xl sm:text-3xl xl:text-4xl font-sans font-medium">
                         <li>Set custom alert interval</li>
                         <li>Choose between a notification, gentle alert sounds, or both.</li>
                         <li>Upload own alert sound (soon!)</li>
@@ -94,13 +98,9 @@
                     </ul>
                 </article>
             </div>
-
-            <div class="w-full md:w-1/2 h-full">
-                <enhanced:img src="../../static/assets/notification-settings.png" alt="notification settings" />
-            </div>
         </div>
 
-        <div class="flex flex-col md:flex-row-reverse justify-between w-full gap-4 md:gap-10 xl:gap-16">
+        <div class="rounded-xl border-4 md:border-8 p-4 md:p-6 lg:p-10 border-blue-600 flex flex-col md:flex-row-reverse justify-between w-full gap-4 md:gap-10 xl:gap-16">
             <div class="w-full md:w-1/2 h-full">
                 <enhanced:img src="../../static/assets/notification.png" alt="desktop notification" />
             </div>
@@ -108,7 +108,7 @@
             <div class="w-full md:w-1/2">
                 <article class="prose">
                     <h4 class="text-blue-800 text-center font-semibold text-3xl md:text-4xl xl:text-5xl">Alerts & Notifications</h4>
-                    <ul class="text-blue-800 text-lg md:text-2xl xl:text-4xl font-sans font-medium">
+                    <ul class="list-outside list-disc marker:text-blue-800 list-disc-blue-800 text-blue-800 text-xl sm:text-3xl xl:text-4xl font-sans font-medium">
                         <li>Desktop notifications based on user settings</li>
                         <li>Option to log a preset drink amount</li>
                         <li>View progress and encouragement</li>
