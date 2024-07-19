@@ -1,6 +1,14 @@
 {
-    "name": "common",
-    "private": true,
-    "type": "module",
-    "version": "0.1.0"
+  "name": "common",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "dependencies": {
+    "dexie": "^4.0.8",
+    "dexie-cloud-addon": "^4.0.8",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^10.0.0"
+  }
 }
