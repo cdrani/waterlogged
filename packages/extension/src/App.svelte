@@ -12,7 +12,7 @@
     import { initToday, getToday } from './stores/today'
     import type SettingsStore from './stores/settings'
     import { initSettings, getSettings } from './stores/settings'
-    import { initModal, getModal, openModal } from './stores/modal'
+    import { initModal, getModal, openModal } from 'common/stores/modal'
 
     let PORT = chrome.runtime.connect({ name: 'popup' })
     

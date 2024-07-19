@@ -1,7 +1,7 @@
 <script lang="ts">
     import { getToday } from '../stores/today'
-    import { openModal } from '../stores/modal'
     import type TodayStore from '../stores/today'
+    import { openModal } from 'common/stores/modal'
 
     import Tank from 'common/components/Tank.svelte'
 

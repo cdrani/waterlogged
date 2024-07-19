@@ -1,8 +1,8 @@
 <script lang="ts">
     import { getToday } from '../stores/today'
     import type TodayStore from '../stores/today'
-    import { closeModal, getModal } from '../stores/modal'
     import { clickOutside } from '../utils/click-outside'
+    import { closeModal, getModal } from 'common/stores/modal'
 
     import CustomLogForm from './modal-views/CustomLogForm.svelte'
     import Congratulation from './modal-views/Congratulation.svelte'

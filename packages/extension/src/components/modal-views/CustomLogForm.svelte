@@ -1,6 +1,6 @@
 <script lang="ts">
     import { getToday } from '../../stores/today'
-    import { closeModal } from '../../stores/modal'
+    import { closeModal } from 'common/stores/modal'
 
     const todayStore = getToday()
     const inputClass = "px-0.5 pl-2 h-7 text-[14px] rounded-[4px]"
