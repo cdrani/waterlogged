@@ -1,5 +1,7 @@
 <script lang="ts">
     import { playAlarm } from '../utils/alarm'
+    import { db } from 'common/stores/db'
+    import { liveQuery } from 'dexie'
     import { getSettings } from '../stores/settings'
     import Toggle from '../components/Toggle.svelte'
 
@@ -25,8 +27,12 @@
     }
 
     const inputClass = "px-0.5 pl-2 h-7 text-[14px] rounded-[4px]"
+
+    // console.log({ settings: $settings })
+    // const settings = liveQuery(() => db.settings.toArray()[0])
 </script>
 
+{#if $settings}
 <section class="flex relative left-0 flex-col mx-auto w-full h-[340px] max-h-[358] bg-cyan-200">
     <div class="relative flex flex-col w-full mx-auto overflow-y-auto h-full">
         <form class="relative flex flex-col gap-3 p-4 pt-0 w-full mx-auto">
@@ -114,3 +120,4 @@
         </form>
     </div>
 </section>
+{/if}

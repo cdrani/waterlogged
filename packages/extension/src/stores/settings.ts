@@ -3,7 +3,7 @@ import type { Writable } from "svelte/store"
 import { getContext, setContext } from 'svelte'
 
 import type TodayStore from "./today"
-import type { SETTINGS } from "src/utils/types"
+import type { SETTINGS } from "common/types/index.d"
 import { SETTINGS_DEFAULT } from "../utils/defaults"
 
 type SettingsStoreParams = { port: chrome.runtime.Port, observer: TodayStore }
@@ -16,7 +16,7 @@ export default class SettingsStore {
     constructor({ port , observer }: SettingsStoreParams) {
         this._PORT = port
         this._observer = observer
-        this._settings = writable<SETTINGS>(SETTINGS_DEFAULT)
+        this._settings = writable<SETTINGS>()
 
         this.#init()
     }
