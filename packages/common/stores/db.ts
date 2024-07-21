@@ -1,4 +1,4 @@
-import dexieCloud from 'dexie-cloud-addon'
+// import dexieCloud from 'dexie-cloud-addon'
 import Dexie, { Table } from 'dexie'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -11,7 +11,7 @@ export class DB extends Dexie {
     settings!: Table<SETTINGS>
 
     constructor() {
-        super('waterlogged', { addons: [dexieCloud], cache: 'immutable' })
+        super('waterlogged')//, { addons: [dexieCloud], cache: 'immutable' })
 
         this.version(1).stores({
             user: 'id, created',
@@ -27,9 +27,7 @@ export class DB extends Dexie {
         //     customLoginGui: false,
         // })
 
-        this.on('populate', () => {
-            this.on('ready', () => populate(this))
-        })
+        this.on('ready', async () => await populate(this))
     }
 }
 
@@ -37,11 +35,12 @@ export const db = new DB()
 
 async function populate(db: DB) {
     const numOfUsers = await db.user.count()
-
     if (numOfUsers > 0) return
 
-    const user = await db.user.add({
-        id: uuidv4(),
+    const user_id = uuidv4()
+
+    await db.user.add({
+        id: user_id,
         synced: false,
         created: new Date()
     })
@@ -50,7 +49,7 @@ async function populate(db: DB) {
         id: uuidv4(),
         created: new Date(),
 
-        user_id: user.id,
+        user_id,
         intakes: [],
         goal: 2000,
         amount: 250,
@@ -59,8 +58,8 @@ async function populate(db: DB) {
 
     await db.settings.add({
         id: uuidv4(),
+        user_id,
         created: new Date(),
-        user_id: user.id,
 
         goal: 2000,
         amount: 250,
