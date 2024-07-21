@@ -1,11 +1,10 @@
+import { db } from 'common/stores/db'
 import { getDateKey } from 'common/utils/date'
 import { sendMessage } from './utils/messages'
 import Notification from './utils/notifications'
-import { setState, getState } from './utils/state'
-import { mergeObjects } from './utils/merge-objects'
+import type { STORAGE_RESPONSE } from 'common/types'
+import { createDailyLog } from 'common/stores/defaults'
 import { ensureOffscreenDocument } from './utils/offscreen'
-import { SETTINGS_DEFAULT, TODAY_DEFAULT } from './utils/defaults'
-import type { STORAGE_RESPONSE, TODAY, TODAY_RESPONSE } from './utils/types.d'
 
 const Notifier = new Notification()
 let keepAliveTimer: Timer | null = null
@@ -30,14 +29,16 @@ function setBadgeInfo(enabled = true) {
 }
 
 chrome.runtime.onInstalled.addListener(async (details) => {
+    const isOpen = db.isOpen()
+
+    if (!isOpen) await db.open()
+
     if (details.reason == 'install') {
-        await setState({ key: 'settings',  values: SETTINGS_DEFAULT })
-        await setState({ key: 'today', values: TODAY_DEFAULT })
         setBadgeInfo(true)
         await Notifier.welcome()
     } else {
-        const settings = await getState('settings')
-        setBadgeInfo(settings?.enabled || true)
+        const settings = await db.settings.toArray()[0]
+        setBadgeInfo(settings?.enabled ?? true)
     }
 
     await Notifier.startTimer()
@@ -75,39 +76,35 @@ chrome.runtime.onConnect.addListener(async (port) => {
 
     POPUP_PORT.onMessage.addListener(async ({ type, data = null }) => {
         let response: STORAGE_RESPONSE = null
-
         const dateKey = getDateKey()
-        if (type == 'get:settings') {
-            response = await getState('settings')
-            if ((!response || !Object.keys(response).length) && data) {
-                await setState({ key: 'settings', values: data })
-                response = { settings: data }
-            }
-        } else if (type == 'set:settings') {
-            const todayState = await getState([dateKey, 'today'])
-            await setState({ key: 'settings', values: data })
-            const syncedTodayWithSettings = mergeObjects(todayState.today, data)
-            await setState({ key: 'today', values: syncedTodayWithSettings })
 
-            if (todayState[dateKey]) {
-                const syncedDateKeyWithSettings = mergeObjects(todayState.today, data)
-                const logs = todayState[dateKey].logs
-                await setState({ key: dateKey, values: { ...syncedDateKeyWithSettings, logs } as TODAY })
-            }
+        if (type == 'get:settings') {
+            const settings = await db.settings.toArray()
+            response = { settings: settings?.length ? settings[0] : data }
+            if (!settings.length && data) await db.settings.add(data)
+        } else if (type == 'set:settings') {
+            const log = await db.logs.get({ date_id: dateKey }) 
+            log.amount = data.amount
+            log.goal = data.goal
+            log.measurement = data.measurement
+            
+            await db.logs.put(log)
+            await db.settings.put(data)
 
             response = { settings: data }
         } else if (type == 'get:today') {
-            const stateData = await getState([dateKey, 'settings'])
-            if (stateData?.settings && stateData?.[dateKey]) {
-                const mergedData = mergeObjects(stateData[dateKey], stateData.settings)
-                response = { [dateKey]: mergedData } as TODAY_RESPONSE
-            } else {
-                const mergedData = mergeObjects(data, stateData?.settings ?? {})
-                await setState({ key: dateKey, values: mergedData })
-                response = { [dateKey]: mergedData } as TODAY_RESPONSE
+            let log = await db.logs.get({ date_id: dateKey })
+            if (!log) {
+                const settings = await db.settings.toArray()[0]
+                if (!settings) return
+
+                log = createDailyLog(settings)
+                await db.logs.add(log)
             }
+
+            response = { log }
         } else if (type == 'set:today') {
-            await setState({ key: dateKey, values: data })
+            await db.logs.put(data)
         }
 
         response && POPUP_PORT?.postMessage({ type: `${type}:response`, response })

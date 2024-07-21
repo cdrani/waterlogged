@@ -2,25 +2,19 @@ import type { Writable } from 'svelte/store'
 import { getContext, setContext } from 'svelte'
 import { writable, get, derived } from 'svelte/store'
 
-import type { LOG, TODAY } from '../utils/types'
-import { TODAY_DEFAULT } from '../utils/defaults'
+import type { LOG, INTAKE } from 'common/types'
 
-import {
-    formatTime,
-    getDateKey,
-    getTimeStamp,
-    convertToDate,
-    convertTo24HourFormat,
-} from 'common/utils/date'
+import { createIntake } from 'common/stores/defaults'
+import { convertToDate, convertTo24HourFormat, } from 'common/utils/date'
 
 export default class TodayStore {
     _PORT: chrome.runtime.Port
-    _today: Writable<TODAY>
+    _today: Writable<LOG>
     _party: Writable<boolean>
 
     constructor(port: chrome.runtime.Port) {
         this._PORT = port
-        this._today = writable<TODAY>(TODAY_DEFAULT)
+        this._today = writable<LOG>()
         this._party = writable<boolean>(this.partied)
 
         this.#init()
@@ -44,10 +38,13 @@ export default class TodayStore {
         return derived([this._party, this._today], () => {
             if (this.partied) return false
 
-            const { logs = [], goal } = get(this._today) as TODAY
-            if (!logs.length) return false 
+            const log = get(this._today)
+            if (!log) return false
 
-            const total = logs.reduce((acc: number, curr: LOG) => acc + Number(curr.amount), 0)
+            const { intakes = [], goal } = log
+            if (!intakes.length) return false 
+
+            const total = intakes.reduce((acc: number, curr: INTAKE) => acc + Number(curr.amount), 0)
             return (total / Number(goal)) * 100 >= 100
         }) 
     }
@@ -55,7 +52,7 @@ export default class TodayStore {
     #init() {
         this._PORT?.onMessage.addListener(async ({ type, response }) => {
             if (type == 'get:today:response') {
-                const data = response[getDateKey()]
+                const data = response.log
                 this.#updateToday(data)
             }
         })
@@ -65,24 +62,15 @@ export default class TodayStore {
         this._PORT?.postMessage({ type: 'get:today', data: get(this._today) })
     }
 
-    syncWithSettings({ measurement, goal, amount }) {
-        this.populate()
-
-        const today = get(this._today) as TODAY
-        const data = { ...today, measurement, goal, amount }
-        this._today.set(data)
-        this._PORT?.postMessage({ type: 'set:today', data })
-    }
-
-    #resetParty(data: TODAY) {
-        const { logs, goal } = data
-        const total = logs.reduce((acc: number, log: LOG) => acc + Number(log.amount), 0)
-        if (logs.length == 0 || total < Number(goal)) {
+    #resetParty(data: LOG) {
+        const { intakes, goal } = data
+        const total = intakes.reduce((acc: number, intake: INTAKE) => acc + Number(intake.amount), 0)
+        if (intakes.length == 0 || total < Number(goal)) {
             this.partied = false
         }
     }
 
-    #updateToday(data: TODAY) {
+    #updateToday(data: LOG) {
         this._today.set(data)
         this.#resetParty(data)
     }
@@ -98,14 +86,14 @@ export default class TodayStore {
         return times.length
     }
 
-    logCustomAmount({ amount, time }: LOG) {
-        const { logs } = get(this._today)
-        const formatedLogTimes = logs.map(({ time }: LOG) => convertTo24HourFormat(time))
+    logCustomAmount({ amount, time }: INTAKE) {
+        const { id: log_id, intakes } = get(this._today)
+        const formatedLogTimes = intakes.map(({ time }: INTAKE) => convertTo24HourFormat(time))
         const insertIndex = this.findInsertionIndex(formatedLogTimes, time)
 
-        logs.splice(insertIndex, 0, { amount, time: formatTime(time) })
+        intakes.splice(insertIndex, 0, createIntake({ log_id, amount, time }))
 
-        this._today.update(previous => ({ ...previous, logs }))
+        this._today.update(previous => ({ ...previous, intakes }))
 
         this.#updateStorage()
     }
@@ -118,16 +106,16 @@ export default class TodayStore {
 
     logAmount(add = true, index: number = undefined) {
         if (add) {
-            const { amount } = get(this._today)
-            const log = { amount, time: getTimeStamp() } 
-            this._today.update(previous => ({ ...previous, logs: [log, ...previous.logs] }))
+            const { id: log_id, amount } = get(this._today)
+            const intake = createIntake({ log_id, amount }) 
+            this._today.update(previous => ({ ...previous, intakes: [intake, ...previous.intakes] }))
         } else {
             if (index != undefined) {
-                const { logs } = get(this._today)
-                logs.splice(index, 1)
-                this._today.update(previous => ({ ...previous, logs }))
+                const { intakes } = get(this._today)
+                intakes.splice(index, 1)
+                this._today.update(previous => ({ ...previous, intakes }))
             } else {
-                this._today.update(previous => ({ ...previous, logs: [...previous.logs.slice(1)] }))
+                this._today.update(previous => ({ ...previous, intakes: [...previous.intakes.slice(1)] }))
             }
         }
 
@@ -142,20 +130,28 @@ export default class TodayStore {
         return this._party
     }
 
-    #calculateTotal(logs: LOG[]) {
-        if (!logs.length) return 0
+    #calculateTotal(intakes: INTAKE[]) {
+        if (!intakes?.length) return 0
 
-        return logs.reduce((acc, curr) => acc + Number(curr.amount), 0)
+        return intakes.reduce((acc, curr) => acc + Number(curr.amount), 0)
     }
 
     get total() {
-        return derived(this._today, () => this.#calculateTotal(get(this._today).logs))
+        return derived(this._today, () => {
+            const log = get(this._today)
+            if (!log) return 0
+
+            return this.#calculateTotal(log.intakes)
+        })
     }
 
     get waterLevel() {
         return derived(this._today, () => {
-            const { goal, logs } = get(this._today)
-            const total = this.#calculateTotal(logs)
+            const log = get(this._today)
+            if (!log) return 0
+
+            const { goal, intakes } = log
+            const total = this.#calculateTotal(intakes)
             return total == 0 ? 0 : (total / Number(goal)) * 100
         })
     }

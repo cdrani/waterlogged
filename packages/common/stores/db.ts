@@ -2,12 +2,13 @@
 import Dexie, { Table } from 'dexie'
 import { v4 as uuidv4 } from 'uuid'
 
-import type { LOGS, USER, SETTINGS, INTAKES } from '../types/index.d'
+import type { LOG, USER, SETTINGS, INTAKE } from '../types/index.d'
+import { createDailyLog, createSettings } from './defaults'
 
 export class DB extends Dexie {
     user!: Table<USER>
-    logs!: Table<LOGS>
-    intakes!: Table<INTAKES>
+    logs!: Table<LOG>
+    intakes!: Table<INTAKE>
     settings!: Table<SETTINGS>
 
     constructor() {
@@ -15,9 +16,9 @@ export class DB extends Dexie {
 
         this.version(1).stores({
             user: 'id, created',
-            logs: 'id, user_id, created',
-            intakes: 'id, log_id, created',
             settings: 'id, user_id, created',
+            intakes: 'id, log_id, time_stamp',
+            logs: 'id, user_id, date_id, created',
         })
 
         // TODO: reconfigure when cloud setup
@@ -45,30 +46,9 @@ async function populate(db: DB) {
         created: new Date()
     })
 
-    await db.logs.add({
-        id: uuidv4(),
-        created: new Date(),
+    const settings = createSettings({ user_id })
+    const log = createDailyLog(settings)
 
-        user_id,
-        intakes: [],
-        goal: 2000,
-        amount: 250,
-        measurement: 'ml'
-    })
-
-    await db.settings.add({
-        id: uuidv4(),
-        user_id,
-        created: new Date(),
-
-        goal: 2000,
-        amount: 250,
-        measurement: 'ml',
-        sound: 'bubble1',
-        enabled: true,
-        interval: 60,
-        end_time: '18:00',
-        alert_type: 'both',
-        start_time: '08:00'
-    })
+    await db.settings.add(settings)
+    await db.logs.add(log)
 }

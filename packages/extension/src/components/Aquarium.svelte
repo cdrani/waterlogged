@@ -28,7 +28,7 @@
     })
 
     store.today.subscribe(value => {
-        let { measurement, goal } = value
+        let { measurement, goal } = value ?? tank
         tank = { ...tank, measurement, goal }
     })
 </script>

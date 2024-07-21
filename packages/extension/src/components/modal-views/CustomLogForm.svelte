@@ -1,8 +1,10 @@
 <script lang="ts">
+    import type { INTAKE } from 'common/types';
+    import type TodayStore from '../../stores/today'
     import { getToday } from '../../stores/today'
     import { closeModal } from 'common/stores/modal'
 
-    const todayStore = getToday()
+    const todayStore = getToday() as TodayStore
     const inputClass = "px-0.5 pl-2 h-7 text-[14px] rounded-[4px]"
 
     function saveCustomLog(e: SubmitEvent) {
@@ -10,7 +12,7 @@
         const [time, amount] = [...formData.values()]
         const log = { time, amount: Number(amount) }
         
-        todayStore.logCustomAmount(log)
+        todayStore.logCustomAmount(log as INTAKE)
         closeModal()
     }
 
