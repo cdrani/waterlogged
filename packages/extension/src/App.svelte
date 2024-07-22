@@ -18,12 +18,10 @@
     
     initModal()
     initToday(PORT)
+    initSettings(PORT)
 
     const modal = getModal()
     const todayStore = getToday() as TodayStore
-    initSettings({ port: PORT, observer: todayStore })
-
-
     const settingsStore = getSettings() as SettingsStore
 
     type PageView = 'default' | 'settings'
