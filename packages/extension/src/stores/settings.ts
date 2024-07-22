@@ -1,13 +1,10 @@
-import { writable, get } from "svelte/store"
-import type { Writable } from "svelte/store"
 import { getContext, setContext } from 'svelte'
+import { writable, get, type Writable } from 'svelte/store'
 
-import type TodayStore from "./today"
 import type { SETTINGS } from "common/types/index.d"
 
 export default class SettingsStore {
     _PORT: chrome.runtime.Port
-    _observer: TodayStore
     _settings: Writable<SETTINGS>
 
     constructor(port: chrome.runtime.Port) {

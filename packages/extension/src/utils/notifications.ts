@@ -106,7 +106,6 @@ export default class Notification {
 
     async #getProgress() {
         const log =  await this.#getToday()
-        console.log({ log })
         const current = log.intakes.reduce((acc, curr ) => acc + curr.amount, 0)
         const percentage = Math.round((current / log.goal) * 100)
         return  { goal: log.goal, left: log.goal - current, percentage }
