@@ -1,7 +1,5 @@
 <script lang="ts">
     import { playAlarm } from '../utils/alarm'
-    import { db } from 'common/stores/db'
-    import { liveQuery } from 'dexie'
     import { getSettings } from '../stores/settings'
     import Toggle from '../components/Toggle.svelte'
 
@@ -27,9 +25,6 @@
     }
 
     const inputClass = "px-0.5 pl-2 h-7 text-[14px] rounded-[4px]"
-
-    // console.log({ settings: $settings })
-    // const settings = liveQuery(() => db.settings.toArray()[0])
 </script>
 
 {#if $settings}

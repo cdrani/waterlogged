@@ -32,7 +32,7 @@ export default class SettingsStore {
     }
 
     #notifyObserver(data: SETTINGS) {
-        this._observer.syncWithSettings(data)
+        // this._observer.syncWithSettings(data)
     }
 
     get settings() {
