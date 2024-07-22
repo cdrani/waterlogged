@@ -4,7 +4,6 @@ import { getContext, setContext } from 'svelte'
 
 import type TodayStore from "./today"
 import type { SETTINGS } from "common/types/index.d"
-import { SETTINGS_DEFAULT } from "../utils/defaults"
 
 type SettingsStoreParams = { port: chrome.runtime.Port, observer: TodayStore }
 
