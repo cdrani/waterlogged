@@ -72,7 +72,6 @@ async function ensureDailyLog(settingsData?: SETTINGS) {
 
     if (!log) {
         const settings = settingsData ?? await db.settings.toArray()[0]
-        console.log({ settingsData, settings })
         const newLog = createDailyLog(settings)
         log = await db.logs.add(newLog)
     }
@@ -85,11 +84,11 @@ chrome.runtime.onConnect.addListener(async (port) => {
 
     POPUP_PORT = port
 
-    await ensureDailyLog()
+    const log = await ensureDailyLog()
+    POPUP_PORT?.postMessage({ type: `get:today:response`, response: { log } })
 
     POPUP_PORT.onMessage.addListener(async ({ type, data = null }) => {
         let response: STORAGE_RESPONSE = null
-        const dateKey = getDateKey()
 
         if (type == 'get:settings') {
             const settings = await db.settings.toArray()
@@ -109,15 +108,7 @@ chrome.runtime.onConnect.addListener(async (port) => {
 
             response = { settings: data }
         } else if (type == 'get:today') {
-            let log = await db.logs.get({ date_id: dateKey })
-            if (!log) {
-                const settings = await db.settings.toArray()[0]
-                if (!settings) return
-
-                log = createDailyLog(settings)
-                await db.logs.add(log)
-            }
-
+            const log = await ensureDailyLog()
             response = { log }
         } else if (type == 'set:today') {
             await db.logs.put(data)
