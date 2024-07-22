@@ -35,9 +35,7 @@
 
     onMount(() => {
         $pageView == 'default' ? todayStore.populate() : settingsStore.populate()
-        return() => {
-            PORT.onDisconnect.addListener(() => (PORT = null))
-        }
+        return () => PORT.disconnect()
     })
 
     $: party = todayStore.canParty
