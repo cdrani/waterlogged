@@ -6,21 +6,24 @@ type DEFAULT_MODEL_TYPE = {
     created: Date
 }
 
+type TARGET = {
+    goal: number,
+    amount: number,
+    measurement: MEASUREMENT
+}
+
 export type USER = DEFAULT_MODEL_TYPE & {
     synced: boolean,
 }
 
-export type SETTINGS = DEFAULT_MODEL_TYPE & {
+export type SETTINGS = DEFAULT_MODEL_TYPE & TARGET & {
     user_id: string,
-    goal: number,
     sound: string,
-    amount: number,
     enabled: boolean,
     interval: number,
     end_time: string,
     alert_type: ALERT,
     start_time: string,
-    measurement: MEASUREMENT
 }
 
 export type INTAKE = DEFAULT_MODEL_TYPE & {
@@ -30,14 +33,11 @@ export type INTAKE = DEFAULT_MODEL_TYPE & {
     time_stamp: number
 }
 
-export type LOG = DEFAULT_MODEL_TYPE & {
+export type LOG = DEFAULT_MODEL_TYPE & TARGET & {
     user_id: string,
-
     date_id: string,
     intakes: INTAKE[],
-    goal: number,
-    amount: number,
-    measurement: MEASUREMENT
+    complete: boolean,
 }
 
 export type LOG_RESPONSE = { log: LOG }

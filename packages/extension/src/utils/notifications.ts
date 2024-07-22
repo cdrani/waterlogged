@@ -1,7 +1,8 @@
-import { getState, setState } from './state'
+import { db } from 'common/stores/db'
 import { ENCOURAGEMENTS } from './encouragements'
-import type { DAILY_RESPONSE, SETTINGS, TODAY } from './types.d'
-import { getDateKey, getDateMS, getTimeStamp } from 'common/utils/date'
+import type { LOG, SETTINGS } from 'common/types'
+import { getDateKey, getDateMS } from 'common/utils/date'
+import { createDailyLog, createIntake } from 'common/stores/defaults'
 import { ensureOffscreenDocument, sendOffscreenMessage } from './offscreen'
 
 const FULL_DAY_MS = 60 * 60 * 24 * 1000
@@ -9,12 +10,12 @@ const FULL_DAY_MS = 60 * 60 * 24 * 1000
 type Progress = { goal: number, left: number, percentage: number }
 
 export default class Notification {
-    _today: TODAY | null
+    _log: LOG | null
     _settings: SETTINGS | null
 
     constructor() {
+        this._log = null
         this._settings = null
-        this._today = null
     }
 
     async welcome() {
@@ -33,9 +34,9 @@ export default class Notification {
     }
 
     async #getSettings() {
-        const { settings } = await getState('settings')
-        if (settings) (this._settings = settings)
-        return settings
+        const settings = await db.settings.toArray()
+        if (settings?.length) (this._settings = settings[0])
+        return settings?.[0]
     }
 
     async #clearAlarms() {
@@ -92,33 +93,33 @@ export default class Notification {
     }
 
     async #getToday() {
-        let data: TODAY
         const key = getDateKey()
-        let response = await getState([key, 'today']) as DAILY_RESPONSE
-        if (response[key]) {
-            data = response[key]
-        } else {
-            const { amount, goal } = response.today
-            data = { logs: [], amount, goal, measurement: 'ml' }
-            await setState({ key, values: data })
+        let log = await db.logs.get({ date_id: key })
+        if (!log) {
+            log = createDailyLog(this._settings)
+            await db.logs.add(log)
         }
         
-        this._today = data
-        return data
+        this._log = log
+        return log
     }
 
     async #getProgress() {
-        const data =  await this.#getToday()
-        const current = data.logs.reduce((acc, curr ) => acc + curr.amount, 0)
-        const percentage = Math.round((current / data.goal) * 100)
-        return  { goal: data.goal, left: data.goal - current, percentage }
+        const log =  await this.#getToday()
+        console.log({ log })
+        const current = log.intakes.reduce((acc, curr ) => acc + curr.amount, 0)
+        const percentage = Math.round((current / log.goal) * 100)
+        return  { goal: log.goal, left: log.goal - current, percentage }
     }
 
     async #logAmount() {
-        const data = await this.#getToday()
-        const logs = [{ amount: data.amount, time: getTimeStamp() }, ...data.logs]
-        const key = getDateKey() 
-        await setState({ key, values: { ...data, logs } })
+        const log = await this.#getToday()
+
+        const intake = createIntake({ log_id: log.id, amount: log.amount })
+        const intakes = [intake, ...log.intakes]
+        log.intakes = intakes
+
+        await db.logs.put(log)
     }
 
     async #createNotification({ id, title, message }: { id: string, title: string, message: string }) {

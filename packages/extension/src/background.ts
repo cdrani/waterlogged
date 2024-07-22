@@ -2,7 +2,7 @@ import { db } from 'common/stores/db'
 import { getDateKey } from 'common/utils/date'
 import { sendMessage } from './utils/messages'
 import Notification from './utils/notifications'
-import type { STORAGE_RESPONSE } from 'common/types'
+import type { SETTINGS, STORAGE_RESPONSE } from 'common/types'
 import { createDailyLog } from 'common/stores/defaults'
 import { ensureOffscreenDocument } from './utils/offscreen'
 
@@ -54,25 +54,38 @@ chrome.runtime.onMessage.addListener((_message, _sender, sendResponse) => {
     return true
 })
 
-chrome.storage.onChanged.addListener(async changes => {
-    const settingsChanged = changes.hasOwnProperty('settings')
-    if (!settingsChanged) return
-
-    const { oldValue, newValue } = changes.settings
+async function onSettingsUpate({ previous, current }) {
     const hasSettingChanged = ['enabled', 'alert_type', 'interval', 'start_time', 'end_time']
-        .some(key => oldValue?.[key] !== newValue?.[key])
+        .some(key => previous?.[key] !== current?.[key])
 
-    if (oldValue?.enabled !== newValue?.enabled) {
-        setBadgeInfo(newValue.enabled)
+    if (previous?.enabled !== current?.enabled) {
+        setBadgeInfo(current.enabled)
     }
 
     hasSettingChanged && await Notifier.startTimer()
-})
+}
+
+async function ensureDailyLog(settingsData?: SETTINGS) {
+    const dateKey = getDateKey()
+
+    let log = await db.logs.get({ date_id: dateKey }) 
+
+    if (!log) {
+        const settings = settingsData ?? await db.settings.toArray()[0]
+        console.log({ settingsData, settings })
+        const newLog = createDailyLog(settings)
+        log = await db.logs.add(newLog)
+    }
+
+    return log
+}
 
 chrome.runtime.onConnect.addListener(async (port) => {
     if (port.name !== 'popup') return
 
     POPUP_PORT = port
+
+    await ensureDailyLog()
 
     POPUP_PORT.onMessage.addListener(async ({ type, data = null }) => {
         let response: STORAGE_RESPONSE = null
@@ -83,13 +96,16 @@ chrome.runtime.onConnect.addListener(async (port) => {
             response = { settings: settings?.length ? settings[0] : data }
             if (!settings.length && data) await db.settings.add(data)
         } else if (type == 'set:settings') {
-            const log = await db.logs.get({ date_id: dateKey }) 
+            const log = await ensureDailyLog(data)
             log.amount = data.amount
             log.goal = data.goal
             log.measurement = data.measurement
             
             await db.logs.put(log)
+
+            const previous = await db.settings.toArray()[0]
             await db.settings.put(data)
+            await onSettingsUpate({ previous, current: data })
 
             response = { settings: data }
         } else if (type == 'get:today') {

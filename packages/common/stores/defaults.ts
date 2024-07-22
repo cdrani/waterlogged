@@ -18,6 +18,7 @@ export const createDailyLog = ({ user_id, goal, amount, measurement }: Partial<L
     measurement,
 
     id: uuidv4(),
+    complete: false,
     created: new Date(),
     date_id: getDateKey(),
     intakes: [],
