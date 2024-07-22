@@ -1,10 +1,10 @@
-import { db } from 'common/stores/db'
+import { db } from 'common/data/db'
 import { getDateKey } from 'common/utils/date'
 import { sendMessage } from './utils/messages'
 import Notification from './utils/notifications'
-import type { SETTINGS, STORAGE_RESPONSE } from 'common/types'
-import { createDailyLog } from 'common/stores/defaults'
+import { createDailyLog } from 'common/data/defaults'
 import { ensureOffscreenDocument } from './utils/offscreen'
+import type { SETTINGS, STORAGE_RESPONSE } from 'common/types'
 
 const Notifier = new Notification()
 let keepAliveTimer: Timer | null = null

@@ -1,8 +1,8 @@
-import { db } from 'common/stores/db'
+import { db } from 'common/data/db'
 import { ENCOURAGEMENTS } from './encouragements'
 import type { LOG, SETTINGS } from 'common/types'
 import { getDateKey, getDateMS } from 'common/utils/date'
-import { createDailyLog, createIntake } from 'common/stores/defaults'
+import { createDailyLog, createIntake } from 'common/data/defaults'
 import { ensureOffscreenDocument, sendOffscreenMessage } from './offscreen'
 
 const FULL_DAY_MS = 60 * 60 * 24 * 1000

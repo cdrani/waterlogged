@@ -3,8 +3,7 @@ import { getContext, setContext } from 'svelte'
 import { writable, get, derived } from 'svelte/store'
 
 import type { LOG, INTAKE } from 'common/types'
-
-import { createIntake } from 'common/stores/defaults'
+import { createIntake } from 'common/data/defaults'
 import { convertToDate, convertTo24HourFormat, } from 'common/utils/date'
 
 export default class TodayStore {
