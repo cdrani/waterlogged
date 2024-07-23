@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <div class="absolute -z-10 w-full h-[120px]" style="left:0; top: 0;">
+    <div class="absolute z-10 w-full h-[120px]" style="left:0; top: 0;">
         <div class="wave" style="--wave-height: {Math.min(tank.waterLevel, 100)}%" />
     </div>
 </section>

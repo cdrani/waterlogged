@@ -1,7 +1,6 @@
 <script lang="ts">
-    import { getLog } from '../stores/log'
-    import type LogStore from 'common/stores/log'
     import { openModal } from 'common/stores/modal'
+    import { type LogStore, getLog } from 'common/stores/log'
 
     import Tank from 'common/components/Tank.svelte'
 

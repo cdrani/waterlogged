@@ -2,19 +2,17 @@
     import { onMount } from 'svelte'
     import { writable } from 'svelte/store'
 
-    import Nav from './components/Nav.svelte'
-    import Modal from './components/Modal.svelte'
-    import DefaultView from "./views/Default.svelte"
-    import SettingsView from './views/Settings.svelte'
-    import Celebrate from './components/Celebrate.svelte'
+    import Nav from 'common/components/Nav.svelte'
+    import Modal from 'common/components/Modal.svelte'
+    import DefaultView from 'common/views/Default.svelte'
+    import SettingsView from 'common/views/Settings.svelte'
+    import Celebrate from 'common/components/Celebrate.svelte'
 
-    import type LogStore from 'common/stores/log'
-    import { initLog, getLog } from './stores/log'
-    import type SettingsStore from 'common/stores/settings'
-    import { initSettings, getSettings } from './stores/settings'
+    import { type LogStore, initLog, getLog } from 'common/stores/log'
     import { initModal, getModal, openModal } from 'common/stores/modal'
+    import { type SettingsStore, initSettings, getSettings } from 'common/stores/settings'
 
-    let PORT = chrome.runtime.connect({ name: 'popup' })
+    const PORT = chrome.runtime.connect({ name: 'popup' })
     
     initModal()
     initLog(PORT)
