@@ -30,27 +30,32 @@
     function setView(event: CustomEvent) {
         const { newView } = event.detail
         pageView.set(newView) 
-        newView == 'default' ? logStore.populate() : settingsStore.populate()
+
+        loadView(newView)
+    }
+
+    function loadView(view: PageView) {
+        view == 'default' ? logStore.populate() : settingsStore.populate()
     }
 
     onMount(() => {
-        $pageView == 'default' ? logStore.populate() : settingsStore.populate()
+        loadView($pageView)
         return () => PORT.disconnect()
     })
 
-    // $: party = todayStore.canParty
-    // $: {
-    //     if ($party) {
-    //         openModal('complete')
-    //     }
-    // }
+    $: party = logStore.canParty
+    $: {
+        if ($party) {
+            openModal('complete')
+        }
+    }
 </script>
 
 <main class="relative -z-100 bg-cyan-200 flex flex-col pt-0 w-[280px] mx-auto h-full">
     <Nav view={$pageView} on:view={setView} />
     <Modal />
 
-    <!-- <Celebrate party={$party} /> -->
+    <Celebrate party={$party} />
 
     <div 
         class="{$modal.visible ? 'shadow-black blur-md opacity-75' : 'flex w-full h-full'}"

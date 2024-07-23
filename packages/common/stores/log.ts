@@ -14,7 +14,7 @@ export default class LogStore {
     constructor(messaging: Messaging) {
         this.log = writable<LOG>()
         this.messaging = messaging
-        this.party = writable<boolean>(false)
+        this.party = writable<boolean>(this.partied)
 
         this.init()
     }
@@ -28,10 +28,23 @@ export default class LogStore {
         })
     }
 
+    get partied() {
+        const hasPartied = JSON.parse(localStorage.getItem('party_shown'))
+        if (hasPartied == null) {
+            localStorage.setItem('party_shown', `${false}`)
+            return false
+        }
+        return hasPartied
+    }
+
+    set partied(partied: boolean) {
+        localStorage.setItem('party_shown', `${partied}`)
+        this.party.set(partied)
+    }
+
     get canParty() {
         return derived([this.party, this.log], () => {
-            const partied = get(this.party)
-            if (partied) return false
+            if (this.partied) return false
 
             const log = get(this.log)
             if (!log) return false
@@ -52,10 +65,7 @@ export default class LogStore {
         const { intakes = [], goal } = log
         const total = intakes.reduce((acc: number, intake: INTAKE) => acc + Number(intake.amount), 0)
         if (intakes.length == 0 || total < Number(goal)) {
-            this.party.set(false)
-        } else {
-            const partied = get(this.party)
-            if (!partied) this.party.set(true)
+            this.partied = false
         }
     }
 

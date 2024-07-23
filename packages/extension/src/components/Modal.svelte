@@ -14,7 +14,7 @@
 
     function handleClose() {
         const view = $modal.view
-        // if (view == 'complete') (logStore.partied = true)
+        if (view == 'complete') (logStore.partied = true)
         closeModal()
     }
 </script>
