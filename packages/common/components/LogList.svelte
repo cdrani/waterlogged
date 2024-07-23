@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { getLog } from '../stores/log'
-    import type LogStore from 'common/stores/log'
+    import { type LogStore, getLog } from 'common/stores/log'
     import CurrentTime from 'common/components/CurrentTime.svelte'
 
     const store = getLog() as LogStore

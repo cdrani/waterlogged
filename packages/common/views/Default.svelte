@@ -1,6 +1,6 @@
 <script lang="ts">
-    import Aquarium from "../components/Aquarium.svelte"
-    import LogList from "../components/LogList.svelte"
+    import LogList from 'common/components/LogList.svelte'
+    import Aquarium from 'common/components/Aquarium.svelte'
 </script>
 
 <div class="flex flex-col w-full h-full relative">

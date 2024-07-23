@@ -1,9 +1,11 @@
+import { getContext, setContext } from 'svelte'
 import { writable, get, type Writable } from 'svelte/store'
 
-import type { Messaging } from './messaging/type'
-import type { SETTINGS } from "common/types/index.d"
+import type { SETTINGS } from 'common/types/index.d'
+import { type Messaging, ExtMessaging, WebMessaging } from 'common/stores/messaging'
 
-export default class SettingsStore {
+
+export class SettingsStore {
     private messaging: Messaging
     public settings: Writable<SETTINGS>
 
@@ -40,4 +42,16 @@ export default class SettingsStore {
         const settings = get(this.settings)
         this.messaging.postMessage({ type: 'set:settings', data: settings })
     }
+}
+
+
+const STORE = 'settings'
+
+export function getSettings() {
+    return getContext(STORE)
+}
+
+export function initSettings(port?: chrome.runtime.Port) {
+    const messaging = port ? new ExtMessaging(port) : new WebMessaging()
+    setContext(STORE, new SettingsStore(messaging))
 }

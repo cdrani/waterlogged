@@ -1,7 +1,6 @@
 <script lang="ts">
-    import { getLog } from '../stores/log'
-    import type LogStore from 'common/stores/log'
-    import { clickOutside } from '../utils/click-outside'
+    import { type LogStore, getLog } from 'common/stores/log'
+    import { clickOutside } from 'common/utils/click-outside'
     import { closeModal, getModal } from 'common/stores/modal'
 
     import CustomLogForm from './modal-views/CustomLogForm.svelte'

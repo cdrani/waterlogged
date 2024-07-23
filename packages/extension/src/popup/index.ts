@@ -1,4 +1,4 @@
-import '../index.css'
+import 'common/index.css'
 import App from '../App.svelte'
 
 const target = document.getElementById('app')

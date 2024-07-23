@@ -1,12 +1,13 @@
 import type { Writable } from 'svelte/store'
+import { getContext, setContext } from 'svelte'
 import { writable, get, derived } from 'svelte/store'
 
 import type { LOG, INTAKE } from 'common/types'
-import type { Messaging } from './messaging/type'
 import { createIntake } from 'common/data/defaults'
 import { convertToDate, convertTo24HourFormat, } from 'common/utils/date'
+import { type Messaging, ExtMessaging, WebMessaging } from 'common/stores/messaging'
 
-export default class LogStore {
+export class LogStore {
     private log: Writable<LOG>
     private messaging: Messaging
     private party: Writable<boolean>
@@ -146,3 +147,15 @@ export default class LogStore {
         })
     }
 }
+
+const STORE = 'log'
+
+export function getLog() {
+    return getContext(STORE)
+}
+
+export function initLog(port?: chrome.runtime.Port) {
+    const messaging = port ? new ExtMessaging(port) : new WebMessaging()
+    setContext(STORE, new LogStore(messaging))
+}
+
