@@ -1,15 +1,15 @@
 <script lang="ts">
-    import { getToday } from '../../stores/today'
+    import { getLog } from '../../stores/log'
+    import type LogStore from 'common/stores/log'
     import { closeModal } from 'common/stores/modal'
-    import type TodayStore from '../../stores/today'
 
-    const store = getToday() as TodayStore
+    const logStore = getLog() as LogStore
 
-    $: today = store.today
-    $: total = store.total
+    $: log = logStore.data
+    $: total = logStore.total
 
     function handleClose() {
-        store.partied = true 
+        // logStore.partied = true 
         closeModal()
     }
 </script>
@@ -18,7 +18,7 @@
     <h1 class="text-center text-white text-xl font-bold">Congratulations!</h1>
     <h2 class="text-center text-white text-lg font-medium">You hit your daily goal!</h2>
     <h3 class="text-center text-white text-2xl font-black mt-2">
-        {$total} / {$today.goal} ({$today.measurement})
+        {$total} / {$log.goal} ({$log.measurement})
     </h3>
 
     <h4 class="text-center text-white text-[13px] mt-3 leading-snug">

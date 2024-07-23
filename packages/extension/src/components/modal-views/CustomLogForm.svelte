@@ -1,22 +1,23 @@
 <script lang="ts">
-    import type { INTAKE } from 'common/types';
-    import type TodayStore from '../../stores/today'
-    import { getToday } from '../../stores/today'
+    import { getLog } from '../../stores/log'
     import { closeModal } from 'common/stores/modal'
 
-    const todayStore = getToday() as TodayStore
-    const inputClass = "px-0.5 pl-2 h-7 text-[14px] rounded-[4px]"
+    import type { INTAKE } from 'common/types'
+    import type LogStore from 'common//stores/log'
+
+    const logStore = getLog() as LogStore
+    const inputClass = 'px-0.5 pl-2 h-7 text-[14px] rounded-[4px]'
 
     function saveCustomLog(e: SubmitEvent) {
         const formData = new FormData(e.target as HTMLFormElement)
         const [time, amount] = [...formData.values()]
         const log = { time, amount: Number(amount) }
         
-        todayStore.logCustomAmount(log as INTAKE)
+        logStore.logCustomAmount(log as INTAKE)
         closeModal()
     }
 
-    $: today = todayStore.today
+    $: log = logStore.data
 
     const getTime = () => {
         const date = new Date()
@@ -43,8 +44,8 @@
         </label>
 
         <label for="amount" class="flex justify-between items-center gap-y-1">
-            <span class="text-white text-[16px]">Amount ({$today.measurement})</span>
-            <input id="amount" name="amount" type="number" value={$today.amount} class="w-1/2 {inputClass}" />
+            <span class="text-white text-[16px]">Amount ({$log.measurement})</span>
+            <input id="amount" name="amount" type="number" value={$log.amount} class="w-1/2 {inputClass}" />
         </label>
     </div>
 
