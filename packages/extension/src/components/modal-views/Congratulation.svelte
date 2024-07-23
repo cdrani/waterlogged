@@ -9,7 +9,7 @@
     $: total = logStore.total
 
     function handleClose() {
-        // logStore.partied = true 
+        logStore.partied = true 
         closeModal()
     }
 </script>
