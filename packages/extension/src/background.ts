@@ -85,7 +85,7 @@ chrome.runtime.onConnect.addListener(async (port) => {
     POPUP_PORT = port
 
     const log = await ensureDailyLog()
-    POPUP_PORT?.postMessage({ type: `get:today:response`, response: { log } })
+    POPUP_PORT?.postMessage({ type: `get:log:response`, response: { log } })
 
     POPUP_PORT.onMessage.addListener(async ({ type, data = null }) => {
         let response: STORAGE_RESPONSE = null
@@ -107,10 +107,10 @@ chrome.runtime.onConnect.addListener(async (port) => {
             await onSettingsUpate({ previous, current: data })
 
             response = { settings: data }
-        } else if (type == 'get:today') {
+        } else if (type == 'get:log') {
             const log = await ensureDailyLog()
             response = { log }
-        } else if (type == 'set:today') {
+        } else if (type == 'set:log') {
             await db.logs.put(data)
         }
 

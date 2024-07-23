@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { getToday } from '../stores/today'
-    import type TodayStore from '../stores/today'
+    import { getLog } from '../stores/log'
+    import type LogStore from 'common/stores/log'
     import { openModal } from 'common/stores/modal'
 
     import Tank from 'common/components/Tank.svelte'
 
-    const store = getToday() as TodayStore
+    const store = getLog() as LogStore
 
     function showAddModal() {
         openModal('add')
@@ -27,7 +27,7 @@
         tank = { ...tank, waterLevel: value }
     })
 
-    store.today.subscribe(value => {
+    store.data.subscribe(value => {
         let { measurement, goal } = value ?? tank
         tank = { ...tank, measurement, goal }
     })

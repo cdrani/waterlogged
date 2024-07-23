@@ -8,20 +8,20 @@
     import SettingsView from './views/Settings.svelte'
     import Celebrate from './components/Celebrate.svelte'
 
-    import type TodayStore from './stores/today'
-    import { initToday, getToday } from './stores/today'
-    import type SettingsStore from './stores/settings'
+    import type LogStore from 'common/stores/log'
+    import { initLog, getLog } from './stores/log'
+    import type SettingsStore from 'common/stores/settings'
     import { initSettings, getSettings } from './stores/settings'
     import { initModal, getModal, openModal } from 'common/stores/modal'
 
     let PORT = chrome.runtime.connect({ name: 'popup' })
     
     initModal()
-    initToday(PORT)
+    initLog(PORT)
     initSettings(PORT)
 
     const modal = getModal()
-    const todayStore = getToday() as TodayStore
+    const logStore = getLog() as LogStore
     const settingsStore = getSettings() as SettingsStore
 
     type PageView = 'default' | 'settings'
@@ -30,27 +30,27 @@
     function setView(event: CustomEvent) {
         const { newView } = event.detail
         pageView.set(newView) 
-        newView == 'default' ? todayStore.populate() : settingsStore.populate()
+        newView == 'default' ? logStore.populate() : settingsStore.populate()
     }
 
     onMount(() => {
-        $pageView == 'default' ? todayStore.populate() : settingsStore.populate()
+        $pageView == 'default' ? logStore.populate() : settingsStore.populate()
         return () => PORT.disconnect()
     })
 
-    $: party = todayStore.canParty
-    $: {
-        if ($party) {
-            openModal('complete')
-        }
-    }
+    // $: party = todayStore.canParty
+    // $: {
+    //     if ($party) {
+    //         openModal('complete')
+    //     }
+    // }
 </script>
 
 <main class="relative -z-100 bg-cyan-200 flex flex-col pt-0 w-[280px] mx-auto h-full">
     <Nav view={$pageView} on:view={setView} />
     <Modal />
 
-    <Celebrate party={$party} />
+    <!-- <Celebrate party={$party} /> -->
 
     <div 
         class="{$modal.visible ? 'shadow-black blur-md opacity-75' : 'flex w-full h-full'}"

@@ -3,10 +3,10 @@
     import { getSettings } from '../stores/settings'
     import Toggle from '../components/Toggle.svelte'
 
-    import type SettingsStore from '../stores/settings'
+    import type SettingsStore from 'common/stores/settings'
 
     const store = getSettings() as SettingsStore
-    $: settings = store.settings
+    $: settings = store.data
 
     function handleInput(e: Event) {
         const target = e.target as HTMLSelectElement | HTMLSelectElement
