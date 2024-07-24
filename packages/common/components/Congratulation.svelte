@@ -1,7 +1,6 @@
 <script lang="ts">
-    import { getLog } from '../../stores/log'
-    import type LogStore from 'common/stores/log'
     import { closeModal } from 'common/stores/modal'
+    import { type LogStore, getLog } from 'common/stores/log'
 
     const logStore = getLog() as LogStore
 
@@ -14,7 +13,7 @@
     }
 </script>
 
-<section class="absolute flex flex-col h-full p-4 pt-6">
+<section class="absolute z-[1000] flex flex-col h-full p-4 pt-6">
     <h1 class="text-center text-white text-xl font-bold">Congratulations!</h1>
     <h2 class="text-center text-white text-lg font-medium">You hit your daily goal!</h2>
     <h3 class="text-center text-white text-2xl font-black mt-2">

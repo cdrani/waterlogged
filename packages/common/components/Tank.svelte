@@ -8,8 +8,8 @@
     export let handleModal: () => void = () => {}
 </script>
 
-<section class="overflow-hidden rounded-md absolute -z-100 bg-cyan-500 flex flex-col p-4 w-[248px] h-[120px]">
-    <div class="flex relative z-50 w-full h-full justify-between">
+<section class="overflow-hidden rounded-md relative bg-cyan-500 flex flex-col p-4 w-[248px] h-[120px]">
+    <div class="flex relative z-20 w-full h-full justify-between">
         <CurrentTime />
         <div class="flex flex-col min-w-[100px] max-w-3/5 items-end">
             <p class="flex gap-x-2 justify-between font-semibold text-[14px] text-black w-full">
@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    <div class="relative z-50 bottom-2 h-6 w-full">
+    <div class="relative z-20 bottom-2 h-6 w-full">
         <div class="flex gap-3">
             <button on:click={handleLog} class="w-6 h-6">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="#155e75"  viewBox="0 0 24 24" width="24" height="24">

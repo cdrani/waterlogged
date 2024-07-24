@@ -32,10 +32,10 @@
     })
 </script>
 
-<div class="flex w-full max-w-[248px] h-[120px] mx-4 overflow-hidden rounded-md">
+<div class="flex relative w-full max-w-[248px] h-[120px] mx-4 overflow-hidden rounded-md">
     <Tank 
         tank={tank}
         handleModal={showAddModal}
-        handleLog={() => store.logAmount(true) }
+        handleLog={() => store.logAmount() }
     />
 </div>
