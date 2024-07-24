@@ -55,9 +55,7 @@
 
     <Celebrate party={$party} />
 
-    <div 
-        class="{$modal.visible ? 'shadow-black blur-md opacity-75' : 'flex w-full h-full'}"
-    >
+    <div class="flex w-full h-full {$modal.visible ? 'shadow-black shadow-xl blur-xl opacity-75' : ''}">
         {#if $pageView == 'default'}
             <DefaultView />
         {:else}

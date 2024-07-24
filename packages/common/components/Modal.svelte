@@ -3,13 +3,11 @@
     import { clickOutside } from 'common/utils/click-outside'
     import { closeModal, getModal } from 'common/stores/modal'
 
-    import CustomLogForm from './modal-views/CustomLogForm.svelte'
-    import Congratulation from './modal-views/Congratulation.svelte'
+    import CustomLogForm from './CustomLogForm.svelte'
+    import Congratulation from './Congratulation.svelte'
 
     const modal = getModal()
     const logStore = getLog() as LogStore
-
-    $: visible = $modal.visible
 
     function handleClose() {
         const view = $modal.view
@@ -22,7 +20,7 @@
     id="modal"
     role="alertdialog"
     aria-modal="true"
-    class="fixed w-full h-full shadow-black {visible
+    class="fixed z-[100] w-full h-full {$modal.visible
         ? 'block overflow-y-hidden'
         : 'hidden overflow-y-hidden'} top-1/2 -translate-y-1/2 shadow-black z-[10] inset-0 flex w-full h-full mx-auto px-4 items-center content-center place-content-center"
 >
