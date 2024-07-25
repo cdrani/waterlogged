@@ -13,14 +13,22 @@ export function getDateMS(timeStr?: string) {
     return date.getTime()
 }
 
+function getLocales(): string[] {
+    let locales = ['en-US'] // Default locale
+
+    if (typeof navigator !== 'undefined' && navigator.languages) {
+        locales = navigator.languages as string[]
+    }
+
+    return locales
+}
+
 export function getTimeStamp(date?: Date) {
-    const locales = navigator.languages as string[]
-    return new Intl.DateTimeFormat(locales, { timeStyle: 'short' }).format(date ?? new Date())
+    return new Intl.DateTimeFormat(getLocales(), { timeStyle: 'short' }).format(date ?? new Date())
 }
 
 export function getMediumDate(date?: Date) {
-    const locales = navigator.languages as string[]
-    return new Intl.DateTimeFormat(locales, {
+    return new Intl.DateTimeFormat(getLocales(), {
         dateStyle: 'medium',
     }).format(date ?? new Date())
 }
