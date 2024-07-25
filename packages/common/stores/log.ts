@@ -30,16 +30,22 @@ export class LogStore {
     }
 
     get partied() {
-        const hasPartied = JSON.parse(localStorage.getItem('party_shown'))
-        if (hasPartied == null) {
-            localStorage.setItem('party_shown', `${false}`)
-            return false
+        if (typeof window !== 'undefined' && window.localStorage) {
+            const hasPartied = JSON.parse(localStorage.getItem('party_shown') || 'false')
+            if (hasPartied == null) {
+                localStorage.setItem('party_shown', 'false')
+                return false
+            }
+            return hasPartied
         }
-        return hasPartied
+
+        return false // Default value if localStorage is not available
     }
 
     set partied(partied: boolean) {
-        localStorage.setItem('party_shown', `${partied}`)
+        if (typeof window !== 'undefined' && window.localStorage) {
+            localStorage.setItem('party_shown', JSON.stringify(partied))
+        }
         this.party.set(partied)
     }
 
@@ -158,4 +164,3 @@ export function initLog(port?: chrome.runtime.Port) {
     const messaging = port ? new ExtMessaging(port) : new WebMessaging()
     setContext(STORE, new LogStore(messaging))
 }
-
