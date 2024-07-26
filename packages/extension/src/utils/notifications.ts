@@ -1,9 +1,10 @@
 import { db } from 'common/data/db'
 import type { LOG, SETTINGS } from 'common/types'
-import { getDateKey, getDateMS } from 'common/utils/date'
+import { getDateMS } from 'common/utils/date'
 import { getEncouragingMessage } from 'common/utils/encouragements'
-import { createDailyLog, createIntake } from 'common/data/defaults'
+import { createIntake } from 'common/data/defaults'
 import { ensureOffscreenDocument, sendOffscreenMessage } from './offscreen'
+import { LogsService, SettingsService } from 'common/data/services'
 
 const FULL_DAY_MS = 60 * 60 * 24 * 1000
 
@@ -78,9 +79,9 @@ export default class Notification {
     }
 
     private async getSettings() {
-        const settings = await db.settings.toArray()
-        if (settings?.length) (this.settings = settings[0])
-        return settings?.[0]
+        const settings = await SettingsService.load()
+        this.settings = settings
+        return settings
     }
 
     private async clearAlarms() {
@@ -119,27 +120,21 @@ export default class Notification {
         await sendOffscreenMessage(sound)
     }
 
-    private async getToday() {
-        const key = getDateKey()
-        let log = await db.logs.get({ date_id: key })
-        if (!log) {
-            log = createDailyLog(this.settings)
-            await db.logs.add(log)
-        }
-        
+    private async getLog() {
+        const log = await LogsService.load(this.settings)
         this.log = log
         return log
     }
 
     private async getProgress() {
-        const log =  await this.getToday()
+        const log =  await this.getLog()
         const current = log.intakes.reduce((acc, curr ) => acc + curr.amount, 0)
         const percentage = Math.round((current / log.goal) * 100)
         return  { goal: log.goal, left: log.goal - current, percentage }
     }
 
     private async logAmount() {
-        const log = await this.getToday()
+        const log = await this.getLog()
 
         const intake = createIntake({ log_id: log.id, amount: log.amount })
         const intakes = [intake, ...log.intakes]
