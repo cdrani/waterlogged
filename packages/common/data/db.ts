@@ -20,12 +20,11 @@ export class DB extends Dexie {
             logs: 'id, date_id, created',
         })
 
-        // TODO: reconfigure when cloud setup
-        // this.cloud.configure({
-        //     databaseUrl: '',
-        //     requireAuth: false,
-        //     customLoginGui: false,
-        // })
+        this.cloud.configure({
+            requireAuth: false,
+            customLoginGui: true,
+            databaseUrl: process.env.DEXIE_DB_RL,
+        })
 
         this.on('ready', async () => await populate(this))
     }
