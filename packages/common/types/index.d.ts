@@ -2,7 +2,7 @@ export type MEASUREMENT = 'cup' | 'ml'
 export type ALERT = 'notify' | 'alarm' | 'both' | 'none'
 
 type DEFAULT_MODEL_TYPE = {
-    id: string, // primary key
+    id: string,
     created: Date
 }
 
@@ -17,7 +17,6 @@ export type USER = DEFAULT_MODEL_TYPE & {
 }
 
 export type SETTINGS = DEFAULT_MODEL_TYPE & TARGET & {
-    user_id: string,
     sound: string,
     enabled: boolean,
     interval: number,
@@ -34,7 +33,6 @@ export type INTAKE = DEFAULT_MODEL_TYPE & {
 }
 
 export type LOG = DEFAULT_MODEL_TYPE & TARGET & {
-    user_id: string,
     date_id: string,
     intakes: INTAKE[],
     complete: boolean,

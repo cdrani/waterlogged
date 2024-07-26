@@ -1,34 +1,30 @@
 import { v4 as uuidv4 } from 'uuid'
 import type { INTAKE, LOG, SETTINGS } from 'common/types'
-import { formatTime, getDateKey, getTimeStamp } from '../utils/date'
+import { formatTime, getDateKey, getTimeStamp } from 'common/utils/date'
 
 export const createIntake = ({ log_id, time, amount }: Partial<INTAKE>): INTAKE => ({
+    id: uuidv4(),
     amount,
     log_id,
-    id: uuidv4(),
     created: new Date(),
     time_stamp: Date.now(),
     time: time ? formatTime(time) : getTimeStamp(),
 })
 
-export const createDailyLog = ({ user_id, goal, amount, measurement }: Partial<LOG>): LOG => ({
-    user_id,
+export const createDailyLog = ({ goal, amount, measurement }: Partial<LOG>): LOG => ({
+    id: uuidv4(),
     goal,
     amount,
     measurement,
-
-    id: uuidv4(),
     complete: false,
     created: new Date(),
     date_id: getDateKey(),
     intakes: [],
 })
 
-export const createSettings = ({ user_id }: Partial<SETTINGS>): SETTINGS => ({
+export const createSettings = (): SETTINGS => ({
     id: uuidv4(),
-    user_id,
     created: new Date(),
-
     goal: 2000,
     amount: 250,
     measurement: 'ml',

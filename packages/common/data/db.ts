@@ -1,9 +1,9 @@
-// import dexieCloud from 'dexie-cloud-addon'
 import Dexie, { Table } from 'dexie'
 import { v4 as uuidv4 } from 'uuid'
+import dexieCloud from 'dexie-cloud-addon'
 
-import type { LOG, USER, SETTINGS, INTAKE } from '../types/index.d'
 import { createDailyLog, createSettings } from './defaults'
+import type { LOG, USER, SETTINGS, INTAKE } from '../types/index.d'
 
 export class DB extends Dexie {
     user!: Table<USER>
@@ -12,13 +12,12 @@ export class DB extends Dexie {
     settings!: Table<SETTINGS>
 
     constructor() {
-        super('waterlogged')//, { addons: [dexieCloud], cache: 'immutable' })
+        super('waterlogged', { addons: [dexieCloud], cache: 'immutable' })
 
         this.version(1).stores({
             user: 'id, created',
-            settings: 'id, user_id, created',
-            intakes: 'id, log_id, time_stamp',
-            logs: 'id, user_id, date_id, created',
+            settings: 'id, created',
+            logs: 'id, date_id, created',
         })
 
         // TODO: reconfigure when cloud setup
@@ -38,15 +37,13 @@ async function populate(db: DB) {
     const numOfUsers = await db.user.count()
     if (numOfUsers > 0) return
 
-    const user_id = uuidv4()
-
     await db.user.add({
-        id: user_id,
+        id: uuidv4(),
         synced: false,
         created: new Date()
     })
 
-    const settings = createSettings({ user_id })
+    const settings = createSettings()
     const log = createDailyLog(settings)
 
     await db.settings.add(settings)
