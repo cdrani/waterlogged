@@ -1,14 +1,12 @@
 import { db } from 'common/data/db'
-import { getDateKey } from 'common/utils/date'
 import { sendMessage } from './utils/messages'
 import Notification from './utils/notifications'
-import { createDailyLog } from 'common/data/defaults'
+import { LogsService } from 'common/data/services'
 import { ensureOffscreenDocument } from './utils/offscreen'
-import type { SETTINGS, STORAGE_RESPONSE } from 'common/types'
+import { type Messaging, initMessageHandler } from 'common/stores/messaging'
 
 const Notifier = new Notification()
 let keepAliveTimer: Timer | null = null
-let POPUP_PORT: chrome.runtime.Port | null = null
 
 function keepAlive() {
     if (keepAliveTimer) return
@@ -65,57 +63,11 @@ async function onSettingsUpate({ previous, current }) {
     hasSettingChanged && await Notifier.startTimer()
 }
 
-async function ensureDailyLog(settingsData?: SETTINGS) {
-    const dateKey = getDateKey()
-
-    let log = await db.logs.get({ date_id: dateKey }) 
-
-    if (!log) {
-        const settings = settingsData ?? await db.settings.toArray()[0]
-        const newLog = createDailyLog(settings)
-        log = await db.logs.add(newLog)
-    }
-
-    return log
-}
-
 chrome.runtime.onConnect.addListener(async (port) => {
     if (port.name !== 'popup') return
 
-    POPUP_PORT = port
-
-    const log = await ensureDailyLog()
-    POPUP_PORT?.postMessage({ type: `get:log:response`, response: { log } })
-
-    POPUP_PORT.onMessage.addListener(async ({ type, data = null }) => {
-        let response: STORAGE_RESPONSE = null
-
-        if (type == 'get:settings') {
-            const settings = await db.settings.toArray()
-            response = { settings: settings?.length ? settings[0] : data }
-            if (!settings.length && data) await db.settings.add(data)
-        } else if (type == 'set:settings') {
-            const log = await ensureDailyLog(data)
-            log.amount = data.amount
-            log.goal = data.goal
-            log.measurement = data.measurement
-            
-            await db.logs.put(log)
-
-            const previous = await db.settings.toArray()[0]
-            await db.settings.put(data)
-            await onSettingsUpate({ previous, current: data })
-
-            response = { settings: data }
-        } else if (type == 'get:log') {
-            const log = await ensureDailyLog()
-            response = { log }
-        } else if (type == 'set:log') {
-            await db.logs.put(data)
-        }
-
-        response && POPUP_PORT?.postMessage({ type: `${type}:response`, response })
+    const messaging: Messaging = initMessageHandler({ port, callback: onSettingsUpate })
+    LogsService.load().then(log => {
+        messaging.postMessage({ type: `get:log:response`, response: { log } })
     })
-
-    POPUP_PORT.onDisconnect.addListener(() => (POPUP_PORT = null))
 })
