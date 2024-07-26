@@ -5,7 +5,7 @@ import { writable, get, derived } from 'svelte/store'
 import type { LOG, INTAKE } from 'common/types'
 import { createIntake } from 'common/data/defaults'
 import { convertToDate, convertTo24HourFormat, } from 'common/utils/date'
-import { type Messaging, ExtMessaging, WebMessaging } from 'common/stores/messaging'
+import { type Messaging, ExtMessaging, WebMessaging } from 'common/messaging'
 
 export class LogStore {
     private log: Writable<LOG>

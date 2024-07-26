@@ -2,7 +2,7 @@ import { getContext, setContext } from 'svelte'
 import { writable, get, type Writable } from 'svelte/store'
 
 import type { SETTINGS } from 'common/types/index.d'
-import { type Messaging, ExtMessaging, WebMessaging } from 'common/stores/messaging'
+import { type Messaging, ExtMessaging, WebMessaging } from 'common/messaging'
 
 
 export class SettingsStore {
