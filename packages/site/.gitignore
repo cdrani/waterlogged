@@ -1,5 +1,7 @@
 node_modules
 
+!**/routes/logs
+
 # Output
 .output
 .vercel
