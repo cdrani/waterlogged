@@ -3,7 +3,7 @@ import { sendMessage } from './utils/messages'
 import Notification from './utils/notifications'
 import { LogsService } from 'common/data/services'
 import { ensureOffscreenDocument } from './utils/offscreen'
-import { type Messaging, initMessageHandler } from 'common/stores/messaging'
+import { type Messaging, initMessageHandler } from 'common/messaging'
 
 const Notifier = new Notification()
 let keepAliveTimer: Timer | null = null
