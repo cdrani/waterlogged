@@ -23,7 +23,8 @@ export class DB extends Dexie {
         this.cloud.configure({
             requireAuth: false,
             customLoginGui: true,
-            databaseUrl: process.env.DEXIE_DB_RL,
+            // @ts-ignore
+            databaseUrl: import.meta.env.VITE_DEXIE_DB_URL,
         })
 
         this.on('ready', async () => await populate(this))
