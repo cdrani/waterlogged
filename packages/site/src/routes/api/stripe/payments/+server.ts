@@ -22,13 +22,13 @@ export async function POST(request: Request) {
 	const session = await stripe.checkout.sessions.create({
 		line_items: [
 			{
-				price: process.env.PRICE_ID,
+				price: process.env.STRIPE_PRICE_ID,
 				quantity: 1,
 			},
 		],
 		mode: 'subscription',
-		success_url: process.env.SUCCESS_URL,
-		cancel_url: process.env.CANCEL_URL,
+		success_url: process.env.STRIPE_SUCCESS_URL,
+		cancel_url: process.env.STRIPE_CANCEL_URL,
 		customer,
 	})
 
