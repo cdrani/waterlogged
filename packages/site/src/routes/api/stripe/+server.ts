@@ -1,6 +1,6 @@
 import Stripe from 'stripe'
 
-const secret = process.env.STRIPE_SECRET!
+const secret = process.env.STRIPE_WEBHOOK_SECRET!
 
 const stripe = new Stripe(process.env.STRIPE_API_KEY!, {
 	typescript: true,
