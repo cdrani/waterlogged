@@ -2,6 +2,7 @@
     import { onMount } from 'svelte'
     import { writable } from 'svelte/store'
 
+    import { db } from 'common/data/db'
     import Nav from 'common/components/Nav.svelte'
     import Modal from 'common/components/Modal.svelte'
     import DefaultView from 'common/views/Default.svelte'
@@ -11,6 +12,8 @@
     import { type LogStore, initLog, getLog } from 'common/stores/log'
     import { initModal, getModal, openModal } from 'common/stores/modal'
     import { type SettingsStore, initSettings, getSettings } from 'common/stores/settings'
+
+    db.open()
 
     initModal()
     initLog()
