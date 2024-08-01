@@ -1,8 +1,7 @@
 <script lang="ts">
     import { playAlarm } from 'common/utils/alarm'
     import Toggle from 'common/components/Toggle.svelte'
-    import { type SettingStore, getSettings } from 'common/stores/settings'
-
+    import { type SettingsStore, getSettings } from 'common/stores/settings'
 
     const store = getSettings() as SettingsStore
     $: settings = store.data
