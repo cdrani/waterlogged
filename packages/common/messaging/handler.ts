@@ -9,10 +9,11 @@ type Callback = (args: any) => Promise<void>
 
 type MessageHandler = {
     type: string,
-    callback: Callback
+    callback?: Callback,
     messaging: Messaging,
     data: SETTINGS | LOG | null,
 }
+
 async function handleMessage({ type, data, messaging, callback }: MessageHandler) {
     let response: STORAGE_RESPONSE = null
 
@@ -38,12 +39,14 @@ async function handleMessage({ type, data, messaging, callback }: MessageHandler
 }
 
 type InitMessage = {
-    callback?: Callback
+    callback?: Callback,
     port?: chrome.runtime.Port
-}
+} | undefined
 
-export function initMessageHandler({ port, callback }: InitMessage) {
-    const messaging = port ? new ExtMessaging(port) : new WebMessaging()
-    messaging.onMessage(({ type, data }) => { handleMessage({ type, data, messaging, callback }) })
+export function initMessageHandler(params: InitMessage = undefined) {
+    const messaging = params?.port ? new ExtMessaging(params.port) : new WebMessaging()
+    messaging.onMessage(({ type, data }) => {
+        handleMessage({ type, data, messaging, callback: params?.callback })
+    })
     return messaging
 }
