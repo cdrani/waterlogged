@@ -6,6 +6,7 @@ import type { LOG, INTAKE } from 'common/types'
 import { createIntake } from 'common/data/defaults'
 import { convertToDate, convertTo24HourFormat, } from 'common/utils/date'
 import { type Messaging, ExtMessaging, WebMessaging } from 'common/messaging'
+import { LogsService } from 'common/data/services'
 
 export class LogStore {
     private log: Writable<LOG>
@@ -20,7 +21,10 @@ export class LogStore {
         this.init()
     }
 
-    private init() {
+    private async init() {
+        const log = await LogsService.load()
+        this.updateLog(log)
+
         this.messaging.onMessage(({ type, response }) => {
             if (type == 'get:log:response') {
                 const data = response.log

@@ -3,6 +3,7 @@ import { writable, get, type Writable } from 'svelte/store'
 
 import type { SETTINGS } from 'common/types/index.d'
 import { type Messaging, ExtMessaging, WebMessaging } from 'common/messaging'
+import { SettingsService } from 'common/data/services'
 
 
 export class SettingsStore {
@@ -16,7 +17,10 @@ export class SettingsStore {
         this.init()
     }
 
-    private init() {
+    private async init() {
+        const settings = await SettingsService.load()
+        this.updateDefaults(settings)
+
         this.messaging.onMessage(({ type, response }) => {
             if (type == 'get:settings:response') {
                 const data = response.settings

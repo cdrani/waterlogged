@@ -66,8 +66,5 @@ async function onSettingsUpate({ previous, current }) {
 chrome.runtime.onConnect.addListener(async (port) => {
     if (port.name !== 'popup') return
 
-    const messaging: Messaging = initMessageHandler({ port, callback: onSettingsUpate })
-    LogsService.load().then(log => {
-        messaging.postMessage({ type: `get:log:response`, response: { log } })
-    })
+    initMessageHandler({ port, callback: onSettingsUpate })
 })
