@@ -22,7 +22,7 @@
     aria-modal="true"
     class="fixed z-[100] w-full h-full {$modal.visible
         ? 'block overflow-y-hidden'
-        : 'hidden overflow-y-hidden'} top-1/2 -translate-y-1/2 shadow-black z-[10] inset-0 flex w-full h-full mx-auto px-4 items-center content-center place-content-center"
+        : 'hidden overflow-y-hidden'} top-[184px] -translate-y-1/2 shadow-black z-[10] inset-0 flex w-full h-full mx-auto px-4 items-center content-center place-content-center"
 >
     <div
         id="modal-content"
