@@ -1,21 +1,19 @@
 <script lang="ts">
+    import { liveQuery } from 'dexie'
     import { playAlarm } from 'common/utils/alarm'
+    import { SettingsService } from '../data/services'
     import Toggle from 'common/components/Toggle.svelte'
-    import { type SettingsStore, getSettings } from 'common/stores/settings'
 
-    const store = getSettings() as SettingsStore
-    $: settings = store.data
-
-    function handleInput(e: Event) {
+    async function handleInput(e: Event) {
         const target = e.target as HTMLSelectElement | HTMLSelectElement
         const { name: key , value: rawValue } = target
         const value = ['goal', 'interval', 'amount'].includes(key) ? Number(rawValue) : rawValue
-        store.updateSetting({ key, value })
+        await SettingsService.updateKeyValue({ key, value })
     }
 
-    function handleToggle(event: CustomEvent) {
+    async function handleToggle(event: CustomEvent) {
         const state = event.detail
-        store.updateSetting(state)
+        await SettingsService.updateKeyValue(state)
     }
 
     function playSound() {
@@ -23,6 +21,8 @@
     }
 
     const inputClass = "px-0.5 pl-2 h-7 text-[14px] rounded-[4px]"
+
+    let settings = liveQuery(() => SettingsService.load())
 </script>
 
 {#if $settings}
