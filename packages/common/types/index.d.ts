@@ -33,6 +33,7 @@ export type INTAKE = DEFAULT_MODEL_TYPE & {
 }
 
 export type LOG = DEFAULT_MODEL_TYPE & TARGET & {
+    total: number,
     date_id: string,
     intakes: INTAKE[],
     complete: boolean,
