@@ -15,6 +15,7 @@ export const createDailyLog = ({ goal, amount, measurement }: Partial<LOG>): LOG
     id: uuidv4(),
     goal,
     amount,
+    total: 0,
     measurement,
     complete: false,
     created: new Date(),
