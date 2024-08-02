@@ -2,6 +2,15 @@ export function getDateKey() {
     return new Intl.DateTimeFormat('sv-SE', { dateStyle: 'short' }).format(new Date())
 }
 
+export function getTime() {
+    const date = new Date()
+    const minutes = date.getMinutes()
+    const hours = date.getHours()
+    const paddedMinutes = minutes <= 9 ? `0${minutes}` : minutes
+    const paddedHours = hours <= 9 ? `0${hours}` : hours
+    return `${paddedHours}:${paddedMinutes}`
+}
+
 export function getDateMS(timeStr?: string) {
     const date = new Date()
     if (!timeStr) return date.getTime()
