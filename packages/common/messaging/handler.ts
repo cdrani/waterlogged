@@ -1,4 +1,3 @@
-import { db } from 'common/data/db'
 import ExtMessaging from './ext'
 import WebMessaging from './web'
 import type { Messaging } from './type'
@@ -27,10 +26,10 @@ async function handleMessage({ type, data, messaging, callback }: MessageHandler
 
         response = { settings: data as SETTINGS }
     } else if (type === 'get:log') {
-        const log = await LogsService.load()
+        const log = await LogsService.getByDate()
         response = { log }
     } else if (type === 'set:log') {
-        await db.logs.put(data as LOG)
+        await LogsService.update(data as LOG)
     }
 
     if (response) {
