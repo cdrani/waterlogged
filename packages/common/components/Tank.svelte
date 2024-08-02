@@ -1,9 +1,10 @@
 <script lang="ts">
     import CurrentTime from './CurrentTime.svelte'
 
-    type Tank = { measurement: string, goal: number, total: number, waterLevel: number }
-
+    type Tank = { measurement: string, goal: number, total: number }
     export let tank: Tank
+    export let waterLevel: number = 0
+
     export let handleLog: () => void = () => {}
     export let handleModal: () => void = () => {}
 </script>
@@ -40,6 +41,6 @@
     </div>
 
     <div class="absolute z-10 w-full h-[120px]" style="left:0; top: 0;">
-        <div class="wave" style="--wave-height: {Math.min(tank.waterLevel, 100)}%" />
+        <div class="wave" style="--wave-height: {waterLevel}%" />
     </div>
 </section>

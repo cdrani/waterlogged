@@ -1,57 +1,51 @@
 <script lang="ts">
-    import { closeModal } from 'common/stores/modal'
-    import { type LogStore, getLog } from 'common/stores/log'
+    import { liveQuery } from 'dexie'
 
     import type { INTAKE } from 'common/types'
+    import { getTime } from 'common/utils/date'
+    import { closeModal } from 'common/stores/modal'
+    import { LogsService } from 'common/data/services'
 
-    const logStore = getLog() as LogStore
     const inputClass = 'px-0.5 pl-2 h-7 text-[14px] rounded-[4px]'
 
-    function saveCustomLog(e: SubmitEvent) {
+    async function saveCustomLog(e: SubmitEvent) {
         const formData = new FormData(e.target as HTMLFormElement)
         const [time, amount] = [...formData.values()]
-        const log = { time, amount: Number(amount) }
+        const intake = { time, amount: Number(amount) }
         
-        logStore.logCustomAmount(log as INTAKE)
+        LogsService.addCustomLogIntake(intake as INTAKE)
         closeModal()
     }
 
-    $: log = logStore.data
-
-    const getTime = () => {
-        const date = new Date()
-        const minutes = date.getMinutes()
-        const hours = date.getHours()
-        const paddedMinutes = minutes <= 9 ? `0${minutes}` : minutes
-        const paddedHours = hours <= 9 ? `0${hours}` : hours
-        return `${paddedHours}:${paddedMinutes}`
-    }
+    const log = liveQuery(async () => await LogsService.getByDate())
 </script>
 
-<form on:submit|preventDefault={saveCustomLog} class="absolute flex flex-col h-full p-4 pt-6">
-    <h1 class="text-center text-white text-xl font-bold">Log Custom Amount</h1>
-    <div class="flex flex-col justify-between w-full gap-x-6 gap-4 mt-4">
-        <label for="time" class="flex justify-between items-center gap-y-1">
-            <span class="text-white text-[16px]">Log Time</span>
-            <input
-                id="time"
-                type="time" 
-                name="time"
-                value={getTime()}
-                class="{inputClass} w-1/2"
-            />
-        </label>
+{#if $log}
+    <form on:submit|preventDefault={saveCustomLog} class="absolute flex flex-col h-full p-4 pt-6">
+        <h1 class="text-center text-white text-xl font-bold">Log Custom Amount</h1>
+        <div class="flex flex-col justify-between w-full gap-x-6 gap-4 mt-4">
+            <label for="time" class="flex justify-between items-center gap-y-1">
+                <span class="text-white text-[16px]">Log Time</span>
+                <input
+                    id="time"
+                    type="time" 
+                    name="time"
+                    value={getTime()}
+                    class="{inputClass} w-1/2"
+                />
+            </label>
 
-        <label for="amount" class="flex justify-between items-center gap-y-1">
-            <span class="text-white text-[16px]">Amount ({$log.measurement})</span>
-            <input id="amount" name="amount" type="number" value={$log.amount} class="w-1/2 {inputClass}" />
-        </label>
-    </div>
+            <label for="amount" class="flex justify-between items-center gap-y-1">
+                <span class="text-white text-[16px]">Amount ({$log.measurement})</span>
+                <input id="amount" name="amount" type="number" value={$log.amount} class="w-1/2 {inputClass}" />
+            </label>
+        </div>
 
-    <button 
-        type="submit"
-        class="absolute bottom-4 right-4 w-16 h-7 bg-white rounded-md"
-    >
-        <span class="text-[16px] text-black">Save</span>
-    </button>
-</form>
+        <button 
+            type="submit"
+            class="absolute bottom-4 right-4 w-16 h-7 bg-white rounded-md"
+        >
+            <span class="text-[16px] text-black">Save</span>
+        </button>
+    </form>
+{/if}

@@ -1,17 +1,15 @@
 <script lang="ts">
-    import { type LogStore, getLog } from 'common/stores/log'
-    import { clickOutside } from 'common/utils/click-outside'
-    import { closeModal, getModal } from 'common/stores/modal'
-
     import CustomLogForm from './CustomLogForm.svelte'
     import Congratulation from './Congratulation.svelte'
 
+    import { clickOutside } from 'common/utils/click-outside'
+    import { closeModal, getModal } from 'common/stores/modal'
+
     const modal = getModal()
-    const logStore = getLog() as LogStore
 
     function handleClose() {
         const view = $modal.view
-        if (view == 'complete') (logStore.partied = true)
+        // if (view == 'complete') (logStore.partied = true)
         closeModal()
     }
 </script>
