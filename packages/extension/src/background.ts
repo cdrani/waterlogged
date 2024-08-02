@@ -1,11 +1,9 @@
 import { db } from 'common/data/db'
 import { sendMessage } from './utils/messages'
-import Notification from './utils/notifications'
-import { LogsService } from 'common/data/services'
+import { initMessageHandler } from 'common/messaging'
+import { notificationManager } from './utils/notification'
 import { ensureOffscreenDocument } from './utils/offscreen'
-import { type Messaging, initMessageHandler } from 'common/messaging'
 
-const Notifier = new Notification()
 let keepAliveTimer: Timer | null = null
 
 function keepAlive() {
@@ -33,13 +31,13 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 
     if (details.reason == 'install') {
         setBadgeInfo(true)
-        await Notifier.welcome()
+        await notificationManager.welcome()
     } else {
         const settings = await db.settings.toArray()[0]
         setBadgeInfo(settings?.enabled ?? true)
     }
 
-    await Notifier.startTimer()
+    await notificationManager.startTimer()
     keepAlive()
 })
 
@@ -60,7 +58,7 @@ async function onSettingsUpate({ previous, current }) {
         setBadgeInfo(current.enabled)
     }
 
-    hasSettingChanged && await Notifier.startTimer()
+    hasSettingChanged && await notificationManager.startTimer()
 }
 
 chrome.runtime.onConnect.addListener(async (port) => {
