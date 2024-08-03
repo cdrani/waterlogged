@@ -1,27 +1,28 @@
 <script lang="ts">
     import { onMount } from 'svelte'
+    import { liveQuery } from 'dexie'
     import { writable } from 'svelte/store'
 
-    import { db } from 'common/data/db'
     import Nav from 'common/components/Nav.svelte'
     import Modal from 'common/components/Modal.svelte'
     import DefaultView from 'common/views/Default.svelte'
     import SettingsView from 'common/views/Settings.svelte'
     import Celebrate from 'common/components/Celebrate.svelte'
 
-    import { type LogStore, initLog, getLog } from 'common/stores/log'
+    import { db } from 'common/data/db'
+	import { LogsService } from 'common/data/services'
+	import { initMessageHandler } from 'common/messaging'
+    import { notificationManager } from '$lib/notification'
     import { initModal, getModal, openModal } from 'common/stores/modal'
-    import { type SettingsStore, initSettings, getSettings } from 'common/stores/settings'
+    import { type PartyStore, initParty, getParty } from 'common/stores/party'
 
     db.open()
 
     initModal()
-    initLog()
-    initSettings()
+    initParty()
 
     const modal = getModal()
-    const logStore = getLog() as LogStore
-    const settingsStore = getSettings() as SettingsStore
+    const partyStore = getParty() as PartyStore
 
     type PageView = 'default' | 'settings'
     let pageView = writable<PageView>('default')
@@ -29,28 +30,32 @@
     function setView(event: CustomEvent) {
         const { newView } = event.detail
         pageView.set(newView) 
-
-        loadView(newView)
     }
 
-    function loadView(view: PageView) {
-        view == 'default' ? logStore.populate() : settingsStore.populate()
+    // ensure a log exists for every day
+    async function loadOnMount() {
+        await LogsService.load()
     }
 
     onMount(() => {
-        loadView($pageView)
+        loadOnMount()
+        initMessageHandler()
+        notificationManager.startTimer()
     })
 
-    $: party = logStore.canParty
-    $: {
-        if ($party) {
+    let log = liveQuery(async () => await LogsService.getByDate())
+    let party: boolean = false
+
+    $: if ($log) {
+        party = partyStore.canParty($log)
+        if (party) {
             openModal('complete')
         }
     }
 </script>
 
 <svelte:head>
-    <title>WaterLogged</title>
+    <title>Water | Logs</title>
     <meta name="description" content="WaterLogged | Logs" />
 </svelte:head>
 
@@ -58,7 +63,7 @@
     <Nav view={$pageView} on:view={setView} />
     <Modal />
 
-    <Celebrate party={$party} />
+    <Celebrate party={party} />
 
     <div class="flex w-full h-full {$modal.visible ? 'shadow-black shadow-xl blur-xl opacity-75' : ''}">
         {#if $pageView == 'default'}

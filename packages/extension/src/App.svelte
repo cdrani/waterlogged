@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte'
+    import { liveQuery } from 'dexie'
     import { writable } from 'svelte/store'
 
     import Nav from 'common/components/Nav.svelte'
@@ -8,19 +9,18 @@
     import SettingsView from 'common/views/Settings.svelte'
     import Celebrate from 'common/components/Celebrate.svelte'
 
-    import { type LogStore, initLog, getLog } from 'common/stores/log'
+    import { ExtMessaging } from 'common/messaging'
+    import { LogsService } from 'common/data/services'
     import { initModal, getModal, openModal } from 'common/stores/modal'
-    import { type SettingsStore, initSettings, getSettings } from 'common/stores/settings'
+    import { initParty, getParty, type PartyStore } from 'common/stores/party'
 
     const PORT = chrome.runtime.connect({ name: 'popup' })
     
     initModal()
-    initLog(PORT)
-    initSettings(PORT)
+    initParty()
 
     const modal = getModal()
-    const logStore = getLog() as LogStore
-    const settingsStore = getSettings() as SettingsStore
+    const partyStore = getParty() as PartyStore
 
     type PageView = 'default' | 'settings'
     let pageView = writable<PageView>('default')
@@ -28,22 +28,25 @@
     function setView(event: CustomEvent) {
         const { newView } = event.detail
         pageView.set(newView) 
-
-        loadView(newView)
     }
 
-    function loadView(view: PageView) {
-        view == 'default' ? logStore.populate() : settingsStore.populate()
+    // ensure a log exists for every day
+    async function loadOnMount() {
+        await LogsService.load()
     }
 
     onMount(() => {
-        loadView($pageView)
+        loadOnMount()
+        new ExtMessaging(PORT)
         return () => PORT.disconnect()
     })
 
-    $: party = logStore.canParty
-    $: {
-        if ($party) {
+    let log = liveQuery(async () => await LogsService.getByDate())
+    let party: boolean = false
+
+    $: if ($log) {
+        party = partyStore.canParty($log)
+        if (party) {
             openModal('complete')
         }
     }
@@ -53,7 +56,7 @@
     <Nav view={$pageView} on:view={setView} />
     <Modal />
 
-    <Celebrate party={$party} />
+    <Celebrate party={party} />
 
     <div class="flex w-full h-full {$modal.visible ? 'shadow-black shadow-xl blur-xl opacity-75' : ''}">
         {#if $pageView == 'default'}
