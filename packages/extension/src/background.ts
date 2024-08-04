@@ -1,6 +1,7 @@
 import { db } from 'common/data/db'
 import { sendMessage } from './utils/messages'
 import { initMessageHandler } from 'common/messaging'
+import { SettingsService } from 'common/data/services'
 import { notificationManager } from './utils/notification'
 import { ensureOffscreenDocument } from './utils/offscreen'
 
@@ -33,7 +34,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
         setBadgeInfo(true)
         await notificationManager.welcome()
     } else {
-        const settings = await db.settings.toArray()[0]
+        const settings = await SettingsService.load()
         setBadgeInfo(settings?.enabled ?? true)
     }
 
@@ -50,7 +51,7 @@ chrome.runtime.onMessage.addListener((_message, _sender, sendResponse) => {
     return true
 })
 
-async function onSettingsUpate({ previous, current }) {
+async function onSettingsUpdate({ previous, current }) {
     const hasSettingChanged = ['enabled', 'alert_type', 'interval', 'start_time', 'end_time']
         .some(key => previous?.[key] !== current?.[key])
 
@@ -64,5 +65,5 @@ async function onSettingsUpate({ previous, current }) {
 chrome.runtime.onConnect.addListener(async (port) => {
     if (port.name !== 'popup') return
 
-    initMessageHandler({ port, callback: onSettingsUpate })
+    initMessageHandler({ port, callback: onSettingsUpdate })
 })
