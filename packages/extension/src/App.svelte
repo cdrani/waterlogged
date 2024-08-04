@@ -37,7 +37,6 @@
 
     onMount(() => {
         loadOnMount()
-        new ExtMessaging(PORT)
         return () => PORT.disconnect()
     })
 
@@ -50,6 +49,8 @@
             openModal('complete')
         }
     }
+
+    const messaging = new ExtMessaging(PORT)
 </script>
 
 <main class="relative -z-100 bg-cyan-200 flex flex-col pt-0 w-[280px] mx-auto h-full">
@@ -62,7 +63,7 @@
         {#if $pageView == 'default'}
             <DefaultView />
         {:else}
-            <SettingsView />
+            <SettingsView messaging={messaging} />
         {/if}
     </div>
 </main>
