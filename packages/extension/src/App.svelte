@@ -44,7 +44,7 @@
     let party: boolean = false
 
     $: if ($log) {
-        party = partyStore.canParty($log)
+        party = partyStore.canParty($log.complete)
         if (party) {
             openModal('complete')
         }
