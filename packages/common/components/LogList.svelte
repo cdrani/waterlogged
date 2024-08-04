@@ -11,7 +11,7 @@
 </script>
 
 {#if $log}
-    <section class="flex relative left-0 flex-col pt-3 w-full mx-auto h-[220px] bg-cyan-200">
+    <section class="flex relative left-0 flex-col pt-3 w-full mx-auto h-[220px]">
         <div class="flex justify-between items-center sticky px-4 w-full pb-0 font-semibold">
             <CurrentTime format="date" />
             <h2 class="text-[18px]">({$log?.intakes?.length ?? 0})</h2>
