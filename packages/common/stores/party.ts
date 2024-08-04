@@ -1,8 +1,6 @@
+import { writable } from 'svelte/store'
 import type { Writable } from 'svelte/store'
 import { getContext, setContext } from 'svelte'
-import { writable, derived } from 'svelte/store'
-
-import type { LOG } from 'common/types'
 
 export class PartyStore {
     private party: Writable<boolean>
@@ -32,17 +30,15 @@ export class PartyStore {
         this.party.set(partied)
     }
 
-    canParty({ goal, total }: Pick<LOG, 'goal' | 'total'>) {
-        return derived(this.party, () => {
-            if (this.partied) return false
-            return (total / Number(goal)) * 100 >= 100
-        }) 
-    }
-
-    resetParty({ goal, total }: Pick<LOG, 'goal' | 'total'>) {
-        if (total == 0 || total < goal) {
+    canParty(complete: boolean) {
+        if (!complete) {
             this.partied = false
+            return false
         }
+
+        if (this.partied) return false
+
+        return true
     }
 }
 
