@@ -14,6 +14,7 @@ export const  LogsService = {
         let log = await LogsService.getByDate()
 
         if (!log) {
+            localStorage?.setItem('confetti_shown', 'false')
             const settings = await SettingsService.load(settingsData)
             log = createDailyLog(settings)
             await db.logs.add(log)
