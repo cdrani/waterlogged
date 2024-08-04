@@ -10,6 +10,7 @@
     import Celebrate from 'common/components/Celebrate.svelte'
 
     import { db } from 'common/data/db'
+    import { WebMessaging } from 'common/messaging'
 	import { LogsService } from 'common/data/services'
 	import { initMessageHandler } from 'common/messaging'
     import { notificationManager } from '$lib/notification'
@@ -52,6 +53,8 @@
             openModal('complete')
         }
     }
+
+    const messaging = new WebMessaging()
 </script>
 
 <svelte:head>
@@ -69,7 +72,7 @@
         {#if $pageView == 'default'}
             <DefaultView />
         {:else}
-            <SettingsView />
+            <SettingsView messaging={messaging} />
         {/if}
     </div>
 </div>

@@ -94,7 +94,7 @@ export const SettingsService = {
             await SettingsService.syncWithLog(settings)
         }
 
-        await SettingsService.update(settings)
+        return await SettingsService.update(settings)
     },
 
     // Fields in LOG must be in sync with SETTINGS
