@@ -31,6 +31,7 @@ export default abstract class NotificationBase {
 
     async startTimer() {
         const settings = await this.getSettings()
+        console.log({ settings })
         if (!settings) return
 
         if (!this.settings.enabled || this.settings.alert_type === 'none') return await this.clearAlarms()
@@ -71,6 +72,7 @@ export default abstract class NotificationBase {
         const { sound, alert_type } = this.settings
         const progress = await this.getProgress()
 
+        console.log({ sound, alert_type, progress })
         if (progress.percentage >= 100) return
 
         if (['alarm', 'both'].includes(alert_type)) await this.playSound(sound)
@@ -87,9 +89,8 @@ export default abstract class NotificationBase {
 
     protected async getProgress() {
         const log = await this.getLog()
-        const current = log.intakes.reduce((acc, curr) => acc + curr.amount, 0)
-        const percentage = Math.round((current / log.goal) * 100)
-        return { goal: log.goal, left: log.goal - current, percentage }
+        const percentage = Math.round((log.total / log.goal) * 100)
+        return { goal: log.goal, left: Math.max(log.goal - log.total, 0), percentage }
     }
 
     protected async logAmount() {
