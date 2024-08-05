@@ -31,7 +31,6 @@ export default abstract class NotificationBase {
 
     async startTimer() {
         const settings = await this.getSettings()
-        console.log({ settings })
         if (!settings) return
 
         if (!this.settings.enabled || this.settings.alert_type === 'none') return await this.clearAlarms()
@@ -66,20 +65,18 @@ export default abstract class NotificationBase {
 
     protected abstract clearAlarms(): Promise<void>
     protected abstract setupAlarms(delay: number): void
+    protected abstract playSound(sound: string): Promise<void>
     protected abstract createNotification({ id, title, message }: { id: string, title: string, message: string }): Promise<void>
 
     protected async notifyAlert() {
         const { sound, alert_type } = this.settings
         const progress = await this.getProgress()
 
-        console.log({ sound, alert_type, progress })
         if (progress.percentage >= 100) return
 
         if (['alarm', 'both'].includes(alert_type)) await this.playSound(sound)
         if (['notify', 'both'].includes(alert_type)) await this.notifyProgress(progress)
     }
-
-    protected abstract playSound(sound: string): Promise<void>
 
     protected async getLog() {
         const log = await LogsService.load(this.settings)
@@ -94,13 +91,8 @@ export default abstract class NotificationBase {
     }
 
     protected async logAmount() {
-        const log = await this.getLog()
-
-        const intake = createIntake({ log_id: log.id, amount: log.amount })
-        const intakes = [intake, ...log.intakes]
-        log.intakes = intakes
-
-        await db.logs.put(log)
+        await this.getLog()
+        await LogsService.addLogIntake()
     }
 
     protected async notifyProgress(progress: Progress) {
