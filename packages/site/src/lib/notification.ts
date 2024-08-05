@@ -2,6 +2,8 @@ import { playAlarm } from 'common/utils/alarm'
 import NotificationBase, { type Notification } from 'common/notification'
 
 export default class WebNotification extends NotificationBase {
+    private closeTimeout: Timer | null = null
+
     protected async clearAlarms() {
         if (this.intervalId) {
             clearInterval(this.intervalId)
@@ -25,33 +27,30 @@ export default class WebNotification extends NotificationBase {
         }, (this?.settings?.interval ?? 60) * 60 * 1000)
     }
 
+    private clearTimer() {
+        if (this.closeTimeout) clearTimeout(this.closeTimeout)
+    }
+
     protected async createNotification({ id, title, message }: Notification) {
         const showButton = title.includes('Time to Hydrate!')
         const notificationOptions = {
             body: message,
             data: { id },
             icon: 'favicon.png',
+            requireInteraction: showButton
         }
 
         const notification = new Notification(title, notificationOptions)
+        this.closeTimeout = setTimeout(() => notification.close(), 10000)
 
-        notification.onclick = async () => {
-            const isHydrating = title.includes('Time to Hydrate!')
-            if (isHydrating) {
-                await this.logAmount()
-            }
+        if (!showButton) return
+
+        notification.onclose = () => { this.clearTimer() }
+
+        notification.onclick = async (event) => {
+            event.preventDefault()
+            await this.logAmount()
             notification.close()
-        }
-
-        if (showButton) {
-            notification.addEventListener('show', () => {
-                setTimeout(() => {
-                    if (notification.data.id === 'progress') {
-                        this.logAmount()
-                        notification.close()
-                    }
-                }, 5000)
-            })
         }
     }
 
