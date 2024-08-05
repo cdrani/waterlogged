@@ -1,14 +1,18 @@
 import ExtMessaging from './ext'
 import WebMessaging from './web'
-import type { LOG } from 'common/types'
+import { type SETTINGS } from 'common/types'
+import { setBadgeInfo } from 'common/utils/badge'
 import { SettingsService } from 'common/data/services'
+import type NotificationBase from 'common/notification'
 
-type Callback = (args: any) => Promise<void>
+type CallbackParams = { current: SETTINGS, previous: SETTINGS }
+
+type Callback = (args: CallbackParams) => Promise<void>
 
 type MessageHandler = {
     type: string,
     callback?: Callback,
-    data: {key: string, value: string | number} | LOG | null,
+    data: {key: string, value: string | number}
 }
 
 async function handleMessage({ type, data, callback }: MessageHandler) {
@@ -19,15 +23,23 @@ async function handleMessage({ type, data, callback }: MessageHandler) {
     }
 }
 
-type InitMessage = {
-    callback?: Callback,
-    port?: chrome.runtime.Port
-} | undefined
+async function messageCallback({ previous, current }: CallbackParams, notificationManager: NotificationBase) {
+    const restart = ['enabled', 'alert_type', 'interval', 'start_time', 'end_time']
+        .some(key => previous?.[key] !== current?.[key])
 
-export function initMessageHandler(params: InitMessage = undefined) {
-    const messaging = params?.port ? new ExtMessaging(params.port) : new WebMessaging()
-    messaging.onMessage(({ type, data }) => {
-        handleMessage({ type, data, callback: params?.callback })
-    })
+    if (previous?.enabled !== current?.enabled) setBadgeInfo(current.enabled)
+
+    restart && await notificationManager.startTimer()
+}
+
+type InitMessage = {
+    port?: chrome.runtime.Port,
+    notificationManager: NotificationBase
+}
+
+export function initMessageHandler({ notificationManager, port }: InitMessage) {
+    const messaging = port ? new ExtMessaging(port) : new WebMessaging()
+    const callback = (args: CallbackParams) => messageCallback(args, notificationManager)
+    messaging.onMessage(({ type, data }) => handleMessage({ type, data, callback }))
     return messaging
 }

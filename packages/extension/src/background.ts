@@ -1,5 +1,6 @@
 import { db } from 'common/data/db'
 import { sendMessage } from './utils/messages'
+import { setBadgeInfo } from 'common/utils/badge'
 import { initMessageHandler } from 'common/messaging'
 import { SettingsService } from 'common/data/services'
 import { notificationManager } from './utils/notification'
@@ -18,12 +19,6 @@ function keepAlive() {
 }
 
 keepAlive()
-
-function setBadgeInfo(enabled = true) {
-    chrome.action.setBadgeText({ text: enabled ? 'on' : 'off' })
-    chrome.action.setBadgeTextColor({ color: 'white' })
-    chrome.action.setBadgeBackgroundColor({ color: enabled ? '#22d3ee' : 'gray' })
-}
 
 chrome.runtime.onInstalled.addListener(async (details) => {
     const isOpen = db.isOpen()
@@ -51,19 +46,8 @@ chrome.runtime.onMessage.addListener((_message, _sender, sendResponse) => {
     return true
 })
 
-async function onSettingsUpdate({ previous, current }) {
-    const hasSettingChanged = ['enabled', 'alert_type', 'interval', 'start_time', 'end_time']
-        .some(key => previous?.[key] !== current?.[key])
-
-    if (previous?.enabled !== current?.enabled) {
-        setBadgeInfo(current.enabled)
-    }
-
-    hasSettingChanged && await notificationManager.startTimer()
-}
-
 chrome.runtime.onConnect.addListener(async (port) => {
     if (port.name !== 'popup') return
 
-    initMessageHandler({ port, callback: onSettingsUpdate })
+    initMessageHandler({ port, notificationManager })
 })
