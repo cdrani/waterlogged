@@ -10,10 +10,10 @@
     import Celebrate from 'common/components/Celebrate.svelte'
 
     import { db } from 'common/data/db'
-    import { WebMessaging } from 'common/messaging'
+    import WebNotification from '$lib/notification'
+    import { type Messaging } from 'common/messaging'
 	import { LogsService } from 'common/data/services'
 	import { initMessageHandler } from 'common/messaging'
-    import { notificationManager } from '$lib/notification'
     import { initModal, getModal, openModal } from 'common/stores/modal'
     import { type PartyStore, initParty, getParty } from 'common/stores/party'
 
@@ -33,15 +33,18 @@
         pageView.set(newView) 
     }
 
+    let messaging: Messaging
+
     // ensure a log exists for every day
-    async function loadOnMount() {
+    async function loadOnMount(notificationManager: WebNotification) {
         await LogsService.load()
+        await notificationManager.startTimer()
     }
 
     onMount(() => {
-        loadOnMount()
-        initMessageHandler()
-        notificationManager.startTimer()
+        const notificationManager = new WebNotification()
+        messaging = initMessageHandler({ notificationManager })
+        loadOnMount(notificationManager)
     })
 
     let log = liveQuery(async () => await LogsService.getByDate())
@@ -53,8 +56,6 @@
             openModal('complete')
         }
     }
-
-    const messaging = new WebMessaging()
 </script>
 
 <svelte:head>
