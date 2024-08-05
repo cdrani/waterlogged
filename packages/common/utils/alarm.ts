@@ -6,8 +6,8 @@ function getSource(sound: string) {
         : `/sounds/${sound}.mp3`
 }
 
-export function playAlarm(sound: string) {
+export async function playAlarm(sound: string) {
     const source = getSource(sound)
     const audio = new Audio(source)
-    audio.play()
+    await audio.play()
 }
