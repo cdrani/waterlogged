@@ -12,7 +12,7 @@ export default class WebMessaging implements Messaging {
         this.listeners.push(listener)
         const eventListener = (event: Event) => {
             if (event instanceof CustomEvent) {
-                listener(event.detail)
+                listener(event.detail.message)
             }
         }
 
