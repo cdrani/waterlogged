@@ -21,7 +21,7 @@
 </script>
 
 <button name={name} on:click={updateToggle}>
-    <input disabled type="checkbox" class="hidden" />
+    <input id={name} disabled type="checkbox" class="hidden" />
     <svg 
         width="1.5rem"
         height="1.5rem"
