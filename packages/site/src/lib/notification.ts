@@ -1,6 +1,7 @@
+import { playAlarm } from 'common/utils/alarm'
 import NotificationBase, { type Notification } from 'common/notification'
 
-class WebNotification extends NotificationBase {
+export default class WebNotification extends NotificationBase {
     protected async clearAlarms() {
         if (this.intervalId) {
             clearInterval(this.intervalId)
@@ -13,25 +14,23 @@ class WebNotification extends NotificationBase {
     protected setupAlarms(delay: number) {
         this.timeoutId = setTimeout(async () => {
             await this.getSettings()
-
             const { nowMS, startMS, endMS } = this.getTimeBoundaries()
             if (nowMS >= startMS && nowMS < endMS) await this.notifyAlert()
-
-            this.intervalId = setInterval(async () => {
-                await this.getSettings()
-                const { nowMS, startMS, endMS } = this.getTimeBoundaries()
-                if (nowMS >= startMS && nowMS < endMS) await this.notifyAlert()
-            }, (this?.settings?.interval ?? 60) * 60 * 1000)
         }, delay)
+
+        this.intervalId = setInterval(async () => {
+            await this.getSettings()
+            const { nowMS, startMS, endMS } = this.getTimeBoundaries()
+            if (nowMS >= startMS && nowMS < endMS) await this.notifyAlert()
+        }, (this?.settings?.interval ?? 60) * 60 * 1000)
     }
 
     protected async createNotification({ id, title, message }: Notification) {
         const showButton = title.includes('Time to Hydrate!')
-        const notificationOptions: NotificationOptions = {
+        const notificationOptions = {
             body: message,
-            icon: 'path/to/icon.png',
-            requireInteraction: showButton,
-            data: { id }
+            data: { id },
+            icon: 'favicon.png',
         }
 
         const notification = new Notification(title, notificationOptions)
@@ -57,9 +56,6 @@ class WebNotification extends NotificationBase {
     }
 
     protected async playSound(sound: string) {
-        const audio = new Audio(sound)
-        await audio.play()
+        await playAlarm(sound)
     }
 }
-
-export const notificationManager = new WebNotification()
