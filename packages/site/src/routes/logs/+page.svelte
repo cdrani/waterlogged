@@ -4,9 +4,11 @@
     import { writable } from 'svelte/store'
 
     import Nav from 'common/components/Nav.svelte'
+    import GraphView from 'common/views/Graph.svelte'
     import Modal from 'common/components/Modal.svelte'
     import DefaultView from 'common/views/Default.svelte'
     import SettingsView from 'common/views/Settings.svelte'
+    import Graph from 'common/components/graph/Graph.svelte'
     import Celebrate from 'common/components/Celebrate.svelte'
 
     import { db } from 'common/data/db'
@@ -25,8 +27,8 @@
     const modal = getModal()
     const partyStore = getParty() as PartyStore
 
-    type PageView = 'default' | 'settings'
-    let pageView = writable<PageView>('default')
+    type PageView = 'default' | 'settings' | 'graph'
+    let pageView = writable<PageView>('graph')
 
     function setView(event: CustomEvent) {
         const { newView } = event.detail
@@ -72,8 +74,10 @@
     <div class="flex w-full h-full {$modal.visible ? 'shadow-black shadow-xl blur-xl opacity-75' : ''}">
         {#if $pageView == 'default'}
             <DefaultView />
-        {:else}
+        {:else if $pageView == 'settings'}
             <SettingsView messaging={messaging} />
+        {:else}
+            <GraphView />
         {/if}
     </div>
 </div>
