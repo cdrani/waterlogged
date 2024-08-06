@@ -1,74 +1,129 @@
-<script>
-    import { onMount, afterUpdate } from 'svelte'
-    import Square from './Square.svelte'
+<script lang="ts">
+    import Week from './views/Week.svelte'
+    import Month from './views/Month.svelte'
+    import { chunkMonths, chunkWeeks, getCalendar } from './utils/heatmap'
 
-    export let contributions = []
-    const colors = ['#ebedf0', '#c6e48b', '#7bc96f', '#239a3b', '#196127', '#d0f0c0', '#9be58c', '#52c41a', '#3da940', '#2a7f29', '#a9d6ac', '#4bb543', '#1f7c1c']
+    type View = 'monthly' | 'yearly'
 
-    function getColor(count) {
-        return colors[Math.min(count, colors.length - 1)]
-    }
+    export let allowOverflow = false
+    export let cellGap = 2
+    export let cellRadius = 0
+    export let cellSize = 10
+    export let cellClick = null
+    export let colors = ['#c6e48b', '#7bc96f', '#239a3b', '#196127']
+    export let data = new Map()
+    export let dayLabelWidth = 20
+    export let dayLabels = ['', 'Mon', '', 'Wed', '', 'Fri', '']
+    export let emptyColor = '#ebedf0'
+    export let endDate = null
+    export let fontColor = '#333'
+    export let fontFamily = 'sans-serif'
+    export let fontSize = 8
+    export let monthGap = 2
+    export let monthLabelHeight = 12
+    export let monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    export let startDate = null
+    export let view: View = 'yearly'
 
-    const currentDate = new Date()
-    const currentYear = currentDate.getFullYear()
-    const firstDayOfYear = new Date(currentYear, 0, 1)
-    const lastDayOfYear = new Date(currentYear, 11, 31)
+    const isNewMonth = (chunks: Array<Array<{ date: Date }>>, index: number) => {
+        const chunk = chunks[index]
+        const prev = chunks[index - 1]
 
-    let firstMondayOfYear = new Date(firstDayOfYear)
-    firstMondayOfYear.setDate(firstMondayOfYear.getDate() + (8 - firstMondayOfYear.getDay()) % 7)
-
-    let graphData = []
-
-    function updateGraphData() {
-        graphData = []
-        for (let date = new Date(firstMondayOfYear); date <= lastDayOfYear; date.setDate(date.getDate() + 1)) {
-            const year = date.getFullYear()
-            const month = date.getMonth() + 1
-            const day = date.getDate()
-            const dateString = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
-            const contribution = contributions.find((item) => item.date === dateString)
-            graphData.push(contribution || { date: dateString, count: 0 })
+        if (!prev) {
+            return true
         }
+
+        if (!prev.length || !chunk.length) {
+            return false
+        }
+
+        const currentIndex = chunk[0].date.getMonth()
+        const prevIndex = prev[0].date.getMonth()
+
+        return index < chunks.length && index < chunks.length - 1 && (
+            currentIndex > prevIndex || currentIndex === 0 && prevIndex === 11
+        )
     }
 
-    onMount(() => {
-        updateGraphData()
-    })
+    $: cellRect = cellSize + cellGap
 
-    afterUpdate(() => {
-        updateGraphData()
-    })
+    $: calendar = getCalendar({ allowOverflow, colors, data, emptyColor, endDate, startDate, view })
+
+    $: chunks = view === 'monthly'
+        ? chunkMonths({ allowOverflow, calendar, endDate, startDate })
+        : chunkWeeks({ allowOverflow, calendar, endDate, startDate })
+
+    $: weekRect = (7 * cellRect) - cellGap
+
+    $: height = view === 'monthly'
+        ? (6 * cellRect) - cellGap + monthLabelHeight // <- max of 6 rows in monthly view
+        : weekRect + monthLabelHeight
+
+    $: width = view === 'monthly'
+        ? ((weekRect + monthGap) * chunks.length) - monthGap
+        : (cellRect * chunks.length) - cellGap + dayLabelWidth
+
+    $: dayLabelPosition = (index: number) => {
+        return (cellRect * index) + (cellRect / 2) + monthLabelHeight
+    }
 </script>
 
-<div class="graph">
-    <ul class="months">
-        <li>Jan</li>
-        <li>Feb</li>
-        <li>Mar</li>
-        <li>Apr</li>
-        <li>May</li>
-        <li>Jun</li>
-        <li>Jul</li>
-        <li>Aug</li>
-        <li>Sep</li>
-        <li>Oct</li>
-        <li>Nov</li>
-        <li>Dec</li>
-    </ul>
 
-    <ul class="days">
-        <li>Sun</li>
-        <li>Mon</li>
-        <li>Tue</li>
-        <li>Wed</li>
-        <li>Thu</li>
-        <li>Fri</li>
-        <li>Sat</li>
-    </ul>
-
-    <ul class="squares">
-        {#each graphData as {date, count}}
-          <Square {date} count} color={getColor(count)} />
-      {/each}
-    </ul>
-</div>
+<svg viewBox={`0 0 ${width} ${height}`} overflow="auto" style="width:{width}px;height:{height}px">
+    {#if view === 'monthly'}
+        {#each chunks as chunk, index}
+            <Month
+                cellGap={cellGap}
+                cellRadius={cellRadius}
+                cellRect={cellRect}
+                cellSize={cellSize}
+                cellClick={cellClick}
+                days={chunk}
+                fontColor={fontColor}
+                fontFamily={fontFamily}
+                fontSize={fontSize}
+                index={index}
+                monthGap={monthGap}
+                monthLabelHeight={monthLabelHeight}
+                monthLabels={monthLabels}
+            />
+        {/each}
+    {:else}
+        {#if dayLabelWidth > 0}
+            {#each dayLabels as label, index}
+                <text
+                    alignment-baseline="middle"
+                    fill={fontColor}
+                    font-family={fontFamily}
+                    font-size={fontSize}
+                    x="0"
+                    y={dayLabelPosition(index)}>
+                    {label}
+                </text>
+            {/each}
+        {/if}
+        <g transform={`translate(${dayLabelWidth})`}>
+            {#each chunks as chunk, index}
+                <Week
+                    cellRadius={cellRadius}
+                    cellRect={cellRect}
+                    cellSize={cellSize}
+                    cellClick={cellClick}
+                    days={chunk}
+                    index={index}
+                    monthLabelHeight={monthLabelHeight}
+                />
+                {#if monthLabelHeight > 0 && isNewMonth(chunks, index)}
+                    <text
+                        alignment-baseline="hanging"
+                        fill={fontColor}
+                        font-family={fontFamily}
+                        font-size={fontSize}
+                        x={cellRect * index}>
+                        {monthLabels[chunk[0].date.getMonth()]}
+                    </text>
+                {/if}
+            {/each}
+        </g>
+    {/if}
+</svg>
