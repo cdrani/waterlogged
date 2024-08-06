@@ -69,7 +69,7 @@
 </script>
 
 
-<svg viewBox={`0 0 ${width} ${height}`} overflow="auto" style="width:{width}px;height:{height}px">
+<svg viewBox={`0 0 ${width} ${height}`} style="width:{width}px;height:{height}px">
     {#if view === 'monthly'}
         {#each chunks as chunk, index}
             <Month
