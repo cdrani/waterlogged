@@ -62,8 +62,6 @@ export function chunkWeeks(
     const normalizedStartDate = normalizeDate(startDate)
     const normalizedEndDate = normalizeDate(endDate)
 
-    console.log({ normalizedStartDate, normalizedEndDate })
-
     return calendar.reduce((acc, day, index) => {
         if (index % 7 === 0) acc.push([])
 
