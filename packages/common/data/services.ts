@@ -4,6 +4,10 @@ import { createIntake, createDailyLog } from './defaults'
 import { convertToDate, getDateKey, convertTo24HourFormat } from 'common/utils/date'
 
 export const  LogsService = {
+    all: async () => {
+        return await db.logs.toArray()
+    },
+
     getByDate: async () => {
         const key = getDateKey()
         const log = await db.logs.get({ date_id: key })
