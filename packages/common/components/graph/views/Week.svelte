@@ -15,6 +15,7 @@
 <g transform={`translate(${translation}, ${monthLabelHeight})`}>
     {#each days as day}
         <Cell
+            posX={translation}
             date={day.date}
             size={cellSize}
             value={day.value}
