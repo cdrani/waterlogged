@@ -17,12 +17,14 @@
     }
 
     function formatDate(dateString: string) {
-        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-        const date = new Date(dateString)
-        const month = months[date.getMonth()]
-        const day = date.getDate()
+        const monthsList = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        const [year, month, day] = dateString.split('-').map(Number)
+
+        const date = new Date(year, Math.max(month - 1, 0), day, 0, 0, 0)
+        const fmonth = monthsList[date.getMonth()]
+        const fday = date.getDate()
         
-        return `${month} ${day}`
+        return `${fmonth} ${fday}`
     }
 
     const strDate = stringifyDate(date)

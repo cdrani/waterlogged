@@ -29,13 +29,8 @@
         const chunk = chunks[index]
         const prev = chunks[index - 1]
 
-        if (!prev) {
-            return true
-        }
-
-        if (!prev.length || !chunk.length) {
-            return false
-        }
+        if (!prev) return true
+        if (!prev.length || !chunk.length) return false
 
         const currentIndex = chunk[0].date.getMonth()
         const prevIndex = prev[0].date.getMonth()
@@ -47,7 +42,7 @@
 
     $: cellRect = cellSize + cellGap
 
-    $: calendar = getCalendar({ allowOverflow, colors, data, emptyColor, endDate, startDate, view })
+    $: calendar = getCalendar({ colors, data, emptyColor, endDate, startDate, view })
 
     $: chunks = view === 'monthly'
         ? chunkMonths({ allowOverflow, calendar, endDate, startDate })
