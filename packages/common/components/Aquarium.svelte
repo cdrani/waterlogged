@@ -18,7 +18,7 @@
 </script>
 
 {#if $tank}
-    <div class="flex relative w-full max-w-[248px] h-[120px] mx-4 overflow-hidden rounded-md">
+    <div class="flex relative w-full max-w-[248px] h-[120px] md:h-[160px] mx-4 overflow-hidden rounded-md">
         <Tank 
             tank={$tank}
             waterLevel={waterLevel}
