@@ -4,6 +4,7 @@
     import { writable } from 'svelte/store'
 
     import Nav from 'common/components/Nav.svelte'
+    import GraphView from 'common/views/Graph.svelte'
     import Modal from 'common/components/Modal.svelte'
     import DefaultView from 'common/views/Default.svelte'
     import SettingsView from 'common/views/Settings.svelte'
@@ -54,7 +55,7 @@
 </script>
 
 <main class="relative -z-100 bg-cyan-200 flex flex-col pt-0 w-[280px] mx-auto h-full">
-    <Nav view={$pageView} on:view={setView} />
+    <Nav app="extension" view={$pageView} on:view={setView} />
     <Modal />
 
     <Celebrate party={party} />
@@ -62,8 +63,10 @@
     <div class="flex w-full h-full {$modal.visible ? 'shadow-black shadow-xl blur-xl opacity-75' : ''}">
         {#if $pageView == 'default'}
             <DefaultView />
-        {:else}
+        {:else if $pageView == 'settings'}
             <SettingsView messaging={messaging} />
+        {:else}
+            <GraphView log={$log} />
         {/if}
     </div>
 </main>
