@@ -5,8 +5,10 @@
     import { LogsService } from 'common/data/services'
     import Graph from 'common/components/graph/Graph.svelte'
 
+    export let log: LOG
+
     const start = new Date()
-    start.setMonth(6, 1)
+    start.setMonth(0, 1)
     start.setHours(0, 0, 0, 0)
 
     const end = new Date()
@@ -17,7 +19,7 @@
     let waterDrank: number
     let logIntakes: number
 
-    let viewingLog = writable<LOG>(null)
+    let viewingLog = writable<LOG>(log)
 
     function handleCellClick(dateId: string) {
         const clickedLog = $logs.find((log: LOG) => log.date_id == dateId)
@@ -25,9 +27,7 @@
     }
 
     $: if ($logs) {
-        $logs.forEach((log: LOG) => {
-            data.set(log.date_id, log.intakes.length)
-        })
+        $logs.forEach((log: LOG) => { data.set(log.date_id, log.intakes.length) })
 
         logIntakes = $logs.reduce((acc: number, log: LOG) => acc + log.intakes.length, 0)
         waterDrank = $logs.reduce((acc: number, log: LOG) => acc + log.intakes.reduce((acc, intake) => acc + intake.amount, 0), 0)
@@ -35,52 +35,50 @@
 </script>
 
 {#if $logs}
-    <section class="absolute flex flex-col mx-auto w-full h-[340px] max-h-[358] bg-cyan-200 px-4">
-        <div class="flex w-full justify-between pb-2">
-            <div class="text-[12px] font-semibold">Logs: {logIntakes}</div>
-            <div class="text-[12px] font-semibold">Drank: {waterDrank}ml</div>
+    <section class="relative top-0 flex flex-col w-full h-[340px] max-h-[375] xs:h-full bg-cyan-200 rounded-md overflow-y-auto">
+        <div class="relative flex justify-between mb-1 w-[248px] xs:w-full mx-auto xs:px-4">
+            <div class="text-[14px] xs:text-lg font-semibold">Logs: {logIntakes}</div>
+            <div class="text-[14px] xs:text-lg font-semibold">Drank: {waterDrank}ml</div>
         </div>
-        <div class="relative flex flex-col w-full h-full p-2 rounded-md bg-cyan-800 overflow-x-scroll max-h-[150px]">
-            <Graph 
-                data={data}
-                view={'yearly'}
-                fontSize={12}
-                fontColor="white"
-                cellGap={4}
-                endDate={end}
-                startDate={start}
-                cellSize={12}
-                cellRadius={6}
-                dayLabelWidth={36}
-                monthLabelHeight={20}
-                cellClick={handleCellClick}
-                dayLabels={['', 'Mon', '', 'Wed', '', 'Fri', '']}
-                colors={['#404040', '#303030', '#202020', '#101010']}
-            />
 
-            <div 
-                id="tooltip"
-                class="items-center justify-center absolute z-[2000] hidden h-5 w-full max-w-[120px] rounded-[4px] top-4 border-gray-400 bg-white border-sm py-0.5 px-1 text-[12px]"
-            >
-                <span></span>
+        <div class="xs:px-4">
+            <div class="relative w-[248px] xs:w-full xs:max-h-[160px] md:min-h-[300px] xs:max-w-3xl  rounded-md bg-cyan-800 overflow-x-auto mx-auto p-2">
+                <Graph 
+                    data={data}
+                    view={'yearly'}
+                    fontSize={16}
+                    fontColor="white"
+                    cellGap={8}
+                    monthGap={20}
+                    endDate={end}
+                    startDate={start}
+                    cellSize={20}
+                    cellRadius={2}
+                    dayLabelWidth={32}
+                    monthLabelHeight={32}
+                    cellClick={handleCellClick}
+                    dayLabels={['', 'Mon', '', 'Wed', '', 'Fri', '']}
+                    colors={['#404040', '#303030', '#202020', '#101010']}
+                />
             </div>
         </div>
 
         {#if $viewingLog?.intakes?.length}
-            <div class="flex flex-row justify-between items-center my-1">
+            <div class="flex flex-row justify-between items-center my-1 p-2 px-4 xs:px-6">
                 <div class="flex flex-col">
-                    <span class="text-sm font-semibold">{$viewingLog.date_id}</span>
-                    <span class="text-sm font-semibold">total: {$viewingLog.total}ml</span>
+                    <span class="text-sm xs:text-lg font-semibold">{$viewingLog.date_id}</span>
+                    <span class="text-sm xs:text-lg font-semibold">total: {$viewingLog.total}ml</span>
                 </div>
                 <div class="flex flex-col justify-end self-end">
-                    <span class="text-sm font-semibold text-end">goal: {$viewingLog.goal}ml</span>
-                    <span class="text-sm font-semibold">complete: {$viewingLog.complete}</span>
+                    <span class="text-sm xs:text-lg font-semibold text-end">goal: {$viewingLog.goal}ml</span>
+                    <span class="text-sm xs:text-lg  font-semibold">complete: {$viewingLog.complete}</span>
                 </div>
             </div>
-            <div class="relative left-0 flex flex-col overflow-y-auto w-[280px] h-full mx-auto">
-                <ul class="relative flex flex-col gap-2 pb-3 w-[248px]">
+
+            <div class="relative flex overflow-y-auto w-full h-full px-4 pb-6 md:pb-10">
+                <ul class="relative flex flex-col gap-2 pb-8 w-full h-screen">
                     {#each $viewingLog?.intakes as intake, i (i)}
-                        <li class="rounded-md flex gap-x-2 h-10 bg-cyan-500 items-center p-2">
+                        <li class="rounded-md flex gap-x-2 h-12 bg-cyan-500 items-center p-2">
                             <div class="flex w-full justify-between items-center">
                                 <p class="font-bold text-lg">{intake.time}</p>
                                 <p class="font-bold text-lg">{intake.amount}{$viewingLog.measurement}</p>
@@ -91,13 +89,13 @@
             </div>
         {:else if $viewingLog && !$viewingLog.intakes?.length}
             <div class="flex flex-col w-full items-center justify-center h-[180px]">
-                <h4 class="text-xl text-center">
+                <h4 class="text-xl md:text-2xl lg:text-3xl text-center">
                     No tracked water breaks on this day.
                 </h4>
             </div>
         {:else}
             <div class="flex flex-col w-full items-center justify-center h-[180px]">
-                <h4 class="text-xl text-center">
+                <h4 class="text-xl md:text-2xl lg:text-3xl text-center">
                     Select a date to display logs for chosen date.
                 </h4>
             </div>

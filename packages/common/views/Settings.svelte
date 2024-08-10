@@ -29,7 +29,7 @@
 </script>
 
 {#if $settings}
-    <section class="flex relative left-0 flex-col mx-auto w-full h-[340px] max-h-[358] bg-cyan-200">
+    <section class="flex relative left-0 flex-col mx-auto w-full h-[340px] max-h-[358] xs:h-full bg-cyan-200">
         <div class="relative flex flex-col w-full mx-auto overflow-y-auto h-full">
             <form name="settings" class="relative flex flex-col gap-3 p-4 pt-0 w-full mx-auto">
                 <div class="flex justify-between items-center bg-cyan-500 py-2 px-4 rounded-md">
@@ -109,8 +109,8 @@
                         </select>
                     </label>
 
-                    <span class="text-[11px] font-medium leading-tight">
-                        *Audio will only play if Alert Type is "Alarm" or "Both"
+                    <span class="text-[12px] xs:text-sm font-medium leading-tight">
+                        * Alarm audio plays if Alert Type is <b><i>Alarm</i></b> or <b><i>Both</i></b>
                     </span>
                 </div>
             </form>

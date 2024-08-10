@@ -29,12 +29,12 @@
 
     const strDate = stringifyDate(date)
 
-    function showToolTip() {
+    function showToolTip(event: any) {
         const tooltip = document.getElementById('tooltip')
         tooltip.firstChild.textContent = `${pluralize(value)} on ${formatDate(strDate)}`
         tooltip.style.display = 'flex'
-        tooltip.style.left = `${posX}px`
-        tooltip.style.top = `${y + 12}px`
+        tooltip.style.left = `${event.layerX - 36}px`
+        tooltip.style.top = `${event.layerY + 32}px`
         tooltip.style.opacity = '1'
         tooltip.style.transition = 'opacity 0.3s'
     }
@@ -58,6 +58,9 @@
     on:blur={hideToolTip}
     on:mouseout={hideToolTip}
     on:mousemove={showToolTip}
+    on:touchstart={showToolTip}
+    on:touchcancel={hideToolTip}
     on:click={() => click(strDate)}
     on:keypress={() => click(strDate)}
+    on:touchend={() => click(strDate)}
 />
