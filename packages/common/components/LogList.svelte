@@ -11,13 +11,13 @@
 </script>
 
 {#if $log}
-    <section class="flex relative left-0 flex-col pt-3 w-full mx-auto h-[220px] xs:h-full xs:overflow-y-scroll xs:overflow-hidden">
-        <div class="flex justify-between items-center sticky px-4 w-full pb-0 font-semibold">
+    <section class="relative pt-3 w-full mx-auto h-[220px] xs:h-full xs:mb-6 xs:pb-10 sm:mb-0 sm:pb-0 rounded-b-md bg-cyan-200 overflow-y-hidden">
+        <div class="flex justify-between items-center px-4 w-full pb-0 font-semibold bg-cyan-200">
             <CurrentTime format="date" />
             <h2 class="text-[18px]">({$log?.intakes?.length ?? 0})</h2>
         </div>
 
-        <div class="relative flex flex-col pt-2 overflow-y-auto px-4 w-[280px] xs:w-full h-full pb-4 md:pb-10">
+        <div class="relative flex flex-col pt-2 overflow-y-auto px-4 w-[280px] xs:w-full h-full pb-4 md:pb-10 bg-transparent">
             {#if !($log?.intakes?.length ?? 0)}
                 <div class="flex flex-col w-full items-center justify-center h-[180px]">
                     <h4 class="text-xl text-center">
@@ -25,7 +25,7 @@
                     </h4>
                 </div>
             {:else}
-                <ul class="relative flex flex-col gap-2 w-[248px] xs:w-full xs:pb-16 md:pb-10">
+                <ul class="relative flex flex-col gap-2 w-[248px] xs:w-full pb-6 xs:pb-16 md:pb-10">
                     {#each $log?.intakes as intake, i (i)}
                         <li class="rounded-md flex gap-x-2 h-12 bg-cyan-500 items-center p-2">
                             <div class="flex w-full justify-between items-center">

@@ -33,8 +33,8 @@
         const tooltip = document.getElementById('tooltip')
         tooltip.firstChild.textContent = `${pluralize(value)} on ${formatDate(strDate)}`
         tooltip.style.display = 'flex'
-        tooltip.style.left = `${event.layerX - 36}px`
-        tooltip.style.top = `${event.layerY + 32}px`
+        tooltip.style.left = `${event.pageX - 56}px`
+        tooltip.style.top = `${event.pageY - 32}px`
         tooltip.style.opacity = '1'
         tooltip.style.transition = 'opacity 0.3s'
     }
