@@ -22,7 +22,7 @@
     $: isSettings = view == 'settings'
 </script>
 
-<nav class="sticky top-0 z-[10000] bg-cyan-200 flex w-full justify-end px-4 py-2 xs:py-1">
+<nav class="relative bg-cyan-200 flex w-full justify-end px-4 py-2 xs:py-1 lg:rounded-t-md">
     <ul class="relative flex justify-between items-center gap-x-1 xs:p-2 xs:pr-0">
         <li class="w-5 h-5">
             <button name="default" on:click={updateView} class="w-5 h-5">

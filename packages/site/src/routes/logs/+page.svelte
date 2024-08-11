@@ -64,13 +64,13 @@
     <meta name="description" content="WaterLogged | Logs" />
 </svelte:head>
 
-<section class="relative z-[10] lg:fixed lg:left-[max(0%, calc(50%-45rem))] w-full lg:max-w-[320px] flex flex-col pt-0 pb-24 rounded-md bg-cyan-200">
+<section class="relative w-full h-full pb-6 overflow-y-hidden lg:py-10 lg:max-w-[320px] flex flex-col rounded-md">
     <Nav app="web" view={$pageView} on:view={setView} />
     <Modal />
 
     <Celebrate party={party} />
 
-    <div class="relative flex w-full {$modal.visible ? 'shadow-black shadow-xl blur-xl opacity-75' : ''}">
+    <div class="flex flex-col w-full lg:h-full lg:pb-10 {$modal.visible ? 'shadow-black shadow-xl blur-xl opacity-75' : ''}">
         {#if $pageView == 'default'}
             <DefaultView />
         {:else if $pageView == 'settings'}
@@ -81,7 +81,7 @@
     </div>
 </section>
 
-<section class="hidden top-0 w-full lg:flex md:relative md:pl-[350px] max-w-4xl lg:max-w-none">
+<section class="hidden top-0 w-full lg:flex relative lg:h-screen lg:py-16 max-w-3xl">
     <GraphView log={$log} />
 </section>
 

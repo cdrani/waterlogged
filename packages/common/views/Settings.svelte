@@ -109,8 +109,8 @@
                         </select>
                     </label>
 
-                    <span class="text-[12px] xs:text-sm font-medium leading-tight">
-                        * Alarm audio plays if Alert Type is <b><i>Alarm</i></b> or <b><i>Both</i></b>
+                    <span class="text-[12px] xs:text-sm font-medium leading-tighter">
+                        * Alert sounds if Alert Type is <b><i>Alarm</i></b> or <b><i>Both</i></b>
                     </span>
                 </div>
             </form>

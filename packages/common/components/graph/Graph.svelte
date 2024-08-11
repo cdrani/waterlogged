@@ -64,7 +64,7 @@
 </script>
 
 
-<svg viewBox={`0 0 ${width} ${height}`} class="mx-auto py-1.5 bg-cyan-800" overflow="auto" style="width:{width /1.25}px;height:{height}px">
+<svg viewBox={`0 0 ${width} ${height}`} class="flex items-center bg-cyan-800" style="width:{width / 1.75}px;">
     {#if view === 'monthly'}
         {#each chunks as chunk, index}
             <Month
@@ -84,19 +84,19 @@
             />
         {/each}
     {:else}
-        <!-- {#if dayLabelWidth > 0} -->
-        <!--     {#each dayLabels as label, index} -->
-        <!--         <text -->
-        <!--             alignment-baseline="middle" -->
-        <!--             fill={fontColor} -->
-        <!--             font-family={fontFamily} -->
-        <!--             font-size={fontSize} -->
-        <!--             x="0" -->
-        <!--             y={dayLabelPosition(index)}> -->
-        <!--             {label} -->
-        <!--         </text> -->
-        <!--     {/each} -->
-        <!-- {/if} -->
+        {#if dayLabelWidth > 0}
+            {#each dayLabels as label, index}
+                <text
+                    alignment-baseline="middle"
+                    fill={fontColor}
+                    font-family={fontFamily}
+                    font-size={fontSize}
+                    x="0"
+                    y={dayLabelPosition(index)}>
+                    {label}
+                </text>
+            {/each}
+        {/if}
         <g transform={`translate(${dayLabelWidth})`}>
             {#each chunks as chunk, index}
                 <Week
@@ -108,16 +108,16 @@
                     index={index}
                     monthLabelHeight={monthLabelHeight}
                 />
-                <!-- {#if monthLabelHeight > 0 && isNewMonth(chunks, index)} -->
-                <!--     <text -->
-                <!--         alignment-baseline="hanging" -->
-                <!--         fill={fontColor} -->
-                <!--         font-family={fontFamily} -->
-                <!--         font-size={fontSize} -->
-                <!--         x={cellRect * index}> -->
-                <!--         {monthLabels[chunk[0].date.getMonth()]} -->
-                <!--     </text> -->
-                <!-- {/if} -->
+                {#if monthLabelHeight > 0 && isNewMonth(chunks, index)}
+                    <text
+                        alignment-baseline="hanging"
+                        fill={fontColor}
+                        font-family={fontFamily}
+                        font-size={fontSize}
+                        x={cellRect * index}>
+                        {monthLabels[chunk[0].date.getMonth()]}
+                    </text>
+                {/if}
             {/each}
         </g>
     {/if}
