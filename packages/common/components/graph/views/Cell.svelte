@@ -8,7 +8,6 @@
     export let size: number
     export let value: number
     export let x: number = 0
-    export let posX: number
     export let click: (date: string) => void
 
     function pluralize(num: number) {
