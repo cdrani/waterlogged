@@ -8,8 +8,8 @@ export const  LogsService = {
         return await db.logs.toArray()
     },
 
-    getByDate: async () => {
-        const key = getDateKey()
+    getByDate: async (dateKey?: string) => {
+        const key = dateKey ?? getDateKey()
         const log = await db.logs.get({ date_id: key })
         return log
     },
