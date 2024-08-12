@@ -64,30 +64,32 @@
     <meta name="description" content="WaterLogged | Logs" />
 </svelte:head>
 
-<section class="relative w-full h-full pb-6 overflow-y-hidden lg:py-10 lg:max-w-[320px] flex flex-col rounded-md">
-    <Nav app="web" view={$pageView} on:view={setView} />
-    <Modal />
+{#if $log}
+    <section class="relative w-full h-full pb-6 overflow-y-hidden lg:max-w-[320px] flex flex-col rounded-md lg:mt-[4rem] lg:pb-[18rem]">
+        <Nav app="web" view={$pageView} on:view={setView} />
+        <Modal />
 
-    <Celebrate party={party} />
+        <Celebrate party={party} />
 
-    <div class="flex flex-col w-full lg:h-full lg:pb-10 {$modal.visible ? 'shadow-black shadow-xl blur-xl opacity-75' : ''}">
-        {#if $pageView == 'default'}
-            <DefaultView />
-        {:else if $pageView == 'settings'}
-            <SettingsView messaging={messaging} />
-        {:else}
-            <GraphView log={$log} />
-        {/if}
+        <div class="flex flex-col w-full lg:h-full {$modal.visible ? 'shadow-black shadow-xl blur-xl opacity-75' : ''}">
+            {#if $pageView == 'default'}
+                <DefaultView />
+            {:else if $pageView == 'settings'}
+                <SettingsView messaging={messaging} />
+            {:else}
+                <GraphView log={$log} />
+            {/if}
+        </div>
+    </section>
+
+    <section class="hidden top-0 w-full lg:flex relative lg:h-screen xl:max-w-3xl 2xl:max-w-5xl lg:mt-[4rem] lg:pb-[11rem]">
+        <GraphView log={$log} />
+    </section>
+
+    <div 
+        id="tooltip"
+        class="items-center justify-center fixed z-[2000] hidden h-5 w-full max-w-[120px] rounded-[4px] top-4 border-gray-400 bg-white border-sm py-0.5 px-1 text-[12px]"
+    >
+        <span></span>
     </div>
-</section>
-
-<section class="hidden top-0 w-full lg:flex relative lg:h-screen lg:py-16 max-w-3xl">
-    <GraphView log={$log} />
-</section>
-
-<div 
-    id="tooltip"
-    class="items-center justify-center fixed z-[2000] hidden h-5 w-full max-w-[120px] rounded-[4px] top-4 border-gray-400 bg-white border-sm py-0.5 px-1 text-[12px]"
->
-    <span></span>
-</div>
+{/if}
