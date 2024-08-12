@@ -19,11 +19,19 @@
     let waterDrank: number
     let logIntakes: number
 
+    let todayLog = writable<LOG>(log)
     let viewingLog = writable<LOG>(log)
 
     function handleCellClick(dateId: string) {
+        if (dateId == $todayLog.date_id) return viewingLog.set($todayLog)
+
         const clickedLog = $logs.find((log: LOG) => log.date_id == dateId)
         viewingLog.set(clickedLog)
+    }
+
+    $: if (log.intakes.length !== $todayLog.intakes.length) {
+        todayLog.set(log)
+        if ($viewingLog?.date_id == log.date_id) viewingLog.set(log)
     }
 
     $: if ($logs) {
