@@ -3,7 +3,7 @@
     <meta name="description" content="WaterLogged Home" />
 </svelte:head>
 
-<main class="flex flex-col relative w-full h-full max-w-screen-md  lg:max-w-screen-xl mx-auto p-5 md:p-8 xl:p-16 my-10">
+<main class="flex flex-col relative w-full h-full max-w-screen-md  lg:max-w-screen-xl mx-auto p-5 md:p-8 xl:p-16 my-10 overflow-y-auto">
     <section class="flex relative flex-col items-center w-full gap-8 h-full">
         <div class="flex flex-col justify-evenly gap-6 w-full h-full xl:w-1/2">
             <article class="flex justify-center items-center flex-col gap-3 lg:gap-8 w-full">

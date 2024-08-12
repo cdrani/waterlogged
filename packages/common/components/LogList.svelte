@@ -25,7 +25,7 @@
                     </h4>
                 </div>
             {:else}
-                <ul class="relative flex flex-col gap-2 w-[248px] xs:w-full pb-6 xs:pb-16 md:pb-10">
+                <ul class="relative flex flex-col gap-2 w-[248px] xs:w-full pb-6 xs:pb-16 md:pb-4">
                     {#each $log?.intakes as intake, i (i)}
                         <li class="rounded-md flex gap-x-2 h-12 bg-cyan-500 items-center p-2">
                             <div class="flex w-full justify-between items-center">

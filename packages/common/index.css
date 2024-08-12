@@ -35,7 +35,7 @@ a:hover {
 }
 
 body {
-    @apply bg-cyan-200 sm:bg-cyan-400 overflow-hidden xs:h-screen;
+    @apply bg-cyan-200 sm:bg-cyan-400;
 }
 
 .wave {
