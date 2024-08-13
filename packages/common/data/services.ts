@@ -3,7 +3,13 @@ import type { SETTINGS, LOG, INTAKE } from 'common/types'
 import { createIntake, createDailyLog } from './defaults'
 import { convertToDate, getDateKey, convertTo24HourFormat } from 'common/utils/date'
 
-export const  LogsService = {
+export const UserService = {
+    getUser: async () => {
+        return await db.user.orderBy('created').first()
+    }
+}
+
+export const LogsService = {
     all: async () => {
         return await db.logs.toArray()
     },
