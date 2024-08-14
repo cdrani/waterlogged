@@ -1,18 +1,17 @@
 <script lang="ts">
-    import { db } from 'common/data/db'
-    const userId = db.cloud.currentUserId
+    import { db, populateDB } from 'common/data/db'
 
-    function openLogin() {
-        db.cloud.login()
-    }
+    const user = db.cloud.currentUser
 
-    async function logOut() {
-        await db.cloud.logout()
+    const openLogin = async () => db.cloud.login()
 
+    const logOut = async () => {
+        await db.cloud.logout({ force: true })
+        await populateDB(db)
     }
 </script>
 
-{#if userId == 'unauthorized'}
+{#if !$user.isLoggedIn}
     <button 
         on:click={openLogin}
         on:touchend={openLogin}
