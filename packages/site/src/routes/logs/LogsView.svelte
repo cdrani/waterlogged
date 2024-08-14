@@ -7,6 +7,7 @@
     import GraphView from 'common/views/Graph.svelte'
     import Modal from 'common/components/Modal.svelte'
     import DefaultView from 'common/views/Default.svelte'
+	import LoginUI from 'common/components/LoginUI.svelte'
     import SettingsView from 'common/views/Settings.svelte'
     import Celebrate from 'common/components/Celebrate.svelte'
 
@@ -65,8 +66,8 @@
 {#if $log && $user}
     <section class="relative w-full h-full pb-6 overflow-y-hidden lg:max-w-[320px] flex flex-col rounded-md lg:mt-[4rem] lg:pb-[18rem]">
         <Nav app="web" view={$pageView} on:view={setView} />
-        <Modal />
 
+        <LoginUI />
         <Celebrate party={party} />
 
         <div class="flex flex-col w-full lg:h-full {$modal.visible ? 'shadow-black shadow-xl blur-xl opacity-75' : ''}">
@@ -79,6 +80,8 @@
             {/if}
         </div>
     </section>
+
+    <Modal />
 
     <section class="hidden top-0 w-full lg:flex relative lg:h-screen xl:max-w-3xl 2xl:max-w-5xl lg:mt-[4rem] lg:pb-[11rem]">
         <GraphView log={$log} />
