@@ -8,7 +8,7 @@
     export let messaging: Messaging
 
     async function handleInput(e: Event) {
-        const target = e.target as HTMLSelectElement | HTMLSelectElement
+        const target = e.target as HTMLInputElement | HTMLSelectElement
         const { name: key , value: rawValue } = target
         const value = ['goal', 'interval', 'amount'].includes(key) ? Number(rawValue) : rawValue
         messaging.postMessage({ type: 'set:settings', data: { key, value } })
