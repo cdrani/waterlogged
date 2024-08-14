@@ -1,62 +1,29 @@
 <script lang="ts">
     import { onMount } from 'svelte'
-    import { liveQuery } from 'dexie'
     import { writable } from 'svelte/store'
 
-    import Nav from 'common/components/Nav.svelte'
-    import GraphView from 'common/views/Graph.svelte'
-    import Modal from 'common/components/Modal.svelte'
-    import DefaultView from 'common/views/Default.svelte'
-    import SettingsView from 'common/views/Settings.svelte'
-    import Celebrate from 'common/components/Celebrate.svelte'
+    import LogsView from './LogsView.svelte'
+    import Spinner from 'common/components/Spinner.svelte'
 
     import { db } from 'common/data/db'
-    import WebNotification from '$lib/notification'
-    import { type Messaging } from 'common/messaging'
-	import { LogsService } from 'common/data/services'
-	import { initMessageHandler } from 'common/messaging'
-    import { initModal, getModal, openModal } from 'common/stores/modal'
-    import { type PartyStore, initParty, getParty } from 'common/stores/party'
-
     db.open()
 
-    initModal()
-    initParty()
+    let loading = writable<boolean>(false)
+    const syncState = db.cloud.syncState
 
-    const modal = getModal()
-    const partyStore = getParty() as PartyStore
+    const sync = async () => {
+		if ($syncState?.status === 'connected') {
+			try { await db.cloud.sync({ purpose: 'pull', wait: true }) }
+			catch (error) { console.log(error) }
+		    finally { loading.set(false) }
+		} 
 
-    type PageView = 'default' | 'settings' | 'graph'
-    let pageView = writable<PageView>('default')
+        if ($syncState?.status === 'offline') loading.set(false)
+	}
 
-    function setView(event: CustomEvent) {
-        const { newView } = event.detail
-        pageView.set(newView) 
-    }
+	$: $syncState?.status, sync()
 
-    let messaging: Messaging
-
-    // ensure a log exists for every day
-    async function loadOnMount(notificationManager: WebNotification) {
-        await LogsService.load()
-        await notificationManager.startTimer()
-    }
-
-    onMount(() => {
-        const notificationManager = new WebNotification()
-        messaging = initMessageHandler({ notificationManager })
-        loadOnMount(notificationManager)
-    })
-
-    let log = liveQuery(async () => await LogsService.getByDate())
-    let party: boolean = false
-
-    $: if ($log) {
-        party = partyStore.canParty($log.complete)
-        if (party) {
-            openModal('complete')
-        }
-    }
+	onMount(sync)
 </script>
 
 <svelte:head>
@@ -64,32 +31,8 @@
     <meta name="description" content="WaterLogged | Logs" />
 </svelte:head>
 
-{#if $log}
-    <section class="relative w-full h-full pb-6 overflow-y-hidden lg:max-w-[320px] flex flex-col rounded-md lg:mt-[4rem] lg:pb-[18rem]">
-        <Nav app="web" view={$pageView} on:view={setView} />
-        <Modal />
-
-        <Celebrate party={party} />
-
-        <div class="flex flex-col w-full lg:h-full {$modal.visible ? 'shadow-black shadow-xl blur-xl opacity-75' : ''}">
-            {#if $pageView == 'default'}
-                <DefaultView />
-            {:else if $pageView == 'settings'}
-                <SettingsView messaging={messaging} />
-            {:else}
-                <GraphView log={$log} />
-            {/if}
-        </div>
-    </section>
-
-    <section class="hidden top-0 w-full lg:flex relative lg:h-screen xl:max-w-3xl 2xl:max-w-5xl lg:mt-[4rem] lg:pb-[11rem]">
-        <GraphView log={$log} />
-    </section>
-
-    <div 
-        id="tooltip"
-        class="items-center justify-center fixed z-[2000] hidden h-5 w-full max-w-[120px] rounded-[4px] top-4 border-gray-400 bg-white border-sm py-0.5 px-1 text-[12px]"
-    >
-        <span></span>
-    </div>
+{#if $loading}
+    <Spinner />
+{:else}
+    <LogsView />
 {/if}
