@@ -54,12 +54,12 @@
     fill={color}
     data-value={value}
     data-date={strDate}
-    on:blur={hideToolTip}
-    on:mouseout={hideToolTip}
-    on:mousemove={showToolTip}
-    on:touchstart={showToolTip}
-    on:touchcancel={hideToolTip}
-    on:click={() => click(strDate)}
-    on:keypress={() => click(strDate)}
-    on:touchend={() => click(strDate)}
+    on:blur|preventDefault={hideToolTip}
+    on:mouseout|preventDefault={hideToolTip}
+    on:mousemove|preventDefault={showToolTip}
+    on:touchstart|preventDefault={showToolTip}
+    on:touchcancel|preventDefault={hideToolTip}
+    on:click|preventDefault={() => click(strDate)}
+    on:keypress|preventDefault={() => click(strDate)}
+    on:touchend|preventDefault={() => click(strDate)}
 />

@@ -35,8 +35,8 @@
 
                             <button 
                                 class="w-6 h-6 justify-end"
-                                on:click={() => removeIntake(intake.id)}
-                                on:touchend={() => removeIntake(intake.id)}
+                                on:click|preventDefault={() => removeIntake(intake.id)}
+                                on:touchend|preventDefault={() => removeIntake(intake.id)}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                     <g fill="none" stroke="black" stroke-dasharray="22" stroke-dashoffset="0" stroke-linecap="round" stroke-width="3px">
