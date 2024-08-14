@@ -4,7 +4,7 @@
 
 <slot></slot>
 
-<footer class="hidden lg:flex fixed bottom-0 justify-between items-center mx-auto text-white w-full h-12 bg-gray-800">
+<footer class="hidden lg:flex fixed z-[100000] bottom-0 justify-between items-center mx-auto text-white w-full h-12 bg-gray-800">
     <div class="flex justify-between items-center w-full lg:min-w-[1120px] lg:max-w-[1376px] mx-auto">
         <div class="flex justify-between items-center gap-2">
             <a aria-label="github" target="_blank" href="htpps://github.com/cdrani/">
