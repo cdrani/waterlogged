@@ -1,3 +1,5 @@
+<script lang="ts"></script>
+
 <div class="flex items-center mx-auto my-auto justify-center h-screen w-screen">
     <svg
         class="animate-spin -ml-1 mr-3 h-8 w-8 text-muted-foreground"
