@@ -14,13 +14,12 @@
 
     const onOpen = () => showModal.set(true)
     const onClose = () => showModal.set(false)
-
 </script>
 
 
 <button 
-    on:click={onOpen}
-    on:touchend={onOpen}
+    on:click|preventDefault={onOpen}
+    on:touchend|preventDefault={onOpen}
     class="inline-flex justify-center self-center items-center w-24 h-8 bg-cyan-800 rounded-md"
 >
     <span class="font-bold text-sm text-white w-full">Log Out</span>
