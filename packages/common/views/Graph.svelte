@@ -83,8 +83,8 @@
                 </div>
             </div>
 
-            <div class="relative flex lg:overflow-y-auto w-full h-full px-4 lg:px-6">
-                <ul class="relative flex flex-col gap-2 lg:pb-10 w-full h-screen">
+            <div class="relative flex lg:overflow-y-auto w-full h-full">
+                <ul class="relative flex flex-col gap-2 lg:pb-6 xs:overflow-y-auto px-4 lg:px-6 w-full h-screen xs:h-full">
                     {#each $viewingLog?.intakes as intake, i (i)}
                         <li class="rounded-md flex gap-x-2 h-12 bg-cyan-500 items-center p-2 lg:px-6">
                             <div class="flex w-full justify-between items-center">
