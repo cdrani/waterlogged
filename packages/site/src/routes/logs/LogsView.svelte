@@ -70,7 +70,7 @@
         <LoginUI />
         <Celebrate party={party} />
 
-        <div class="flex flex-col w-full lg:h-full {$modal.visible ? 'shadow-black shadow-xl blur-xl opacity-75' : ''}">
+        <div class="flex flex-col w-full lg:h-full">
             {#if $pageView == 'default'}
                 <DefaultView />
             {:else if $pageView == 'settings'}
