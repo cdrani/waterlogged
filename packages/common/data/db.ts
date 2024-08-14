@@ -27,25 +27,35 @@ export class DB extends Dexie {
             databaseUrl: import.meta.env.VITE_DEXIE_DB_URL,
         })
 
-        this.on('ready', async () => await populate(this))
+        this.on('ready', async () => await populateDB(this))
     }
 }
 
 export const db = new DB()
 
-async function populate(db: DB) {
-    const numOfUsers = await db.user.count()
-    if (numOfUsers > 0) return
-
-    await db.user.add({
-        id: uuidv4(),
-        synced: false,
-        created: new Date()
-    })
+export async function populateApp(db: DB) {
+    const settingsDNE = await db.settings.count() == 0
+    if (!settingsDNE) return
 
     const settings = createSettings()
     const log = createDailyLog(settings)
 
     await db.settings.add(settings)
     await db.logs.add(log)
+}
+
+export async function populateUser(db: DB) {
+    await db.user.add({
+        id: uuidv4(),
+        synced: false,
+        created: new Date()
+    })
+}
+
+export async function populateDB(db: DB) {
+    const numOfUsers = await db.user.count()
+    if (numOfUsers > 0) return
+
+    await populateUser(db)
+    await populateApp(db)
 }
