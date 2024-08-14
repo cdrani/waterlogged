@@ -3,6 +3,7 @@
     import { resolveText, type DXCInputField, type DXCUserInteraction } from 'dexie-cloud-addon'
 
     import PopUp from './PopUp.svelte'
+    import FormActions from './FormActions.svelte'
 
     export let ui: DXCUserInteraction
 
@@ -20,7 +21,6 @@
         const { name, value } = target
         params.update(previous => ({ ...previous, [name]: value }))
     }
-
 </script>
 
 {#if ui}
@@ -67,24 +67,11 @@
                 {/each}
             </div>
 
-            <div class="flex flex-end h-full w-full">
-                <div class="flex justify-end items-end w-full gap-4">
-                    <button 
-                        type="submit"
-                        on:click|preventDefault={handleSubmit}
-                        class="font-semibold w-20 h-9 bg-white rounded-md"
-                    >
-                        <span class="text-[16px] text-black">{ui.submitLabel}</span>
-                    </button>
-
-                    <button 
-                        on:click={handleCancel}
-                        class="w-20 h-9 bg-black rounded-md"
-                    >
-                        <span class="font-semibold text-[16px] text-white">{ui.cancelLabel}</span>
-                    </button>
-                </div>
-            </div>
+            <FormActions 
+                onClose={handleCancel}
+                submitLabel={ui.submitLabel}
+                cancelLabel={ui.cancelLabel}
+            />
         </form>
     </PopUp>
 {/if}

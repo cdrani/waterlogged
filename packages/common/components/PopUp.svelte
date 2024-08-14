@@ -3,13 +3,10 @@
 
     export let onClose: () => void
 
-    const onKeyDown = (e: KeyboardEvent) => {
-        if (e.key !== 'Escape') return
-        onClose()
-    }
+    const onKeyDown = (e: KeyboardEvent) => e.key == 'Escape' && onClose()
 </script>
 
-<svelte:window on:keydown|preventDefault={onKeyDown} />
+<svelte:window on:keydown={onKeyDown} />
 
 <div
     aria-modal="true"

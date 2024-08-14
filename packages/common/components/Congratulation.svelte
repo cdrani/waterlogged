@@ -15,14 +15,14 @@
 </script>
 
 {#if $log}
-    <section class="absolute z-[1000] flex flex-col h-full p-4 pt-6">
+    <section class="absolute z-[1000] flex flex-col w-full h-full p-4 pt-6">
         <h1 class="text-center text-white text-xl font-bold">Congratulations!</h1>
         <h2 class="text-center text-white text-lg font-medium">You hit your daily goal!</h2>
         <h3 class="text-center text-white text-2xl font-black mt-2">
             {$log.total} / {$log.goal} ({$log.measurement})
         </h3>
 
-        <h4 class="text-center text-white text-[13px] mt-3 leading-snug">
+        <h4 class="text-center text-white text-[13px] md:text-md lg:text-lg mt-3 leading-snug">
             Keep your streak going tomorrow!
             Adjust your targets as necessary.
         </h4>

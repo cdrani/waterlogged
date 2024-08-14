@@ -1,8 +1,8 @@
 <script lang="ts">
+    import PopUp from './PopUp.svelte'
     import CustomLogForm from './CustomLogForm.svelte'
     import Congratulation from './Congratulation.svelte'
 
-    import { clickOutside } from 'common/utils/click-outside'
     import { closeModal, getModal } from 'common/stores/modal'
     import { getParty, type PartyStore } from 'common/stores/party'
 
@@ -16,39 +16,12 @@
     }
 </script>
 
-<div
-    id="modal"
-    role="alertdialog"
-    aria-modal="true"
-    class="fixed z-[100] w-full h-full {$modal.visible
-        ? 'block overflow-y-hidden'
-        : 'hidden overflow-y-hidden'} top-[184px] -translate-y-1/2 shadow-black z-[10] inset-0 flex w-full h-full mx-auto px-4 items-center content-center place-content-center"
->
-    <div
-        id="modal-content"
-        class="absolute z-50"
-        use:clickOutside
-        on:click_outside={handleClose}
-    >
-        <div class="border-white border-2 absolute z-[100] inset-0 left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 flex flex-col w-[248px] mx-auto h-[225px] bg-cyan-500 rounded-md">
-            <button class="absolute z-[1001] top-1 right-1 w-5 h-5 cursor justify-end" on:click={handleClose}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <g fill="none" stroke="white" stroke-dasharray="22" stroke-dashoffset="22" stroke-linecap="round" stroke-width="3px">
-                        <path d="M19 5L5 19">
-                            <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.3s" dur="0.3s" values="22;0" />
-                        </path>
-                        <path d="M5 5L19 19">
-                            <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="22;0" />
-                        </path>
-                    </g>
-                </svg>
-            </button>
-
-            {#if $modal.view == 'add'}
-                <CustomLogForm />
-            {:else if $modal.view == 'complete'}
-                <Congratulation />
-            {/if}
-        </div>
-    </div>
-</div>
+{#if $modal.visible}
+    <PopUp onClose={handleClose}>
+        {#if $modal.view == 'add'}
+            <CustomLogForm />
+        {:else if $modal.view == 'complete'}
+            <Congratulation />
+        {/if}
+    </PopUp>
+{/if}
