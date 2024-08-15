@@ -14,14 +14,13 @@
     import WebNotification from '$lib/notification'
     import { type Messaging } from 'common/messaging'
 	import { initMessageHandler } from 'common/messaging'
+    import { initModal, openModal } from 'common/stores/modal'
 	import { UserService, LogsService } from 'common/data/services'
-    import { initModal, getModal, openModal } from 'common/stores/modal'
     import { type PartyStore, initParty, getParty } from 'common/stores/party'
 
     initModal()
     initParty()
 
-    const modal = getModal()
     const partyStore = getParty() as PartyStore
 
     type PageView = 'default' | 'settings' | 'graph'
@@ -65,7 +64,7 @@
 
 {#if $log && $user}
     <section class="relative w-full h-full pb-6 overflow-y-hidden lg:max-w-[320px] flex flex-col rounded-md lg:mt-[4rem] lg:pb-[18rem]">
-        <Nav app="web" view={$pageView} on:view={setView} />
+        <Nav view={$pageView} on:view={setView} />
 
         <LoginUI />
         <Celebrate party={party} />

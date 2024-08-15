@@ -2,10 +2,10 @@
     import { onMount } from 'svelte'
     import { writable } from 'svelte/store'
 
+    import { db } from 'common/data/db'
     import LogsView from './LogsView.svelte'
     import Spinner from 'common/components/Spinner.svelte'
 
-    import { db } from 'common/data/db'
     db.open()
 
     let loading = writable<boolean>(false)
