@@ -21,11 +21,11 @@
 </script>
 
 {#if $log}
-    <form on:submit|preventDefault={saveCustomLog} class="absolute flex flex-col w-full h-full gap-6 p-10">
+    <form on:submit|preventDefault={saveCustomLog} class="absolute flex flex-col w-full h-full gap-2 md:gap-6 p-4 md:p-10">
         <h1 class="text-center text-white text-xl lg:text-2xl font-bold">Log Custom Amount</h1>
         <div class="flex flex-col justify-between w-full gap-x-6 gap-4 mt-4">
             <label for="time" class="flex justify-between items-center gap-y-1">
-                <span class="text-white text-md md:text-lg font-bold">Log Time</span>
+                <span class="text-white text-[16px] md:text-lg font-bold">Log Time</span>
                 <input
                     id="time"
                     type="time" 
@@ -36,7 +36,7 @@
             </label>
 
             <label for="amount" class="flex justify-between items-center gap-y-1">
-                <span class="text-white text-md md:text-lg font-bold">Amount ({$log.measurement})</span>
+                <span class="text-white text-[16px] md:text-lg font-bold">Amount ({$log.measurement})</span>
                 <input 
                     id="amount"
                     name="amount"

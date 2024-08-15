@@ -83,8 +83,8 @@
                 </div>
             </div>
 
-            <div class="relative flex lg:overflow-y-auto w-full h-full">
-                <ul class="relative flex flex-col gap-2 lg:pb-6 xs:overflow-y-auto px-4 lg:px-6 w-full h-screen xs:h-full">
+            <div class="relative flex lg:overflow-y-auto w-full h-full pb-4 xs:pb-0">
+                <ul class="relative flex flex-col gap-2 lg:pb-6 xs:overflow-y-auto px-4 lg:px-6 w-full h-full">
                     {#each $viewingLog?.intakes as intake, i (i)}
                         <li class="rounded-md flex gap-x-2 h-12 bg-cyan-500 items-center p-2 lg:px-6">
                             <div class="flex w-full justify-between items-center">
@@ -96,9 +96,9 @@
                 </ul>
             </div>
         {:else}
-            <div class="flex flex-col w-full items-center justify-center h-[180px]">
+            <div class="flex flex-col w-full items-center justify-center h-[180px] px-4 lg:px-6">
                 <h4 class="text-xl md:text-2xl lg:text-3xl text-center">
-                {$viewingLog && !$viewingLog?.intakes?.length ? 'No tracked water breaks on this day.' : 'Select a date to display logs for chosen date.'}
+                    {$viewingLog && !$viewingLog?.intakes?.length ? 'No tracked water breaks on this day.' : 'Select a date to display logs for chosen date.'}
                 </h4>
             </div>
         {/if}
