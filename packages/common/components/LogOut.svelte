@@ -36,7 +36,7 @@
                 {' '} <b class="underline">you will lose any changes you have made.</b>
             </p>
 
-            <FormActions onClose={onClose} />
+            <FormActions onClose={onClose} submitLabel="Confirm" />
         </form>
     </PopUp>
 {/if}
