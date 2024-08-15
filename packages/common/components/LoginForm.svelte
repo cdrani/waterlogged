@@ -27,10 +27,10 @@
     <PopUp onClose={handleCancel}>
         <form 
             on:submit|preventDefault={handleSubmit}
-            class="absolute flex flex-col items-center mx-auto w-full h-full p-4 md:p-8 gap-4"
+            class="absolute flex flex-col items-center mx-auto w-full h-full p-4 md:p-8 gap-2 md:gap-4"
         >
-            <h1 class="align-left font-bold text-xl md:text-2xl capitalize">{ui.title}</h1>
-            <h3 class="text-md md:text-lg w-full leading-tight">
+            <h1 class="align-left font-bold text-lg md:text-xl lg:text-2xl capitalize">{ui.title}</h1>
+            <h3 class="text-md font-semibold md:text-lg w-full leading-tight">
                 {#if ui.type == 'otp'}
                     Look for an email sent from <b class="underline">Dexie Cloud</b>
                 {:else if ui.type == 'email'}
@@ -53,13 +53,13 @@
             <div class="flex flex-col justify-between w-full gap-x-6 gap-2 md:gap-4">
                 {#each fields as [fieldName, { type, label, placeholder }]}
                     <label for={fieldName} class="flex flex-col justify-between gap-x-8 gap-y-1">
-                        <span class="text-lg font-bold">{label ?? 'Email'}</span>
+                        <span class="text-[14px] md:text-lg font-bold">{label ?? 'Email'}</span>
                         <input
                             id={fieldName}
                             type={type}
                             name={fieldName}
                             placeholder={placeholder}
-                            class="{inputClass} w-1/2 h-[36px] text-lg"
+                            class="{inputClass} w-1/2 md:h-[36px] text-[14px] md:text-lg"
                             on:change={handleInputChange}
                             value={params[fieldName] || ''}
                         />

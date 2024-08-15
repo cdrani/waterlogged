@@ -27,12 +27,12 @@
 
 {#if $showModal} 
     <PopUp onClose={onClose}>
-        <form on:submit|preventDefault={logOut} class="absolute flex flex-col w-full h-full gap-6 p-10">
-            <h1 class="text-center text-xl lg:text-2xl font-bold">
-                Are you sure you want to logout?
+        <form on:submit|preventDefault={logOut} class="absolute flex flex-col w-full h-full gap-4 md:gap-6 p-4 pt-4 md:p-10">
+            <h1 class="text-center text-white capitalize text-lg md:text-xl lg:text-2xl font-bold">
+                Confirm log out
             </h1>
 
-            <p class="text-md md:text-lg">This action will erase all of your local data. Unless your data is synced with cloud,
+            <p class="text-[14px] md:text-lg">This action will erase all of your local data. Unless your data is synced with cloud,
                 {' '} <b class="underline">you will lose any changes you have made.</b>
             </p>
 

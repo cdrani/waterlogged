@@ -4,9 +4,6 @@
 
     type View = 'default' | 'settings' | 'graph'
 
-    type App = 'extension' | 'web'
-
-    export let app: App
     export let view: View
     const dispatch = createEventDispatcher()
 
