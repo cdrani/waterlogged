@@ -2,6 +2,7 @@
     "name": "waterlog",
     "version": "0.1.0",
     "manifest_version": 3,
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5NzPFnq6HnDeBLDMH2P8FaqcnEYeKwx39UkgqQypPbrbTt56Y6eRa/rC/I15xN2LfrkUk7K+SwfDBIStwVsNxkbakJLBWwFkmQt0XSnzIWqktYCf4PjSqvS+58NDmoOBOzspj8pAN9KCjFU14qKs05VLvNYGpNeCqhDdTo9wIKrf6l5H0q0qoIXWvJawajX+8B44RwZ1deUeijgm+sui0yDynlMBy/SMHLsesEXuRmJ+p9M4owCa6aYcP72BXitHCBaRKZocgIYbay++po7djVHW7RND/7I+Eft3DOczm0sOf2Jk1az/P7rut2enZpj23U7cYn+OO0qdIAA1GCNUfQIDAQAB",
     "description": "Track and Review your water logs",
     "action": {
         "default_icon": {
