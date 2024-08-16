@@ -5,26 +5,21 @@ export default class WebNotification extends NotificationBase {
     private closeTimeout: Timer | null = null
 
     protected async clearAlarms() {
-        if (this.intervalId) {
-            clearInterval(this.intervalId)
-        }
-        if (this.timeoutId) {
-            clearTimeout(this.timeoutId)
-        }
+        if (this.intervalId) clearInterval(this.intervalId)
+        if (this.timeoutId) clearTimeout(this.timeoutId)
     }
 
     protected setupAlarms(delay: number) {
-        this.timeoutId = setTimeout(async () => {
+        const checkAndNotify = async () => {
             await this.getSettings()
             const { nowMS, startMS, endMS } = this.getTimeBoundaries()
             if (nowMS >= startMS && nowMS < endMS) await this.notifyAlert()
-        }, delay)
+        }
 
-        this.intervalId = setInterval(async () => {
-            await this.getSettings()
-            const { nowMS, startMS, endMS } = this.getTimeBoundaries()
-            if (nowMS >= startMS && nowMS < endMS) await this.notifyAlert()
-        }, (this?.settings?.interval ?? 60) * 60 * 1000)
+        const interval = (this?.settings?.interval ?? 60) * 60 * 1000
+
+        this.timeoutId = setTimeout(checkAndNotify, delay)
+        this.intervalId = setInterval(checkAndNotify, interval)
     }
 
     private clearTimer() {
@@ -41,7 +36,7 @@ export default class WebNotification extends NotificationBase {
         }
 
         const notification = new Notification(title, notificationOptions)
-        this.closeTimeout = setTimeout(() => notification.close(), 10000)
+        this.closeTimeout = setTimeout(() => notification.close(), 10_000)
 
         if (!showButton) return
 
