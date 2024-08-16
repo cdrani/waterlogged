@@ -1,7 +1,5 @@
-import { db } from 'common/data/db'
-import { getDateMS } from 'common/utils/date'
 import type { LOG, SETTINGS } from 'common/types'
-import { createIntake } from 'common/data/defaults'
+import { getDateMS, getTime } from 'common/utils/date'
 import { getEncouragingMessage } from 'common/utils/encouragements'
 import { LogsService, SettingsService } from 'common/data/services'
 
@@ -33,7 +31,9 @@ export default abstract class NotificationBase {
         const settings = await this.getSettings()
         if (!settings) return
 
-        if (!this.settings.enabled || this.settings.alert_type === 'none') return await this.clearAlarms()
+        if (!this.settings.enabled || this.settings.alert_type === 'none') {
+            return await this.clearAlarms()
+        }
 
         await this.clearAlarms()
         const { nowMS, startMS } = this.getTimeBoundaries()
