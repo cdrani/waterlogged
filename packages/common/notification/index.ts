@@ -1,5 +1,5 @@
+import { getDateMS } from 'common/utils/date'
 import type { LOG, SETTINGS } from 'common/types'
-import { getDateMS, getTime } from 'common/utils/date'
 import { getEncouragingMessage } from 'common/utils/encouragements'
 import { LogsService, SettingsService } from 'common/data/services'
 
