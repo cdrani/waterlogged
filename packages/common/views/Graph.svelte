@@ -15,7 +15,7 @@
     end.setMonth(11, 31)
 
     let logs = liveQuery(async () => await LogsService.all())
-    let data = new Map()
+    let data = writable<Map<string, number>>(new Map())
     let waterDrank: number
     let logIntakes: number
 
@@ -35,7 +35,12 @@
     }
 
     $: if ($logs) {
-        $logs.forEach((log: LOG) => { data.set(log.date_id, log.intakes.length) })
+        $logs.forEach((log: LOG) => {
+            data.update(datum => {
+                datum.set(log.date_id, log.intakes.length)
+                return datum
+            })
+        })
 
         logIntakes = $logs.reduce((acc: number, log: LOG) => acc + log.intakes.length, 0)
         waterDrank = $logs.reduce((acc: number, log: LOG) => acc + log.intakes.reduce((acc, intake) => acc + intake.amount, 0), 0)
@@ -52,7 +57,7 @@
         <div class="relative mx-4 lg:mx-0 md:px-8">
             <div class="relative w-[248px] xs:w-full xs:max-h-[180px] xs:max-w-3xl rounded-md bg-cyan-800 overflow-x-auto overflow-y-hidden mx-auto p-3 lg:max-w-none lg:px-6">
                 <Graph 
-                    data={data}
+                    data={$data}
                     view={'yearly'}
                     fontSize={24}
                     fontColor="white"
