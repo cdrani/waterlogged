@@ -16,6 +16,7 @@
 	import { initMessageHandler } from 'common/messaging'
     import { initModal, openModal } from 'common/stores/modal'
 	import { UserService, LogsService } from 'common/data/services'
+    import { getToken, isSupported } from '$lib/firebase/messaging'
     import { type PartyStore, initParty, getParty } from 'common/stores/party'
 
     initModal()
@@ -39,7 +40,25 @@
         await notificationManager.startTimer()
     }
 
+    async function requestNotificationPermission() {
+        const permission = await Notification.requestPermission()
+        if (!((await isSupported() || permission !== 'granted'))) {
+            console.log('Notification either not supported or permission was denied.')
+            return
+        }
+
+        try {
+            if ($user?.token) return
+
+            const token = await getToken(await navigator.serviceWorker.ready) 
+            token && await UserService.setToken(token)
+        } catch(e) {
+            console.error('ERROR: ', e)
+        }
+    }
+
     onMount(() => {
+        requestNotificationPermission()
         const notificationManager = new WebNotification()
         messaging = initMessageHandler({ notificationManager })
         loadOnMount(notificationManager)
