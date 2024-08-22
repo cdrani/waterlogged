@@ -4,6 +4,18 @@ import { createIntake, createDailyLog } from './defaults'
 import { convertToDate, getDateKey, convertTo24HourFormat } from 'common/utils/date'
 
 export const UserService = {
+    setToken: async (token: string) => {
+        const user = await UserService.getUser()
+        user.token = token
+        await db.user.put(user)
+        return user
+    },
+
+    getToken: async () => {
+        const user = await UserService.getUser()
+        return user.token
+    },
+
     getUser: async () => {
         return await db.user.orderBy('created').first()
     }
