@@ -1,8 +1,12 @@
 import { playAlarm } from 'common/utils/alarm'
+import { UserService } from 'common/data/services'
+import { sendNotification } from '$lib/firebase/messaging'
 import NotificationBase, { type Notification } from 'common/notification'
 
 export default class WebNotification extends NotificationBase {
-    private closeTimeout: Timer | null = null
+    protected isPWA() {
+        return window?.matchMedia('(display-mode: standalone)').matches
+    }
 
     protected async clearAlarms() {
         if (this.intervalId) clearInterval(this.intervalId)
@@ -22,31 +26,48 @@ export default class WebNotification extends NotificationBase {
         this.intervalId = setInterval(checkAndNotify, interval)
     }
 
-    private clearTimer() {
-        if (this.closeTimeout) clearTimeout(this.closeTimeout)
-    }
-
     protected async createNotification({ id, title, message }: Notification) {
+        if (!('serviceWorker' in navigator && navigator.serviceWorker.controller)) {
+            console.error('Service worker not found or not controlling the page')
+            return
+        } 
+
+        // Send a message to the service worker to display the notification
         const showButton = title.includes('Time to Hydrate!')
+
         const notificationOptions = {
             body: message,
             data: { id },
             icon: 'favicon.png',
-            requireInteraction: showButton
+            requireInteraction: showButton,
+            tag: 'hydration-time'
         }
 
-        const notification = new Notification(title, notificationOptions)
-        this.closeTimeout = setTimeout(() => notification.close(), 10_000)
+        const token = await UserService.getToken()
+        await sendNotification({ title, token, notificationOptions })
 
-        if (!showButton) return
+        // if (this.isPWA()) {
+        //    console.log('isPWA') 
+        // } else {
+        //     navigator.serviceWorker.controller.postMessage({
+        //         type: 'SHOW_NOTIFICATION',
+        //         title,
+        //         notificationOptions,
+        //     })
+        // }
 
-        notification.onclose = () => { this.clearTimer() }
+        // const notification = new Notification(title, notificationOptions)
+        // this.closeTimeout = setTimeout(() => notification.close(), 10_000)
 
-        notification.onclick = async (event) => {
-            event.preventDefault()
-            await this.logAmount()
-            notification.close()
-        }
+        // if (!showButton) return
+
+        // notification.onclose = () => { this.clearTimer() }
+
+        // notification.onclick = async (event) => {
+        //     event.preventDefault()
+        //     await this.logAmount()
+        //     notification.close()
+        // }
     }
 
     protected async playSound(sound: string) {
