@@ -1,9 +1,22 @@
+import fs from 'node:fs'
+import os from 'node:os'
+
 import { defineConfig } from 'vite'
 import { sveltekit } from '@sveltejs/kit/vite'
 import { SvelteKitPWA } from '@vite-pwa/sveltekit'
 import { enhancedImages } from '@sveltejs/enhanced-img'
 
+const homeDir = os.homedir()
+
 export default defineConfig({
+    server: {
+        https: {
+            cert: fs.readFileSync(`${homeDir}/localhost.pem`),
+            key: fs.readFileSync(`${homeDir}/localhost-key.pem`),
+        },
+        host: '0.0.0.0',
+        proxy: {},
+    },
     define: {
 		__RELOAD_SW__: false,
 		__DATE__: `'${new Date().toISOString()}'`,
