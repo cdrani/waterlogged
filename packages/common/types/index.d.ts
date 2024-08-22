@@ -13,7 +13,7 @@ type TARGET = {
 }
 
 export type USER = DEFAULT_MODEL_TYPE & {
-    synced: boolean,
+    token?: string,
 }
 
 export type SETTINGS = DEFAULT_MODEL_TYPE & TARGET & {

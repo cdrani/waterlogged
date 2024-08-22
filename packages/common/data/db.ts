@@ -47,7 +47,6 @@ export async function populateApp(db: DB) {
 export async function populateUser(db: DB) {
     await db.user.add({
         id: uuidv4(),
-        synced: false,
         created: new Date()
     })
 }
