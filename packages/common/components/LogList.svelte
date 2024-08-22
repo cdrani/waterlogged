@@ -34,7 +34,8 @@
                             </div>
 
                             <button 
-                                class="w-6 h-6 justify-end"
+                                name="Delete Log Item"
+                                class="w-8 h-8 justify-end"
                                 on:click|preventDefault={() => removeIntake(intake.id)}
                                 on:touchend|preventDefault={() => removeIntake(intake.id)}
                             >
