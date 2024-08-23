@@ -48,7 +48,7 @@
 </script>
 
 {#if $logs}
-    <section class="relative flex flex-col w-full h-[340px] max-h-[375px] xs:h-full xs:max-h-none bg-cyan-200 lg:rounded-md overflow-y-scroll xs:overflow-y-hidden">
+    <section class="relative flex flex-col w-full h-[340px] max-h-[375px] xs:h-full xs:pb-6 md:pb-0 xs:max-h-none bg-cyan-200 lg:rounded-md overflow-y-scroll xs:overflow-y-hidden">
         <div class="relative flex justify-between mb-1 w-[248px] xs:w-full mx-auto px-4 xs:px-6 md:py-6 md:px-8">
             <div class="text-[14px] xs:text-lg font-semibold">Logs: {logIntakes}</div>
             <div class="text-[14px] xs:text-lg font-semibold">Drank: {waterDrank}ml</div>
