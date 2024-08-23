@@ -29,7 +29,7 @@
 </script>
 
 {#if $settings}
-    <section class="flex relative left-0 flex-col mx-auto w-full h-[340px] max-h-[358] xs:h-full bg-cyan-200">
+    <section class="flex relative left-0 flex-col mx-auto w-full h-[340px] max-h-[358] xs:pb-6 xs:h-full bg-cyan-200">
         <div class="relative flex flex-col w-full mx-auto overflow-y-auto h-full">
             <form name="settings" class="relative flex flex-col gap-3 p-4 xs:p-6 pt-0 xs:pt-0 w-full mx-auto">
                 <div class="flex justify-between items-center bg-cyan-500 py-2 px-4 rounded-md">

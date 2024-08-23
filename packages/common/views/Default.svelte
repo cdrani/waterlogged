@@ -3,7 +3,7 @@
     import Aquarium from 'common/components/Aquarium.svelte'
 </script>
 
-<div class="flex flex-col w-full h-full xs:h-screen relative md:overflow-y-auto lg:pb-[13.5rem]">
+<div class="flex flex-col w-full h-full xs:h-screen relative md:overflow-y-auto lg:pb-[14.5rem]">
     <Aquarium />
     <LogList />
 </div>
