@@ -1,6 +1,6 @@
 import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_API_KEY!, {
+const stripe = new Stripe(import.meta.env.VITE_STRIPE_API_KEY!, {
 	typescript: true,
 })
 
@@ -20,16 +20,14 @@ export async function POST(request: Request) {
 	}
 
 	const session = await stripe.checkout.sessions.create({
-		line_items: [
-			{
-				price: process.env.STRIPE_PRICE_ID,
-				quantity: 1,
-			},
-		],
-		mode: 'subscription',
-		success_url: process.env.STRIPE_SUCCESS_URL,
-		cancel_url: process.env.STRIPE_CANCEL_URL,
 		customer,
+		mode: 'subscription',
+		line_items: [{
+            quantity: 1,
+            price: import.meta.env.STRIPE_PRICE_ID,
+		}],
+		cancel_url: import.meta.env.VITE_STRIPE_CANCEL_URL,
+		success_url: import.meta.env.VITE_STRIPE_SUCCESS_URL,
 	})
 
 	return Response.json(session.url)

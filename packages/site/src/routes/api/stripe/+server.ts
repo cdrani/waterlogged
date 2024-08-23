@@ -1,20 +1,20 @@
 import Stripe from 'stripe'
 
-const secret = process.env.STRIPE_WEBHOOK_SECRET!
+const secret = import.meta.env.VITE_STRIPE_WEBHOOK_SECRET!
 
-const stripe = new Stripe(process.env.STRIPE_API_KEY!, {
+const stripe = new Stripe(import.meta.env.VITE_STRIPE_API_KEY!, {
 	typescript: true,
 })
 
 async function getDexieToken() {
     const scopes = ['GLOBAL_READ', 'GLOBAL_WRITE', 'ACCESS_DB']
-    const url = `${process.env.DEXIE_DB_URL}/token`
+    const url = `${import.meta.env.VITEDEXIE_DB_URL}/token`
 
     const body = {
         scopes,
         grant_type: 'client_credentials',
-        client_id: process.env.DEXIE_CLIENT_ID,
-        client_secret: process.env.DEXIE_CLIENT_SECRET,
+        client_id: import.meta.env.VITE_DEXIE_CLIENT_ID,
+        client_secret: import.meta.env.VITE_DEXIE_CLIENT_SECRET,
     }
 
     const response = await fetch(url, {
@@ -37,7 +37,7 @@ async function changeUserType(
 	token: string,
 	userId: string
 ) {
-    const url = `${process.env.DEXIE_DB_URL}/users`
+    const url = `${import.meta.env.VITE_DEXIE_DB_URL}/users`
 	const users = [{ userId, type }]
 
     await fetch(url, {
