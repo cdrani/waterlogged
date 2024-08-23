@@ -9,14 +9,14 @@ import { enhancedImages } from '@sveltejs/enhanced-img'
 const homeDir = os.homedir()
 
 export default defineConfig({
-    server: {
-        https: {
-            cert: fs.readFileSync(`${homeDir}/localhost.pem`),
-            key: fs.readFileSync(`${homeDir}/localhost-key.pem`),
-        },
-        host: '0.0.0.0',
-        proxy: {},
-    },
+    // server: {
+    //     https: {
+    //         cert: fs.readFileSync(`${homeDir}/localhost.pem`),
+    //         key: fs.readFileSync(`${homeDir}/localhost-key.pem`),
+    //     },
+    //     host: '0.0.0.0',
+    //     proxy: {},
+    // },
     define: {
 		__RELOAD_SW__: false,
 		__DATE__: `'${new Date().toISOString()}'`,
@@ -31,7 +31,7 @@ export default defineConfig({
             strategies: 'injectManifest',
             filename: 'prompt-sw.ts',
             scope: '/logs',
-            base: '/logs',
+            base: '/',
             selfDestroying: process.env.SELF_DESTROYING_SW == 'true',
             manifest: {
                 short_name: 'Water Logged',
