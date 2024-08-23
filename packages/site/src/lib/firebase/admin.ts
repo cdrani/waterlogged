@@ -1,6 +1,7 @@
 import firebaseAdmin from 'firebase-admin'
 
-const privateKey = Buffer.from(import.meta.env.VITE_FB_PRIVATE_KEY , 'base64').toString('ascii')
+const key = import.meta.env.VITE_FB_PRIVATE_KEY
+const privateKey = Buffer.from(JSON.stringify(key), 'base64').toString('ascii')
 
 export const admin = (() => {
     try { return  firebaseAdmin.app() }
