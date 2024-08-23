@@ -12,12 +12,12 @@
 
 {#if $log}
     <section class="relative pt-3 w-full mx-auto h-[220px] xs:h-full xs:mb-6 xs:pb-10 sm:mb-0 sm:pb-0 rounded-b-md bg-cyan-200 overflow-y-hidden">
-        <div class="flex justify-between items-center px-4 w-full pb-0 font-semibold bg-cyan-200">
+        <div class="flex justify-between items-center px-4 xs:px-6 w-full pb-0 font-semibold bg-cyan-200">
             <CurrentTime format="date" />
             <h2 class="text-[18px]">({$log?.intakes?.length ?? 0})</h2>
         </div>
 
-        <div class="relative flex flex-col pt-2 overflow-y-auto px-4 w-[280px] xs:w-full h-full pb-4 md:pb-10 bg-transparent">
+        <div class="relative flex flex-col pt-2 overflow-y-auto px-4 xs:px-6 w-[280px] xs:w-full h-full pb-4 md:pb-10 bg-transparent">
             {#if !($log?.intakes?.length ?? 0)}
                 <div class="flex flex-col w-full items-center justify-center h-[180px]">
                     <h4 class="text-xl text-center">

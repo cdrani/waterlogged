@@ -20,7 +20,7 @@
     $: isSettings = view == 'settings'
 </script>
 
-<nav class="relative bg-cyan-200 flex w-full px-4 py-2 xs:py-1 lg:rounded-t-md">
+<nav class="relative bg-cyan-200 flex w-full px-4 xs:px-6 py-2 xs:py-1 lg:rounded-t-md">
     <Auth />
 
     <div class="flex w-full justify-end">
@@ -35,7 +35,7 @@
 
             <li class="w-8 h-8 block lg:hidden mt-1.5">
                 <button name="graph" aria-label="graph" on:click={updateView} class="w-8 h-8">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1.5 0 19 19">
                         <path class="{isRecords ? 'fill-cyan-800' : 'fill-gray-800'}" d="M4 9h4v2H4z" />
                         <path class="{isRecords ? 'fill-cyan-800' : 'fill-gray-800'}" d="M16 2h-1V0H5v2H3v1.25L2.4 4H1v1.75L0 7v9h12l4-5zM2 5h8v2H2zm9 10H1V8h10zm1-8h-1V4H4V3h8zm2-2.5l-1 1.25V2H6V1h8z" />
                     </svg>

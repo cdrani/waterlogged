@@ -49,12 +49,12 @@
 
 {#if $logs}
     <section class="relative flex flex-col w-full h-[340px] max-h-[375px] xs:h-full xs:max-h-none bg-cyan-200 lg:rounded-md overflow-y-scroll xs:overflow-y-hidden">
-        <div class="relative flex justify-between mb-1 w-[248px] xs:w-full mx-auto xs:px-4 md:py-6 md:px-8">
+        <div class="relative flex justify-between mb-1 w-[248px] xs:w-full mx-auto px-4 xs:px-6 md:py-6 md:px-8">
             <div class="text-[14px] xs:text-lg font-semibold">Logs: {logIntakes}</div>
             <div class="text-[14px] xs:text-lg font-semibold">Drank: {waterDrank}ml</div>
         </div>
 
-        <div class="relative mx-4 lg:mx-0 md:px-8">
+        <div class="relative mx-4 xs:mx-6 lg:mx-0 md:px-8">
             <div class="relative w-[248px] xs:w-full xs:max-h-[180px] xs:max-w-3xl rounded-md bg-cyan-800 overflow-x-auto overflow-y-hidden mx-auto p-3 lg:max-w-none lg:px-6">
                 <Graph 
                     data={$data}
@@ -89,7 +89,7 @@
             </div>
 
             <div class="relative flex lg:overflow-y-auto w-full h-full pb-4 xs:pb-0">
-                <ul class="relative flex flex-col gap-2 lg:pb-6 xs:overflow-y-auto px-4 lg:px-6 w-full h-full">
+                <ul class="relative flex flex-col gap-2 lg:pb-6 xs:overflow-y-auto px-4 xs:px-6 w-full h-full">
                     {#each $viewingLog?.intakes as intake, i (i)}
                         <li class="rounded-md flex gap-x-2 h-12 bg-cyan-500 items-center p-2 lg:px-6">
                             <div class="flex w-full justify-between items-center">
