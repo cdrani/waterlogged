@@ -1,12 +1,12 @@
-import fs from 'node:fs'
-import os from 'node:os'
+// import fs from 'node:fs'
+// import os from 'node:os'
 
 import { defineConfig } from 'vite'
 import { sveltekit } from '@sveltejs/kit/vite'
 import { SvelteKitPWA } from '@vite-pwa/sveltekit'
 import { enhancedImages } from '@sveltejs/enhanced-img'
 
-const homeDir = os.homedir()
+// const homeDir = os.homedir()
 
 export default defineConfig({
     // server: {
@@ -31,7 +31,7 @@ export default defineConfig({
             strategies: 'injectManifest',
             filename: 'prompt-sw.ts',
             scope: '/logs',
-            base: '/',
+            base: '/logs',
             selfDestroying: process.env.SELF_DESTROYING_SW == 'true',
             manifest: {
                 short_name: 'Water Logged',
