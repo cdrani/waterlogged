@@ -4,22 +4,30 @@
 /// <reference lib="esnext" />
 
 import { LogsService } from 'common/data/services'
-import { type MessagePayload } from 'firebase/messaging'
-import { getNotificationOptions, onBackgroundMessage } from './lib/firebase/messaging'
-
 import { NavigationRoute, registerRoute } from 'workbox-routing'
+import { getEncouragingMessage } from 'common/utils/encouragements'
 import { cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute } from 'workbox-precaching'
 
 declare let self: ServiceWorkerGlobalScope
 
+let allowlist: undefined | RegExp[]
+if (import.meta.env.DEV) allowlist = [/^\/$/]
+
+// self.__WB_MANIFEST is default injection point
+precacheAndRoute(self.__WB_MANIFEST)
+
+// to allow work offline
+registerRoute(new NavigationRoute(
+    createHandlerBoundToURL('/logs'),
+    { allowlist },
+))
+
+// clean old assets
+cleanupOutdatedCaches()
+
 self.addEventListener('message', async (event) => {
     const type = event?.data?.type
     if (type === 'SKIP_WAITING') self.skipWaiting()
-
-    // if (type == 'SHOW_NOTIFICATION') {
-    //     const { title, notificationOptions } = event.data
-    //     self.registration.showNotification(title, notificationOptions)
-    // }
 })
 
 self.addEventListener('notificationclick', async event => {
@@ -27,27 +35,50 @@ self.addEventListener('notificationclick', async event => {
     event.notification.close()
 })
 
-self.addEventListener('activate', event => {
-    event.waitUntil(self.clients.claim())
+type Notify = { title: string, options: NotificationOptions }
+
+async function registerNotification(): Promise<Notify | undefined> {
+    const progress = await getProgress()
+    if (!progress) return
+    const { id, body, title } = await notifyProgress(progress)
+    const options = {
+        body,
+        data: { id },
+        icon: 'favicon.png',
+        tag: 'hydration-time',
+        requireInteraction: true,
+    }
+
+    return { title, options }
+}
+
+self.addEventListener('push', async event => {
+    const data = await registerNotification()
+    if (!data) return
+    return event.waitUntil(self.registration.showNotification(data.title, data.options))
 })
 
-onBackgroundMessage(payload => {
-    const { data } = payload as MessagePayload
-    const notificationOptions = getNotificationOptions(data) as NotificationOptions
-    return self.registration.showNotification(data!.title, notificationOptions)
-})
+async function getProgress() {
+    const log = await LogsService.load()
+    if (!log) return
 
-// self.__WB_MANIFEST is default injection point
-precacheAndRoute(self.__WB_MANIFEST)
+    const percentage = Math.round((log.total / log.goal) * 100)
+    return { goal: log.goal, left: Math.max(log.goal - log.total, 0), percentage }
+}
 
-// clean old assets
-cleanupOutdatedCaches()
+type Progress = { goal: number, left: number, percentage: number }
 
-let allowlist: undefined | RegExp[]
-if (import.meta.env.DEV) allowlist = [/^\/$/]
+async function notifyProgress(progress: Progress) {
+    const { left, percentage, goal } = progress
+    const encouragement = getEncouragingMessage(percentage)
 
-// to allow work offline
-registerRoute(new NavigationRoute(
-    createHandlerBoundToURL('/logs'),
-    { allowlist },
-))
+    const detail = percentage >= 100
+        ? `${percentage}%. ${goal} ml reached!`
+        : `${percentage}% there. Only ${left}ml to reach goal.`
+
+    return {
+        id: 'progress',
+        title: 'Water Break Time! Time to Hydrate!',
+        body: `${encouragement} ${detail}`,
+    }
+}
