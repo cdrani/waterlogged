@@ -4,6 +4,8 @@
     "scripts": {
         "dev": "bun run --filter '*' dev",
         "site-dev": "bun run --filter './packages/site' dev",
+        "app-dev": "bun run --filter './packages/app' tauri dev",
+        "app-build": "bun run --filter './packages/app' build",
         "site-build": "bun run --filter './packages/site' build",
         "ext-dev": "bun run --filter './packages/extension' dev",
         "ext-build": "bun run --filter './packages/extension' build"
