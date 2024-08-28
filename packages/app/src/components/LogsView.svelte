@@ -11,12 +11,9 @@
     import SettingsView from 'common/views/Settings.svelte'
     import Celebrate from 'common/components/Celebrate.svelte'
 
-    // import WebNotification from '$lib/notification'
     import { type Messaging } from 'common/messaging'
-	import { initMessageHandler } from 'common/messaging'
     import { initModal, openModal } from 'common/stores/modal'
 	import { UserService, LogsService } from 'common/data/services'
-    // import { getToken, isSupported } from '$lib/firebase/messaging'
     import { type PartyStore, initParty, getParty } from 'common/stores/party'
 
     initModal()
@@ -35,34 +32,9 @@
     let messaging: Messaging
 
     // ensure a log exists for every day
-    // async function loadOnMount(notificationManager: WebNotification) {
-    //     await LogsService.load()
-    //     await notificationManager.startTimer()
-    // }
+    const loadOnMount = async () => await LogsService.load()
 
-    // async function requestNotificationPermission() {
-    //     const permission = await Notification.requestPermission()
-    //     if (!((await isSupported() || permission !== 'granted'))) {
-    //         console.log('Notification either not supported or permission was denied.')
-    //         return
-    //     }
-
-    //     try {
-    //         if ($user?.token) return
-
-    //         const token = await getToken(await navigator.serviceWorker.ready) 
-    //         token && await UserService.setToken(token)
-    //     } catch(e) {
-    //         console.error('ERROR: ', e)
-    //     }
-    // }
-
-    onMount(() => {
-        // requestNotificationPermission()
-        // const notificationManager = new WebNotification()
-        // messaging = initMessageHandler({ notificationManager })
-        // loadOnMount(notificationManager)
-    })
+    onMount(loadOnMount)
 
 	const user = liveQuery(async () => await UserService.getUser())
     let log = liveQuery(async () => await LogsService.getByDate())
@@ -70,16 +42,9 @@
 
     $: if ($log) {
         party = partyStore.canParty($log.complete)
-        if (party) {
-            openModal('complete')
-        }
+        if (party) openModal('complete')
     }
 </script>
-
-<svelte:head>
-    <title>Water | Logs</title>
-    <meta name="description" content="WaterLogged | Logs" />
-</svelte:head>
 
 {#if $log && $user}
     <section class="relative w-full h-full pb-6 overflow-y-hidden lg:max-w-[320px] flex flex-col rounded-md lg:mt-[4rem] lg:pb-[18rem]">
