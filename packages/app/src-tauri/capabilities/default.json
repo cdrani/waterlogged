@@ -5,6 +5,16 @@
   "windows": ["main"],
   "permissions": [
     "core:default",
+    "core:window:default",
+    "core:event:default",
+    "core:path:default",
+    "window-state:allow-save-window-state",
+    "window-state:allow-restore-state",
+    "core:app:default",
+    "core:image:default",
+    "core:resources:default",
+    "core:menu:default",
+    "core:tray:default",
     "shell:allow-open"
   ]
 }
