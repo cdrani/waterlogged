@@ -12,6 +12,7 @@
     import Celebrate from 'common/components/Celebrate.svelte'
 
     import { type Messaging } from 'common/messaging'
+	import { initMessageHandler } from 'common/messaging'
     import { initModal, openModal } from 'common/stores/modal'
 	import { UserService, LogsService } from 'common/data/services'
     import { type PartyStore, initParty, getParty } from 'common/stores/party'
@@ -32,7 +33,10 @@
     let messaging: Messaging
 
     // ensure a log exists for every day
-    const loadOnMount = async () => await LogsService.load()
+    const loadOnMount = async () => {
+        await LogsService.load()
+        messaging = initMessageHandler()
+    }
 
     onMount(loadOnMount)
 
