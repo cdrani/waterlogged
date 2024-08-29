@@ -23,21 +23,25 @@ async function handleMessage({ type, data, callback }: MessageHandler) {
     }
 }
 
-async function messageCallback({ previous, current }: CallbackParams, notificationManager: NotificationBase) {
+async function messageCallback(
+    { previous, current }: CallbackParams,
+    notificationManager?: NotificationBase
+) {
     const restart = ['enabled', 'alert_type', 'interval', 'start_time', 'end_time']
         .some(key => previous?.[key] !== current?.[key])
 
     if (previous?.enabled !== current?.enabled) setBadgeInfo(current.enabled)
 
-    restart && await notificationManager.startTimer()
+    restart && await notificationManager?.startTimer()
 }
 
 type InitMessage = {
     port?: chrome.runtime.Port,
-    notificationManager: NotificationBase
-}
+    notificationManager?: NotificationBase
+} | undefined
 
-export function initMessageHandler({ notificationManager, port }: InitMessage) {
+export function initMessageHandler(params?: InitMessage) {
+    const { port, notificationManager } = params || {}
     const messaging = port ? new ExtMessaging(port) : new WebMessaging()
     const callback = (args: CallbackParams) => messageCallback(args, notificationManager)
     messaging.onMessage(({ type, data }) => handleMessage({ type, data, callback }))
