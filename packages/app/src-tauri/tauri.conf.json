@@ -11,9 +11,10 @@
   "app": {
     "windows": [
       {
-        "title": "app",
-        "width": 800,
-        "height": 600
+        "title": "waterlogged",
+        "width": 375,
+        "height": 600,
+        "resizable": false
       }
     ],
     "security": {
