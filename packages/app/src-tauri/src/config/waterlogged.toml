@@ -1,0 +1,9 @@
+[settings]
+enabled = true
+interval = 45.0
+sound = "bubble1"
+end_time = "18:00"
+alert_type = "both"
+start_time = "08:00"
+goal = 2500.0
+measurement = "ml"

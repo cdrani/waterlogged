@@ -2,6 +2,7 @@
 
 mod app;
 mod cmd;
+mod config;
 
 pub fn run() {
     tauri::Builder::default()
