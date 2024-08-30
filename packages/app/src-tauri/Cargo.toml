@@ -25,5 +25,6 @@ toml = { version = "0.8.19", features = [ "display" ] }
 dirs = "5.0.1"
 
 [target."cfg(any(target_os = \"macos\", windows, target_os = \"linux\"))".dependencies]
+tauri-plugin-autostart = "2.0.0-rc.0"
 tauri-plugin-global-shortcut = "2.0.0-rc.1"
 
