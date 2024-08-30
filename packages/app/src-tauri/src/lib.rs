@@ -12,6 +12,7 @@ pub fn run() {
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, Some(vec![])))
         .setup(app::setup::init)
+        .on_window_event(app::window::init)
         .invoke_handler(tauri::generate_handler![cmd::greet])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
