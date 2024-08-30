@@ -4,7 +4,12 @@ use tauri::{
     App, Error as TauriError, Manager
 };
 
+use crate::app::launcher::Launcher;
+
 pub fn init(app: &App) -> Result<(), TauriError> {
+    let auto_launch = MenuItemBuilder::with_id("auto_launch", "Toggle Auto Launch")
+        .accelerator("Cmd+A")
+        .build(app)?;
     let show = MenuItemBuilder::with_id("show", "Show")
         .accelerator("Cmd+S")
         .build(app)?;
@@ -19,7 +24,7 @@ pub fn init(app: &App) -> Result<(), TauriError> {
         .build(app)?;
 
     let menu = MenuBuilder::new(app)
-        .items(&[&relaunch, &show, &hide, &quit])
+        .items(&[&auto_launch, &relaunch, &show, &hide, &quit])
         .build()?;
 
     let path = concat!(env!("CARGO_MANIFEST_DIR"), "/icons/128x128@2x.png");
@@ -36,6 +41,10 @@ pub fn init(app: &App) -> Result<(), TauriError> {
                 "show" => window.show().unwrap(),
                 "hide" => window.hide().unwrap(),
                 "quit" => std::process::exit(0),
+                "auto_launch" =>  {
+                    let launcher = Launcher::new(app);
+                    launcher.toggle();
+                }
                 _ => {}
             }
         })

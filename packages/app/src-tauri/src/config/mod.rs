@@ -34,8 +34,8 @@ pub struct ConfigUpdateAction {
 
 #[derive(Debug, Deserialize, PartialEq, Serialize, Clone)]
 pub struct Config {
-    app: AppConfig,
-    settings: SettingsConfig,
+    pub app: AppConfig,
+    pub settings: SettingsConfig,
 }
 
 impl Config {
@@ -112,13 +112,11 @@ impl Config {
         }
     }
 
-    pub fn toggle_auto_launch() {
-        let auto_launch = Config::get_config().app.auto_launch;
-
+    pub fn set_auto_launch(auto_launch: bool) {
         Self::update_config(
             ConfigUpdateAction { 
                 key: ConfigKey::AutoLaunch,
-                value: ConfigValue::Bool(!auto_launch)
+                value: ConfigValue::Bool(auto_launch)
             }
         );
     }
