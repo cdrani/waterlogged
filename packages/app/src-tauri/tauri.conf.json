@@ -1,5 +1,5 @@
 {
-  "productName": "app",
+  "productName": "waterlogged",
   "version": "0.1.0",
   "identifier": "com.app.waterlogged",
   "build": {
@@ -12,7 +12,7 @@
     "windows": [
       {
         "title": "waterlogged",
-        "width": 375,
+        "width": 350,
         "height": 600,
         "resizable": false
       }
