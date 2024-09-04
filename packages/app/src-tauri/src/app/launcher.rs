@@ -27,12 +27,10 @@ impl<'a> Launcher<'a> {
 
     pub fn enable(&self) {
         self.manager.enable().unwrap();
-        Config::set_auto_launch(true);
     }
 
     pub fn disable(&self) {
         self.manager.disable().unwrap();
-        Config::set_auto_launch(false);
     }
 
     pub fn toggle(&self) {
