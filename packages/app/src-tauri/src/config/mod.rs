@@ -1,20 +1,28 @@
-use serde::{Deserialize,Serialize};
 use dirs;
+use serde_json::Value;
+use serde::{Deserialize, Serialize};
 
 pub mod app;
 pub mod settings;
 
 use app::AppConfig;
-use settings::{Alert,SettingsConfig};
+use settings::{Alert, Measurement, SettingsConfig};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum ConfigKey {
+    #[serde(rename="sound")]
     Sound,
+    #[serde(rename="end_time")]
     EndTime,
+    #[serde(rename="enabled")]
     Enabled,
+    #[serde(rename="interval")]
     Interval,
+    #[serde(rename="alert_type")]
     AlertType,
+    #[serde(rename="start_time")]
     StartTime,
+    #[serde(rename="auto_launch")]
     AutoLaunch,
 }
 
@@ -28,8 +36,8 @@ pub enum ConfigValue {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ConfigUpdateAction {
-    pub key: ConfigKey,
-    pub value: ConfigValue,
+    pub key: String,
+    pub value: Value,
 }
 
 #[derive(Debug, Deserialize, PartialEq, Serialize, Clone)]
@@ -57,8 +65,8 @@ impl Config {
                 sound: "bubble1".to_string(),
                 end_time: "08:00".to_string(),
                 start_time: "18:00".to_string(),
-                alert_type: settings::Alert::Both,
-                measurement: settings::Measurement::ML
+                alert_type: Alert::from(Alert::Both),
+                measurement: Measurement::from(Measurement::ML)
             },
         }
     }
@@ -115,30 +123,40 @@ impl Config {
 
     pub fn set_auto_launch(auto_launch: bool) {
         Self::update_config(
-            ConfigUpdateAction { 
-                key: ConfigKey::AutoLaunch,
-                value: ConfigValue::Bool(auto_launch)
-            }
-        );
+            ConfigUpdateAction { key: "auto_launch".to_string(), value: Value::Bool(auto_launch) }
+        )
+    }
+
+    pub fn update_settings(settings: SettingsConfig) {
+        let mut data = Self::get_config();
+        data.settings = settings;
+
+        Self::write_to_config(data.clone())
     }
 
     pub fn update_config(new_state: ConfigUpdateAction) {
         let mut data = Self::get_config();
 
-        match (new_state.key, new_state.value) {
+        match new_state.key.as_str() {
             // settings
-            (ConfigKey::Sound, ConfigValue::String(sound)) => data.settings.sound = sound,
-            (ConfigKey::Enabled, ConfigValue::Bool(enabled)) => data.settings.enabled = enabled,
-            (ConfigKey::EndTime, ConfigValue::String(end_time)) => data.settings.end_time = end_time,
-            (ConfigKey::Interval, ConfigValue::Interval(interval)) => data.settings.interval = interval,
-            (ConfigKey::StartTime, ConfigValue::String(start_time)) => data.settings.start_time = start_time,
-            (ConfigKey::AlertType, ConfigValue::AlertType(alert_type)) => data.settings.alert_type = alert_type,
+            "sound" => if let Value::String(sound) = new_state.value { data.settings.sound = sound },
+            "enabled" => if let Value::Bool(enabled) = new_state.value { data.settings.enabled = enabled },
+            "interval" => if let Value::Number(interval) = new_state.value { 
+                if let Some(interval) = interval.as_u64() {
+                    data.settings.interval = interval as u32
+                }
+            },
+            "end_time" => if let Value::String(end_time) = new_state.value { data.settings.end_time = end_time },
+            "start_time" => if let Value::String(start_time) = new_state.value { data.settings.start_time = start_time },
+            "alert_type" => if let Value::String(alert_type) = new_state.value {
+                data.settings.alert_type = Alert::from(alert_type);
+            },
 
             // app
-            (ConfigKey::AutoLaunch, ConfigValue::Bool(auto_launch)) => data.app.auto_launch = auto_launch,
-            _ => ()
+            "auto_launch" => if let Value::Bool(auto_launch) = new_state.value { data.app.auto_launch =auto_launch },
+            _ => {}
         }
-        
+
         Self::write_to_config(data.clone())
     }
 
