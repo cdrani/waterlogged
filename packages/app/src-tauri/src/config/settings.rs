@@ -17,6 +17,7 @@ pub enum Alert {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SettingsConfig {
     pub goal: u32,
+    pub amount: u32,
     pub interval: u32,
     pub enabled: bool,
     pub sound: String,

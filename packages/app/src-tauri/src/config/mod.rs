@@ -51,6 +51,7 @@ impl Config {
             },
             settings: SettingsConfig {
                 goal: 2500,
+                amount: 250,
                 interval: 45,
                 enabled: true,
                 sound: "bubble1".to_string(),
