@@ -1,10 +1,12 @@
 use tauri::{
-    menu::{MenuBuilder, MenuItemBuilder},
+    menu::{MenuBuilder, MenuItemBuilder, MenuEvent},
     tray::TrayIconBuilder,
-    App, Error as TauriError, Manager
+    App, Error as TauriError, Manager, AppHandle
 };
 
 use crate::app::launcher::Launcher;
+
+use super::worker::{AsyncWorker, WorkerEvent};
 
 pub fn init(app: &App) -> Result<(), TauriError> {
     let auto_launch = MenuItemBuilder::with_id("auto_launch", "Toggle Auto Launch")
@@ -34,23 +36,33 @@ pub fn init(app: &App) -> Result<(), TauriError> {
         .icon(icon)
         .menu(&menu)
         .on_menu_event(move |app, event| {
-            let window = app.get_webview_window("main").unwrap();
-
-            match event.id().as_ref() {
-                "relaunch" => app.restart(),
-                "show" => window.show().unwrap(),
-                "hide" => window.hide().unwrap(),
-                "quit" => std::process::exit(0),
-                "auto_launch" =>  {
-                    let launcher = Launcher::new(app);
-                    launcher.toggle();
-                }
-                _ => {}
-            }
+            let worker = app.state::<AsyncWorker>();
+            handle_event(app, event, &worker);
         })
         .build(app)?;
 
     Ok(())
+}
+
+fn handle_event(app: &AppHandle, event: MenuEvent, worker: &AsyncWorker) {
+    let window = app.get_webview_window("main").unwrap();
+
+    match event.id().as_ref() {
+        "relaunch" => app.restart(),
+        "show" => window.show().unwrap(),
+        "hide" => window.hide().unwrap(),
+        "quit" => std::process::exit(0),
+        "auto_launch" =>  {
+            let launcher = Launcher::new(app);
+            launcher.toggle();
+
+            let worker_clone = worker.clone();
+            tauri::async_runtime::spawn(async move {
+                worker_clone.send_event(WorkerEvent::ToggleAutoLaunch).await;
+            });
+        }
+        _ => {}
+    }
 }
 
 fn load_icon(path: &std::path::Path) -> Result<tauri::image::Image, tauri::Error> {
