@@ -1,4 +1,5 @@
 <script lang="ts">
+    import  { onMount } from 'svelte'
     import { liveQuery } from 'dexie'
     import { playAlarm } from 'common/utils/alarm'
     import type { Messaging } from 'common/messaging'
@@ -6,17 +7,21 @@
     import { SettingsService } from 'common/data/services'
 
     export let messaging: Messaging
+    export let unMountCB: (args: any) => void = undefined
+    export let messageCB: ({ key, value }) => void = undefined
 
     async function handleInput(e: Event) {
         const target = e.target as HTMLInputElement | HTMLSelectElement
         const { name: key , value: rawValue } = target
         const value = ['goal', 'interval', 'amount'].includes(key) ? Number(rawValue) : rawValue
         messaging.postMessage({ type: 'set:settings', data: { key, value } })
+        messageCB?.({ key, value })
     }
 
     async function handleToggle(event: CustomEvent) {
         const state = event.detail
         messaging.postMessage({ type: 'set:settings', data: state })
+        messageCB?.(state)
     }
 
     function playSound() {
@@ -26,6 +31,25 @@
     const inputClass = "px-0.5 pl-2 h-7 text-[14px] rounded-[4px]"
 
     let settings = liveQuery(() => SettingsService.load())
+
+    function parseSettings() {
+        const keysToRemove = ['id', 'owner', 'realmId', 'created']
+        const object = {}
+        Object.keys($settings).forEach(key => {
+            if (!keysToRemove.includes(key)) object[key] = $settings[key]
+        })
+
+        return object
+    }
+
+    onMount(() => {
+        return (() => {
+            if (!unMountCB) return
+
+            const settings = parseSettings()
+            unMountCB(settings)
+        })
+    })
 </script>
 
 {#if $settings}
