@@ -1,10 +1,22 @@
 <script lang="ts">
     import { liveQuery } from 'dexie'
-    import { LogsService } from '../data/services'
+    import { writable } from 'svelte/store'
+    import { LogsService } from 'common/data/services'
     import CurrentTime from 'common/components/CurrentTime.svelte'
+    import EditLogForm from 'common/components//forms/log/EditLogForm.svelte'
 
     async function removeIntake(intakeId: string) {
         await LogsService.removeLogIntake(intakeId)
+    }
+
+    let selectedId = writable<string | null>(null)
+
+    const onOpen = (intakeId: string) => {
+        selectedId.set(intakeId)
+    }
+
+    const onClose = () => {
+        selectedId.set(null)
     }
 
     let log = liveQuery(async () => await LogsService.getByDate())
@@ -16,6 +28,10 @@
             <CurrentTime format="date" />
             <h2 class="text-[18px]">({$log?.intakes?.length ?? 0})</h2>
         </div>
+
+        {#if $selectedId} 
+            <EditLogForm intakeId={$selectedId} onClose={onClose} />
+        {/if}
 
         <div class="relative flex flex-col pt-2 overflow-y-auto px-4 xs:px-6 w-[280px] xs:w-full h-full pb-4 md:pb-10 bg-transparent">
             {#if !($log?.intakes?.length ?? 0)}
@@ -33,19 +49,32 @@
                                 <p class="font-bold text-lg">{intake.amount}{$log.measurement}</p>
                             </div>
 
-                            <button 
-                                name="Delete Log Item"
-                                class="w-8 h-8 justify-end"
-                                on:click|preventDefault={() => removeIntake(intake.id)}
-                                on:touchend|preventDefault={() => removeIntake(intake.id)}
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <g fill="none" stroke="black" stroke-dasharray="22" stroke-dashoffset="0" stroke-linecap="round" stroke-width="3px">
-                                        <path d="M19 5L5 19" />
-                                        <path d="M5 5L19 19" />
-                                    </g>
-                                </svg>
-                            </button>
+                            <div class="flex justify-end items-center pl-2">
+                                <button 
+                                    name="Edit Log Item"
+                                    on:click|preventDefault={() => onOpen(intake.id)}
+                                    on:touchend|preventDefault={() => onOpen(intake.id)}
+                                    class="w-6 h-6 sm:w-8 sm:h-8 justify-end"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path fill="currentColor" d="M4 20v-2.52L17.18 4.288q.155-.137.34-.212T17.907 4t.39.064q.19.063.35.228l1.067 1.074q.165.159.226.35q.06.19.06.38q0 .204-.068.39q-.069.185-.218.339L6.519 20zM17.504 7.589L19 6.111L17.889 5l-1.477 1.496z" />
+                                    </svg>
+                                </button>
+
+                                <button 
+                                    name="Delete Log Item"
+                                    class="w-6 h-6 sm:w-8 sm:h-8 justify-end"
+                                    on:click|preventDefault={() => removeIntake(intake.id)}
+                                    on:touchend|preventDefault={() => removeIntake(intake.id)}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <g fill="none" stroke="black" stroke-dasharray="22" stroke-dashoffset="0" stroke-linecap="round" stroke-width="3px">
+                                            <path d="M19 5L5 19" />
+                                            <path d="M5 5L19 19" />
+                                        </g>
+                                    </svg>
+                                </button>
+                            </div>
                         </li>
                     {/each}
                 </ul>

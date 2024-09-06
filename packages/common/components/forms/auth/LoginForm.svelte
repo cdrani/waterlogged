@@ -2,8 +2,8 @@
     import { writable } from 'svelte/store'
     import { resolveText, type DXCInputField, type DXCUserInteraction } from 'dexie-cloud-addon'
 
-    import PopUp from './PopUp.svelte'
-    import FormActions from './FormActions.svelte'
+    import PopUp from '../../PopUp.svelte'
+    import FormActions from '../FormActions.svelte'
 
     export let ui: DXCUserInteraction
 

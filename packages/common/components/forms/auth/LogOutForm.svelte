@@ -2,8 +2,8 @@
     import { writable } from 'svelte/store'
     import { db, populateDB } from 'common/data/db'
 
-    import PopUp from './PopUp.svelte'
-    import FormActions from './FormActions.svelte'
+    import PopUp from '../../PopUp.svelte'
+    import FormActions from '../FormActions.svelte'
 
     let showModal = writable(false)
 
@@ -16,13 +16,18 @@
     const onClose = () => showModal.set(false)
 </script>
 
-
 <button 
+    name="Delete Log Item"
     on:click|preventDefault={onOpen}
-    on:touchend|preventDefault={onOpen}
-    class="inline-flex justify-center self-center items-center w-24 h-8 bg-cyan-800 rounded-md"
+    on:touchend|preventDefault={onClose}
+    class="w-6 h-6 sm:w-8 sm:h-8 justify-end"
 >
-    <span class="font-bold text-sm text-white w-full">Log Out</span>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <g fill="none" stroke="black" stroke-dasharray="22" stroke-dashoffset="0" stroke-linecap="round" stroke-width="3px">
+            <path d="M19 5L5 19" />
+            <path d="M5 5L19 19" />
+        </g>
+    </svg>
 </button>
 
 {#if $showModal} 
