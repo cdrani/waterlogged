@@ -6,10 +6,10 @@ import { sendNotification } from '@tauri-apps/plugin-notification'
 export type Progress = { goal: number, left: number, percentage: number }
 
 export default class AppNotification {
-    protected log?: LOG
-    protected settings?: SETTINGS
+    private log?: LOG
+    private settings?: SETTINGS
 
-    protected async notify() {
+    public async notify() {
         const { alert_type = "notify" } = this.settings ?? {}
         const progress = await this.getProgress()
 
@@ -19,31 +19,32 @@ export default class AppNotification {
         if (['notify', 'both'].includes(alert_type)) await this.notifyProgress(progress)
     }
 
-    protected async getSettings() {
+    private async getSettings() {
         const settings = await SettingsService.load()
         this.settings = settings
         return settings
     }
 
-    protected async getLog() {
+    private async getLog() {
         if (!this.settings) await this.getSettings()
         const log = await LogsService.load(this!.settings)
         this.log = log
         return log
     }
 
-    protected async getProgress() {
+    private async getProgress() {
         const log = await this.getLog()
         const percentage = Math.round((log.total / log.goal) * 100)
         return { goal: log.goal, left: Math.max(log.goal - log.total, 0), percentage }
     }
 
-    protected async logAmount() {
+    // TODO: requires notification click action (not supported?)
+    public async logAmount() {
         await this.getLog()
         await LogsService.addLogIntake()
     }
 
-    protected async notifyProgress(progress: Progress) {
+    private async notifyProgress(progress: Progress) {
         const { left, percentage, goal } = progress
         const encouragement = getEncouragingMessage(percentage)
 
