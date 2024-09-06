@@ -12,8 +12,6 @@
     "windows": [
       {
         "title": "waterlogged",
-        "width": 350,
-        "height": 600,
         "resizable": false
       }
     ],

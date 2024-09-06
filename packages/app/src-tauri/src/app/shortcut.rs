@@ -17,6 +17,7 @@ pub fn init(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
                         window.hide().unwrap();
                     } else {
                         window.show().unwrap();
+                        window.set_focus().unwrap();
                     }
                 }
             })
