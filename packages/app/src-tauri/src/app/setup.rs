@@ -1,5 +1,5 @@
 use std::error::Error;
-use tauri::{Manager, App};
+use tauri::{Manager, App, LogicalSize};
 
 use crate::app::tray;
 use crate::app::launcher;
@@ -22,6 +22,9 @@ pub fn init(app: &mut App) -> Result<() , Box<dyn Error>> {
     tauri::async_runtime::spawn(async move {
         worker.start_notifier().await;
     });
+
+    let window = app.get_webview_window(MAIN).unwrap();
+    window.set_size(LogicalSize { width: 320.0, height: 500.0 }).unwrap();
 
     Ok(())
 }
