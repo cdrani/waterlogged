@@ -1,5 +1,6 @@
 <script lang="ts">
     import CurrentTime from './CurrentTime.svelte'
+    import AddLogForm from './forms/log/AddLogForm.svelte';
 
     type Tank = { measurement: string, goal: number, total: number }
     export let tank: Tank

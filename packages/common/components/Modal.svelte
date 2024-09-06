@@ -1,7 +1,7 @@
 <script lang="ts">
     import PopUp from './PopUp.svelte'
-    import CustomLogForm from './CustomLogForm.svelte'
     import Congratulation from './Congratulation.svelte'
+    import AddLogForm from './forms/log/AddLogForm.svelte'
 
     import { closeModal, getModal } from 'common/stores/modal'
     import { getParty, type PartyStore } from 'common/stores/party'
@@ -19,7 +19,7 @@
 {#if $modal.visible}
     <PopUp onClose={handleClose}>
         {#if $modal.view == 'add'}
-            <CustomLogForm />
+            <AddLogForm />
         {:else if $modal.view == 'complete'}
             <Congratulation />
         {/if}

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { db } from 'common/data/db'
-    import LogOut from './LogOut.svelte'
+    import LogOutForm from './forms/auth/LogOutForm.svelte'
 
     const user = db.cloud.currentUser
 
@@ -16,5 +16,5 @@
         <span class="font-bold text-sm text-white w-full">Log In</span>
     </button>
 {:else}
-    <LogOut />
+    <LogOutForm />
 {/if}

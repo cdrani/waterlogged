@@ -2,12 +2,12 @@ export function getDateKey() {
     return new Intl.DateTimeFormat('sv-SE', { dateStyle: 'short' }).format(new Date())
 }
 
-export function getTime() {
-    const date = new Date()
-    const minutes = date.getMinutes()
-    const hours = date.getHours()
-    const paddedMinutes = minutes <= 9 ? `0${minutes}` : minutes
-    const paddedHours = hours <= 9 ? `0${hours}` : hours
+export function getTime(date?: Date) {
+    const currentDate = date ?? new Date()
+    const minutes = currentDate.getMinutes()
+    const hours = currentDate.getHours()
+    const paddedMinutes = minutes.toString().padStart(2, '0')
+    const paddedHours = hours.toString().padStart(2, '0')
     return `${paddedHours}:${paddedMinutes}`
 }
 
@@ -61,6 +61,7 @@ export function convertTo24HourFormat(timeStr: string) {
 
     if (hours == '12') { hours = '00' }
     if (modifier === 'PM') { hours = `${Number(hours) + 12}` }
+    else { hours = hours.padStart(2, '0') }
     
     return `${hours}:${minutes}`
 }
@@ -80,4 +81,3 @@ export function convertToDate(timeStr: string) {
     
     return date
 }
-

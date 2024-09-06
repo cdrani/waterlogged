@@ -56,6 +56,16 @@ export const LogsService = {
         await LogsService.logIntakeUpdate(log)
     },
 
+    editLogIntake: async ({ id, time, amount }) => {
+        const log = await LogsService.getByDate()
+        const editIndex = log.intakes.findIndex((intake: INTAKE) => intake.id == id)
+        if (editIndex < 0) return
+
+        const intakes = log.intakes.with(editIndex, {...log.intakes[editIndex], amount, time })
+        log.intakes = intakes
+        await LogsService.logIntakeUpdate(log)
+    },
+
     addLogIntake: async () => {
         const log = await LogsService.getByDate()
         const { id: log_id, amount } = log

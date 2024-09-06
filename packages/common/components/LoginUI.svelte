@@ -1,6 +1,6 @@
 <script lang="ts">
     import { db } from 'common/data/db'
-    import LoginForm from './LoginForm.svelte'
+    import LoginForm from './forms/auth/LoginForm.svelte'
 
     const ui = db.cloud.userInteraction
 </script>
