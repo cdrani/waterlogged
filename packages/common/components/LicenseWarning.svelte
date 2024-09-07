@@ -28,7 +28,7 @@
             <h3>Eval Period Expiration</h3>
             <h5>
                 <span class="underline font-semibold">TLDR:</span> {' '}
-                Upgrade your account to contiue syncing your data.
+                Upgrade your account to continue syncing your data.
             </h5>
 
             <div class="space-y-2 px-4 md:px-0 pb-2">
