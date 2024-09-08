@@ -5,6 +5,8 @@
     import PopUp from '../../PopUp.svelte'
     import FormActions from '../FormActions.svelte'
 
+    export let fullWidth: boolean = false
+
     let showModal = writable(false)
 
     const logOut = async () => {
@@ -17,17 +19,12 @@
 </script>
 
 <button 
-    name="Delete Log Item"
+    name="Log Out"
     on:click|preventDefault={onOpen}
     on:touchend|preventDefault={onClose}
-    class="w-6 h-6 sm:w-8 sm:h-8 justify-end"
+    class="inline-flex justify-center self-center items-center {fullWidth ? 'w-full h-12' : 'w-6 h-6 sm:w-8 sm:h-8'} bg-cyan-800 rounded-md"
 >
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <g fill="none" stroke="black" stroke-dasharray="22" stroke-dashoffset="0" stroke-linecap="round" stroke-width="3px">
-            <path d="M19 5L5 19" />
-            <path d="M5 5L19 19" />
-        </g>
-    </svg>
+    <span class="font-bold {fullWidth ? 'text-md' : 'text-sm'} text-white w-full">Log Out</span>
 </button>
 
 {#if $showModal} 
