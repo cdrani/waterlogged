@@ -58,10 +58,14 @@ export const LogsService = {
 
     editLogIntake: async ({ id, time, amount }) => {
         const log = await LogsService.getByDate()
-        const editIndex = log.intakes.findIndex((intake: INTAKE) => intake.id == id)
+        let intakes = log.intakes.slice()
+
+        const editIndex = intakes.findIndex((intake: INTAKE) => intake.id == id)
         if (editIndex < 0) return
 
-        const intakes = log.intakes.with(editIndex, {...log.intakes[editIndex], amount, time })
+        intakes = intakes.with(editIndex, { ...intakes[editIndex], time, amount })
+        intakes = LogsService.sortLogTimes(intakes)
+
         log.intakes = intakes
         await LogsService.logIntakeUpdate(log)
     },
@@ -73,6 +77,15 @@ export const LogsService = {
         log.intakes = [intake, ...log.intakes]
 
         await LogsService.logIntakeUpdate(log)
+    },
+
+    sortLogTimes(intakes: INTAKE[]) {
+        const convertToMins = (time: string) => {
+            let [hours, minutes] = time.split(':').map(Number)
+            return hours * 60 + minutes
+        }
+
+        return intakes.sort((t1, t2) => convertToMins(convertTo24HourFormat(t2.time))  - convertToMins(convertTo24HourFormat(t1.time)))
     },
 
     findInsertionIndex(times: string[], newTime: string) {
