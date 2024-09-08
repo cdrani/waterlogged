@@ -2,7 +2,7 @@
     import { createEventDispatcher } from 'svelte'
     import Auth from './Auth.svelte'
 
-    type View = 'default' | 'settings' | 'graph'
+    type View = 'default' | 'settings' | 'graph' | 'account'
 
     export let view: View
     const dispatch = createEventDispatcher()
@@ -18,6 +18,7 @@
     $: isRecords = view == 'graph'
     $: isDefault = view == 'default'
     $: isSettings = view == 'settings'
+    $: isAccount = view == 'account'
 </script>
 
 <nav class="relative bg-cyan-200 flex w-full px-4 xs:px-6 py-2 xs:py-1 lg:rounded-t-md">
@@ -42,10 +43,19 @@
                 </button>
             </li>
 
-            <li class="w-8 h-8">
+
+            <li class="w-8 h-8 block lg:hidden mt-1.5">
                 <button name="settings" aria-label="settings" on:click={updateView} class="w-8 h-8">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                        <path class="{isSettings ? 'fill-cyan-800' : 'fill-gray-800'}" fill="currentColor" d="M5.25 15.5h19.875a6.252 6.252 0 0 0 12.25 0h5.375a1.25 1.25 0 1 0 0-2.5h-5.375a6.252 6.252 0 0 0-12.25 0H5.25a1.25 1.25 0 1 0 0 2.5m0 19h5.625a6.252 6.252 0 0 0 12.25 0H42.75a1.25 1.25 0 1 0 0-2.5H23.125a6.252 6.252 0 0 0-12.25 0H5.25a1.25 1.25 0 1 0 0 2.5" />
+                    </svg>
+                </button>
+            </li>
+
+            <li class="w-8 h-8">
+                <button name="account" aria-label="account" on:click={updateView} class="w-8 h-8">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path class="{isSettings ? 'fill-cyan-800' : 'fill-gray-800'}" d="m10.135 21l-.362-2.892q-.479-.145-1.035-.454q-.557-.31-.947-.664l-2.668 1.135l-1.865-3.25l2.306-1.739q-.045-.27-.073-.558q-.03-.288-.03-.559q0-.252.03-.53q.028-.278.073-.626L3.258 9.126l1.865-3.212L7.771 7.03q.448-.373.97-.673q.52-.3 1.013-.464L10.134 3h3.732l.361 2.912q.575.202 1.016.463t.909.654l2.725-1.115l1.865 3.211l-2.382 1.796q.082.31.092.569t.01.51q0 .233-.02.491q-.019.259-.088.626l2.344 1.758l-1.865 3.25l-2.681-1.154q-.467.393-.94.673t-.985.445L13.866 21zm1.838-6.5q1.046 0 1.773-.727T14.473 12t-.727-1.773t-1.773-.727q-1.052 0-1.776.727T9.473 12t.724 1.773t1.776.727" />
+                        <path class="{isAccount ? 'fill-cyan-800' : 'fill-gray-800'}" d="m10.135 21l-.362-2.892q-.479-.145-1.035-.454q-.557-.31-.947-.664l-2.668 1.135l-1.865-3.25l2.306-1.739q-.045-.27-.073-.558q-.03-.288-.03-.559q0-.252.03-.53q.028-.278.073-.626L3.258 9.126l1.865-3.212L7.771 7.03q.448-.373.97-.673q.52-.3 1.013-.464L10.134 3h3.732l.361 2.912q.575.202 1.016.463t.909.654l2.725-1.115l1.865 3.211l-2.382 1.796q.082.31.092.569t.01.51q0 .233-.02.491q-.019.259-.088.626l2.344 1.758l-1.865 3.25l-2.681-1.154q-.467.393-.94.673t-.985.445L13.866 21zm1.838-6.5q1.046 0 1.773-.727T14.473 12t-.727-1.773t-1.773-.727q-1.052 0-1.776.727T9.473 12t.724 1.773t1.776.727" />
                     </svg>
                 </button>
             </li>
