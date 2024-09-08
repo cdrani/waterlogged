@@ -10,6 +10,7 @@
     import GraphView from 'common/views/Graph.svelte'
     import Modal from 'common/components/Modal.svelte'
     import DefaultView from 'common/views/Default.svelte'
+    import AccountView from 'common/views/Account.svelte'
 	import LoginUI from 'common/components/LoginUI.svelte'
     import SettingsView from 'common/views/Settings.svelte'
     import Celebrate from 'common/components/Celebrate.svelte'
@@ -112,8 +113,10 @@
                 <DefaultView />
             {:else if $pageView == 'settings'}
                 <SettingsView {messaging} {messageCB}  {unMountCB} />
-            {:else}
+            {:else if $pageView == 'graph'}
                 <GraphView log={$log} />
+            {:else}
+                <AccountView />
             {/if}
         </div>
     </section>
