@@ -7,7 +7,8 @@
 <div class="flex flex-end h-full w-full">
     <div class="flex justify-end items-end w-full gap-4">
         <button 
-            on:click={onClose}
+            on:click|preventDefault={onClose}
+            on:touchend|preventDefault={onClose}
             class="w-16 h-7 md:w-20 md:h-9 bg-black rounded-md"
         >
             <span class="font-semibold text-[14px] md:text-[16px] text-white">{cancelLabel}</span>
