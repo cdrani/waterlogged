@@ -14,13 +14,13 @@
 
     $: if (userId) {
         if (userId == 'unauthorized') {
-            tabs.splice(1, 0, { title: 'Account', content: AccountTab })
+            tabs = tabs.toSpliced(1, 0, { title: 'Account', content: AccountTab })
         }
     }
 </script>
 
 <section class="flex relative left-0 flex-col mx-auto w-full h-[340px] max-h-[358] xs:pb-6 xs:h-full bg-cyan-200">
-    <div class="relative flex flex-col w-full mx-auto overflow-y-auto h-full">
+    <div class="relative flex flex-col w-full mx-auto">
         <div class="flex mx-auto">
             <TabList {tabs} />
         </div>
