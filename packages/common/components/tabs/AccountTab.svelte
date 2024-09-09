@@ -1,9 +1,12 @@
 <script lang="ts">
     import { db } from 'common/data/db'
     import { writable } from 'svelte/store'
-    import Auth from '../Auth.svelte'
 
-    export let userId: string
+    import Auth from '../Auth.svelte'
+    import License from '../License.svelte'
+
+    const userId = db.cloud.currentUserId
+
     let syncing = writable<boolean>(false)
 
     async function sync() {
@@ -21,7 +24,7 @@
 </script>
 
 <div class="relative flex flex-col w-full h-screen mx-auto items-center py-4">
-    <div class="relative flex w-full justify-between items-center bg-cyan-400 p-4 rounded-md">
+    <div class="flex w-full justify-between items-center bg-cyan-400 p-4 rounded-md">
         <h2>Sync Your Data</h2>
         <button 
             disabled={$syncing}
@@ -33,9 +36,16 @@
         </button>
     </div>
 
-    <div class="flex flex-col w-full">
-        <hr class="w-full h-1 bg-cyan-600 my-8" />
-        <Auth />
-        <p class="fixed bottom-8 text-md text-center">Logged in as: <b>{userId}<b><p>
+    <div class="relative flex-col w-full h-screen items-center">
+        <hr class="w-full h-1 bg-cyan-600 my-4" />
+
+        <License />
+        <div class="flex justify-center my-4">
+            <Auth fullWidth />
+        </div>
+
+        <div class="flex w-full mx-auto rounded-md bg-cyan-400 p-4">
+            <p class="flex w-full text-md">Logged in as: {' '} <b class="pl-1">{userId}<b><p>
+        </div>
     </div>
 </div>
