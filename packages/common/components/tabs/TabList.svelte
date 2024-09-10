@@ -12,7 +12,7 @@
         const rounding = tabs.at(0).title == title 
             ? 'rounded-tl-md' : tabs.at(-1).title == title
             ? 'rounded-tr-md' : ''
-        return `${rounding}  w-full text-center px-4 py-2 cursor-pointer bg-cyan-800 text-white hover:text-white`
+        return `${rounding} flex justify-center w-full text-center py-2 cursor-pointer bg-cyan-800 text-white hover:text-white`
     }
 </script>
 
@@ -23,7 +23,7 @@
 </style>
 
 <div class="flex-col w-full mx-auto items-center">
-    <div role="tablist" class="relative flex w-full place-items-center">
+    <div role="tablist" class="flex w-full justify-between gap-x-0.5 items-center mx-auto">
         {#each tabs as tab (tab.title)}
             <a role="tab" 
                 class="{getStyles(tab.title)}"
@@ -31,7 +31,10 @@
                 on:click|preventDefault={() => setActiveTab(tab.title)}
                 on:touchend|preventDefault={() => setActiveTab(tab.title)}
             >
+
+            <span class="font-semibold  text-[14px] md:text-[16px] text-white">
                 {tab.title}
+            </span>
             </a>
         {/each}
     </div>
