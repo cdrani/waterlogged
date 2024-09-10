@@ -1,9 +1,9 @@
 <script lang="ts">
     import { db } from 'common/data/db'
+    import AdvancedTab from './AdvancedTab.svelte'
     import TabList from 'common/components/tabs/TabList.svelte'
     import GeneralTab from 'common/components/tabs/GeneralTab.svelte'
     import AccountTab from 'common/components/tabs/AccountTab.svelte'
-    import AdvancedTab from 'common/components/tabs/AdvancedTab.svelte'
 
     let tabs = [
         { title: 'General', content: GeneralTab },
@@ -26,3 +26,4 @@
         </div>
     </div>
 </section>
+

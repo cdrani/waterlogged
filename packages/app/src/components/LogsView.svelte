@@ -10,7 +10,7 @@
     import GraphView from 'common/views/Graph.svelte'
     import Modal from 'common/components/Modal.svelte'
     import DefaultView from 'common/views/Default.svelte'
-    import AccountView from 'common/views/Account.svelte'
+    import AccountView from './account/AccountView.svelte'
 	import LoginUI from 'common/components/LoginUI.svelte'
     import SettingsView from 'common/views/Settings.svelte'
     import Celebrate from 'common/components/Celebrate.svelte'
