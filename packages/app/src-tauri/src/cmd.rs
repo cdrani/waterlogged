@@ -1,4 +1,5 @@
 use tauri::State;
+use std::path::Path;
 use crate::app::worker::{WorkerEvent, AsyncWorker};
 use crate::config::{settings::SettingsConfig, ConfigUpdateAction};
 
@@ -21,4 +22,12 @@ pub async fn update_config(worker: State<'_, AsyncWorker>, action: ConfigUpdateA
     }
 
     Ok(())
+}
+
+#[tauri::command]
+pub async fn download_backup(file_path: &str, content: &str) -> Result<(), String> {
+    println!("FP: {:?} | C: {:?}", file_path, content);
+    let path = Path::new(&file_path);
+
+    std::fs::write(path, content).map_err(|e| format!("Failed to write file: {}", e))
 }

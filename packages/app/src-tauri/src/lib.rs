@@ -17,6 +17,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             cmd::update_config,
             cmd::update_settings,
+            cmd::download_backup,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
