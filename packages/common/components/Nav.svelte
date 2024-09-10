@@ -25,7 +25,7 @@
     <Auth />
 
     <div class="flex w-full justify-end">
-        <ul class="relative flex justify-between items-center gap-x-4 xs:p-2 xs:pr-0">
+        <ul class="relative flex justify-between items-center gap-x-2 xs:p-2 xs:pr-0">
             <li class="w-8 h-8">
                 <button name="default" aria-label="home" on:click={updateView} class="w-8 h-8">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
