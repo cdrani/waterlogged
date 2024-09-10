@@ -9,14 +9,14 @@
         <button 
             on:click|preventDefault={onClose}
             on:touchend|preventDefault={onClose}
-            class="w-16 h-7 md:w-20 md:h-9 bg-black rounded-md"
+            class="w-20 h-9 bg-black rounded-md"
         >
             <span class="font-semibold text-[14px] md:text-[16px] text-white">{cancelLabel}</span>
         </button>
 
         <button 
             type="submit"
-            class="w-16 h-7 md:w-20 md:h-9 bg-white rounded-md"
+            class="w-20 h-9 bg-white rounded-md"
         >
             <span class="font-semibold text-[14px] md:text-[16px] text-black">{submitLabel}</span>
         </button>
