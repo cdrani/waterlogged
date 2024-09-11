@@ -83,7 +83,7 @@
 </svelte:head>
 
 {#if $log && $user}
-    <section class="relative w-full h-full overflow-y-hidden lg:max-w-[320px] flex flex-col justify-center items-center lg:h-[80dvh]">
+    <section class="relative h-full overflow-y-hidden w-[320px] xs:w-full md:w-[320px] flex flex-col justify-center items-center lg:h-[80dvh]">
         <div class="static top-10 w-full">
             <Nav view={$pageView} on:view={setView} />
         </div>
@@ -104,7 +104,7 @@
 
     <Modal />
 
-    <section class="hidden top-0 w-full lg:flex relative justify-center items-center xl:max-w-3xl 2xl:max-w-5xl lg:my-[6rem] lg:h-[80dvh]">
+    <section class="hidden top-0 sm:flex w-full md:w-2/3 relative justify-center items-center md:my-[6rem] md:h-[80dvh]">
         <GraphView log={$log} />
     </section>
 
