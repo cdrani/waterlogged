@@ -21,7 +21,7 @@
         <p class="font-bold text-md">{VERSION}</p>
         <a
             target="_blank"
-            href="https://github.com/cdrani/waterlogged/issues"
+            href="https://github.com/cdrani/waterlogged"
             class="inline-flex text-sm justify-center self-center items-center w-28 h-10 bg-white rounded-md"
         >
             <span class="underline underline-offset-4 tracking-wide font-bold text-center text-black w-full">View Code</span>
