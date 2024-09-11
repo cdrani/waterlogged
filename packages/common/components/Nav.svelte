@@ -21,7 +21,7 @@
     $: isAccount = view == 'account'
 </script>
 
-<nav class="relative bg-cyan-200 flex w-full px-6 py-2 xs:py-1 lg:rounded-t-md">
+<nav class="relative bg-cyan-200 flex w-full h-full px-6 py-2 md:rounded-t-md">
     <Auth />
 
     <div class="flex w-full justify-end">
