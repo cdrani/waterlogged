@@ -106,7 +106,7 @@
         <Nav view={$pageView} on:view={setView} />
 
         <LoginUI />
-        <Celebrate party={party} />
+        <!-- <Celebrate party={party} /> -->
 
         <div class="flex flex-col w-full lg:h-full">
             {#if $pageView == 'default'}
