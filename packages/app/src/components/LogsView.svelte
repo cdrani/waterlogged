@@ -28,7 +28,7 @@
 
     const partyStore = getParty() as PartyStore
 
-    type PageView = 'default' | 'settings' | 'graph'
+    type PageView = 'default' | 'settings' | 'graph' | 'account'
     let pageView = writable<PageView>('default')
 
     function setView(event: CustomEvent) {
