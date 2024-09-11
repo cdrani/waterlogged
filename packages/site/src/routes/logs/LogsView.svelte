@@ -83,8 +83,10 @@
 </svelte:head>
 
 {#if $log && $user}
-    <section class="relative w-full h-full pb-6 md:pb-0 overflow-y-hidden lg:max-w-[320px] flex flex-col rounded-md justify-center items-center lg:h-[80dvh]">
-        <Nav view={$pageView} on:view={setView} />
+    <section class="relative w-full h-full overflow-y-hidden lg:max-w-[320px] flex flex-col justify-center items-center lg:h-[80dvh]">
+        <div class="static top-10 w-full">
+            <Nav view={$pageView} on:view={setView} />
+        </div>
 
         <LoginUI />
         <!-- <Celebrate party={party} /> -->
