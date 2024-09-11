@@ -23,8 +23,8 @@
     }
 </script>
 
-<div class="relative flex flex-col w-full h-screen mx-auto items-center py-4">
-    <div class="flex w-full justify-between items-center bg-cyan-400 p-4 rounded-md">
+<div class="relative flex flex-col w-full h-full mx-auto items-center py-4">
+    <div class="relative flex w-full justify-between items-center bg-cyan-400 p-4 rounded-md">
         <h2>Sync Your Data</h2>
         <button 
             disabled={$syncing}
@@ -36,7 +36,7 @@
         </button>
     </div>
 
-    <div class="relative flex-col w-full h-screen items-center">
+    <div class="relative flex-col w-full h-full items-center">
         <hr class="w-full h-1 bg-cyan-600 my-4" />
 
         <License />
@@ -44,8 +44,9 @@
             <Auth fullWidth />
         </div>
 
-        <div class="flex w-full mx-auto rounded-md bg-cyan-400 p-4">
-            <p class="flex w-full text-md">Logged in as: {' '} <b class="pl-1">{userId}<b><p>
+        <div class="flex flex-col w-full mx-auto rounded-md bg-cyan-400 p-4">
+            <p class="w-full text-md">Logged in as:<p>
+            <p class="w-full text-md font-bold">{userId}<p>
         </div>
     </div>
 </div>
