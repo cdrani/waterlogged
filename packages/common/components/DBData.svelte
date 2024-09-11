@@ -19,7 +19,7 @@
     }
 </script>
 
-<div class="relative flex flex-col w-full h-screen mx-auto items-center py-4">
+<div class="relative flex flex-col w-full h-full mx-auto items-center py-4">
     <div class="relative flex flex-col w-full justify-between items-center bg-cyan-400 p-4 mx-auto rounded-md">
         <h2 class="font-bold text-xl">Data Control</h2>
         <p>Use the buttons below to export and import your data.<p>

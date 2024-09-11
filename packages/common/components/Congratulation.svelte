@@ -18,11 +18,11 @@
     <section class="absolute z-[1000] flex flex-col w-full h-full p-4 pt-6">
         <h1 class="text-center font-bold text-lg md:text-xl lg:text-3xl">Congratulations!</h1>
         <h2 class="text-center text-2xl font-medium my-4">You hit your daily goal!</h2>
-        <h3 class="text-center text-white text-2xl font-black mt-2">
+        <h3 class="text-center text-white text-2xl font-black">
             {$log.total} / {$log.goal} ({$log.measurement})
         </h3>
 
-        <p class="text-center text-md md:text-lg lg:text-xl mt-3 leading-snug">
+        <p class="text-center font-semibold text-md md:text-lg lg:text-xl mt-2 leading-snug">
             Keep your streak going tomorrow!
             Adjust your targets as necessary.
         </p>
