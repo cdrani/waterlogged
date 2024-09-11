@@ -7,6 +7,7 @@
     import GraphView from 'common/views/Graph.svelte'
     import Modal from 'common/components/Modal.svelte'
     import DefaultView from 'common/views/Default.svelte'
+    import AccountView from 'common/views/Account.svelte'
 	import LoginUI from 'common/components/LoginUI.svelte'
     import SettingsView from 'common/views/Settings.svelte'
     import Celebrate from 'common/components/Celebrate.svelte'
@@ -24,7 +25,7 @@
 
     const partyStore = getParty() as PartyStore
 
-    type PageView = 'default' | 'settings' | 'graph'
+    type PageView = 'default' | 'settings' | 'graph' | 'account'
     let pageView = writable<PageView>('default')
 
     function setView(event: CustomEvent) {
@@ -86,17 +87,17 @@
         <Nav view={$pageView} on:view={setView} />
 
         <LoginUI />
-        <Celebrate party={party} />
+        <!-- <Celebrate party={party} /> -->
 
-        <div class="flex flex-col w-full lg:h-full">
-            {#if $pageView == 'default'}
-                <DefaultView />
-            {:else if $pageView == 'settings'}
-                <SettingsView messaging={messaging} />
-            {:else}
-                <GraphView log={$log} />
-            {/if}
-        </div>
+        {#if $pageView == 'default'}
+            <DefaultView />
+        {:else if $pageView == 'settings'}
+            <SettingsView messaging={messaging} />
+        {:else if $pageView == 'graph'}
+            <GraphView log={$log} />
+        {:else}
+            <AccountView />
+        {/if}
     </section>
 
     <Modal />
