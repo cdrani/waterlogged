@@ -4,7 +4,7 @@
 
 <slot></slot>
 
-<footer class="flex fixed z-[100000] bottom-0 justify-between items-center mx-auto text-white w-full h-12 bg-gray-800">
+<footer class="hidden md:flex fixed z-[100000] bottom-0 justify-between items-center mx-auto text-white w-full h-12 bg-gray-800">
     <div class="flex justify-between items-center w-full px-6 lg:px-0 lg:max-w-[1120px] mx-auto">
         <div class="flex justify-between items-center gap-2">
             <a aria-label="github" target="_blank" href="https://github.com/cdrani/waterlogged">

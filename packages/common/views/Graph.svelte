@@ -48,7 +48,8 @@
 </script>
 
 {#if $logs}
-    <section class="relative flex flex-col w-full h-[340px] max-h-[375px] xs:h-full xs:pb-6 md:pb-0 xs:max-h-none bg-cyan-200 lg:rounded-md overflow-y-scroll xs:overflow-y-hidden">
+    <section class="relative flex flex-col w-full h-full pb-6 bg-cyan-200 lg:rounded-md overflow-y-auto">
+        <div class="flex flex-col">
         <div class="relative flex justify-between mb-1 w-[248px] xs:w-full mx-auto px-4 xs:px-6 md:py-6 md:px-8">
             <div class="text-[14px] xs:text-lg font-semibold">Logs: {logIntakes}</div>
             <div class="text-[14px] xs:text-lg font-semibold">Drank: {waterDrank}ml</div>
@@ -88,10 +89,10 @@
                 </div>
             </div>
 
-            <div class="relative flex lg:overflow-y-auto w-full h-full pb-4 xs:pb-0">
-                <ul class="relative flex flex-col gap-2 lg:pb-6 xs:overflow-y-auto px-4 xs:px-6 w-full h-full">
+            <div class="relative flex lg:overflow-y-auto w-full h-full sm:pb-0">
+                <ul class="relative flex flex-col gap-2 lg:pb-6 overflow-hidden sm:overflow-y-auto px-4 xs:px-6 w-full h-full">
                     {#each $viewingLog?.intakes as intake, i (i)}
-                        <li class="rounded-md flex gap-x-2 h-12 bg-cyan-500 items-center p-2 lg:px-6">
+                        <li class="rounded-md flex gap-x-2 h-12 bg-cyan-500 items-center p-4 lg:px-6">
                             <div class="flex w-full justify-between items-center">
                                 <p class="font-bold text-lg">{intake.time}</p>
                                 <p class="font-bold text-lg">{intake.amount}{$viewingLog.measurement}</p>
@@ -107,5 +108,6 @@
                 </h4>
             </div>
         {/if}
+        </div>
     </section>
 {/if}

@@ -23,7 +23,7 @@
 </script>
 
 {#if $log}
-    <section class="relative pt-3 w-full mx-auto h-[220px] xs:h-full xs:mb-6 xs:pb-10 sm:mb-0 sm:pb-0 rounded-b-md bg-cyan-200 overflow-y-hidden">
+    <section class="relative pt-3 w-full mx-auto h-full rounded-b-md bg-cyan-200 overflow-y-hidden">
         <div class="flex justify-between items-center px-4 xs:px-6 w-full pb-0 font-semibold bg-cyan-200">
             <CurrentTime format="date" />
             <h2 class="text-[18px]">({$log?.intakes?.length ?? 0})</h2>

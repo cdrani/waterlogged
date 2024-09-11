@@ -102,13 +102,15 @@
 </script>
 
 {#if $log && $user}
-    <section class="relative w-full h-full pb-6 overflow-y-hidden lg:max-w-[320px] flex flex-col rounded-md lg:mt-[4rem] lg:pb-[18rem]">
-        <Nav view={$pageView} on:view={setView} />
+    <section class="absolute w-full h-screen flex flex-col rounded-md">
+        <div class="static top-10">
+            <Nav view={$pageView} on:view={setView} />
+        </div>
 
         <LoginUI />
         <!-- <Celebrate party={party} /> -->
 
-        <div class="flex flex-col w-full lg:h-full">
+        <div class="flex flex-col w-full h-screen overflow-y-hidden">
             {#if $pageView == 'default'}
                 <DefaultView />
             {:else if $pageView == 'settings'}
