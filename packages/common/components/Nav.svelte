@@ -44,7 +44,7 @@
             </li>
 
 
-            <li class="w-8 h-8 block lg:hidden mt-1.5">
+            <li class="w-8 h-8 mt-1.5">
                 <button name="settings" aria-label="settings" on:click={updateView} class="w-8 h-8">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
                         <path class="{isSettings ? 'fill-cyan-800' : 'fill-gray-800'}" fill="currentColor" d="M5.25 15.5h19.875a6.252 6.252 0 0 0 12.25 0h5.375a1.25 1.25 0 1 0 0-2.5h-5.375a6.252 6.252 0 0 0-12.25 0H5.25a1.25 1.25 0 1 0 0 2.5m0 19h5.625a6.252 6.252 0 0 0 12.25 0H42.75a1.25 1.25 0 1 0 0-2.5H23.125a6.252 6.252 0 0 0-12.25 0H5.25a1.25 1.25 0 1 0 0 2.5" />
