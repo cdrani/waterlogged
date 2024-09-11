@@ -16,22 +16,23 @@
 
 {#if $log}
     <section class="absolute z-[1000] flex flex-col w-full h-full p-4 pt-6">
-        <h1 class="text-center text-white text-xl font-bold">Congratulations!</h1>
-        <h2 class="text-center text-white text-lg font-medium">You hit your daily goal!</h2>
+        <h1 class="text-center font-bold text-lg md:text-xl lg:text-3xl">Congratulations!</h1>
+        <h2 class="text-center text-2xl font-medium my-4">You hit your daily goal!</h2>
         <h3 class="text-center text-white text-2xl font-black mt-2">
             {$log.total} / {$log.goal} ({$log.measurement})
         </h3>
 
-        <h4 class="text-center text-white text-[13px] md:text-md lg:text-lg mt-3 leading-snug">
+        <p class="text-center text-md md:text-lg lg:text-xl mt-3 leading-snug">
             Keep your streak going tomorrow!
             Adjust your targets as necessary.
-        </h4>
+        </p>
 
         <button 
-            on:click={handleClose}
-            class="absolute bottom-4 right-4 w-16 h-7 bg-white rounded-md"
+            on:click|preventDefault={handleClose}
+            on:touchend|preventDefault={handleClose}
+            class="absolute bottom-8 right-8 w-20 h-9 bg-white rounded-md"
         >
-            <span class="text-[16px] text-black">Close</span>
+            <span class="font-bold text-[14px] md:text-[16px]">Close</span>
         </button>
     </section>
 {/if}
