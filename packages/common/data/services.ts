@@ -1,6 +1,6 @@
 import { db } from './db'
 import type { SETTINGS, LOG, INTAKE } from 'common/types'
-import { createIntake, createDailyLog } from './defaults'
+import { createIntake, createDailyLog, createSettings } from './defaults'
 import { convertToDate, getDateKey, convertTo24HourFormat } from 'common/utils/date'
 
 export const UserService = {
@@ -121,15 +121,18 @@ export const LogsService = {
 
 export const SettingsService = {
     load: async (settingsData?: SETTINGS) => {
-        const settings = await db.settings.toArray()
-        if (!settings?.[0]) await SettingsService.create(settingsData)
+        let settings = await db.settings.toArray()
+        if (settings?.length) return settings[0]
 
-        return settings[0] ?? settingsData
+        const settingsId = await SettingsService.create(settingsData)
+        const userSettings = await db.settings.get({ id: settingsId })
+        return userSettings
     },
 
-    create: async (settings: SETTINGS) => {
-        await db.settings.add(settings)
-        return settings
+    create: async (settingsData?: SETTINGS) => {
+        const data = settingsData ?? createSettings()
+        await db.settings.add(data)
+        return data.id
     },
 
     updateKeyValue: async ({ key, value }) => {
