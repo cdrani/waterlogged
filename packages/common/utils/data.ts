@@ -1,11 +1,10 @@
 import download from 'downloadjs'
 import { db } from 'common/data/db'
-import { exportDB, } from 'dexie-export-import'
 
 export const FILE_NAME = 'WTL-backup.json'
 
 export async function getDBAsBlob() {
-    const blob = await exportDB(db, { 
+    const blob = await db.export({ 
         prettyJson: true,
         filter: (table: any) => !['$logins', '$syncState'].includes(table),
     })
@@ -15,6 +14,10 @@ export async function getDBAsBlob() {
 
 // For web & extension
 export async function downloadBackUp() {
+    if (typeof window !== 'undefined') {
+        await import('dexie-export-import')
+    }
+
     const blob = await getDBAsBlob()
     download(blob, FILE_NAME, 'application/json')
 }

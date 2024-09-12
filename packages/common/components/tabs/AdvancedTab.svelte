@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { importDB } from 'dexie-export-import'
+    import { onMount } from 'svelte'
 
     import { db } from 'common/data/db'
     import DBData from '../DBData.svelte'
@@ -11,8 +11,12 @@
 
     async function importData(file: File) {
         await db.delete()
-        await importDB(file)
+        await db.import(file)
     }
+
+    onMount(async () => {
+        await import('dexie-export-import')
+    })
 </script>
 
 <DBData {exportData} {importData} />
