@@ -30,14 +30,14 @@ export default defineConfig({
             mode: 'development',
             strategies: 'injectManifest',
             filename: 'prompt-sw.ts',
-            scope: '/logs',
-            base: '/logs',
+            scope: 'logs',
+            base: '/',
             selfDestroying: process.env.SELF_DESTROYING_SW == 'true',
             manifest: {
                 short_name: 'Water Logged',
                 name: 'WaterLogged: Tracker & Reminder',
                 description: 'Track your progress to meet your hydration goals. Set custom reminders to stay hydrated.',
-                start_url: '/logs',
+                start_url: '/',
                 theme_color: '#ffffff',
                 background_color: '#ffffff',
                 icons: [
@@ -63,7 +63,7 @@ export default defineConfig({
                 enabled: true,
                 suppressWarnings: process.env.SUPPRESS_WARNING === 'true',
                 type: 'module',
-                navigateFallback: '/logs',
+                navigateFallback: '/',
             },
             kit: {
                 includeVersionFile: true,
