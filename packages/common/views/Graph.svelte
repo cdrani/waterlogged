@@ -49,7 +49,7 @@
 
 {#if $logs}
     <section class="relative flex flex-col w-full h-full pb-6 md:pb-0 lg:rounded-md overflow-y-auto">
-        <div class="flex flex-col bg-cyan-200">
+        <div class="flex flex-col bg-cyan-200 h-full">
             <div class="relative flex justify-between w-[248px] xs:w-full mx-auto px-4 xs:px-6 md:py-6 md:px-8">
                 <div class="text-[14px] xs:text-lg font-semibold">Logs: {logIntakes}</div>
                 <div class="text-[14px] xs:text-lg font-semibold">Drank: {waterDrank}ml</div>
