@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { onMount } from 'svelte'
+
     import { stringifyDate } from '../utils/date'
 
     export let color: string
@@ -32,17 +34,30 @@
         const tooltip = document.getElementById('tooltip')
         tooltip.firstChild.textContent = `${pluralize(value)} on ${formatDate(strDate)}`
         tooltip.style.display = 'flex'
-        tooltip.style.left = `${event.pageX - 56}px`
-        tooltip.style.top = `${event.pageY - 32}px`
+
+        const parent = document.getElementById('main')
+        const bounds = parent.getBoundingClientRect()
+
+        const isTouch = event?.touches?.length > 0
+        const clientX = isTouch ? event?.touches?.[0]?.clientX : event?.clientX
+        const clientY = isTouch ? event?.touches?.[0]?.clientY : event?.clientY
+
+        tooltip.style.left = `${clientX - bounds.left - 65}px`
+        tooltip.style.top = `${clientY - bounds.top - 36}px`
         tooltip.style.opacity = '1'
         tooltip.style.transition = 'opacity 0.3s'
     }
 
     function hideToolTip() {
         const tooltip = document.getElementById('tooltip')
+        if (!tooltip) return
+
         tooltip.style.display = 'none'
     }
 
+    onMount(() => {
+        return () => hideToolTip()
+    })
 </script>
 
 <rect

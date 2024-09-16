@@ -64,6 +64,13 @@
 </script>
 
 
+<div 
+    id="tooltip"
+    class="items-center fixed justify-center z-[2000] font-semibold hidden h-5 xs:h-6 w-full max-w-[130px] sm:max-w-[140px] rounded-[4px] top-4 border-gray-400 bg-white border-sm py-0.5 px-1 text-[12px] xs:text-[14px]"
+>
+    <span></span>
+</div>
+
 <svg viewBox={`0 0 ${width} ${height}`} class="flex items-center bg-cyan-800" style="width:{width / 1.75}px;">
     {#if view === 'monthly'}
         {#each chunks as chunk, index}
