@@ -18,7 +18,7 @@ precacheAndRoute(self.__WB_MANIFEST)
 
 // to allow work offline
 registerRoute(new NavigationRoute(
-    createHandlerBoundToURL('/logs'),
+    createHandlerBoundToURL('/'),
     { allowlist },
 ))
 
