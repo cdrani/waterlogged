@@ -32,9 +32,9 @@
                 on:touchend|preventDefault={() => setActiveTab(tab.title)}
             >
 
-            <span class="font-semibold  text-[14px] md:text-[16px] text-white">
-                {tab.title}
-            </span>
+                <span class="font-semibold text-base text-white">
+                    {tab.title}
+                </span>
             </a>
         {/each}
     </div>

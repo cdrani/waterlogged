@@ -7,9 +7,10 @@
     import GraphView from 'common/views/Graph.svelte'
     import Modal from 'common/components/Modal.svelte'
     import DefaultView from 'common/views/Default.svelte'
+    import AccountView from 'common/views/Account.svelte'
 	import LoginUI from 'common/components/LoginUI.svelte'
     import SettingsView from 'common/views/Settings.svelte'
-    import Celebrate from 'common/components/Celebrate.svelte'
+    // import Celebrate from 'common/components/Celebrate.svelte'
 
     import { ExtMessaging } from 'common/messaging'
     import { initModal, openModal } from 'common/stores/modal'
@@ -23,7 +24,7 @@
 
     const partyStore = getParty() as PartyStore
 
-    type PageView = 'default' | 'settings' | 'graph'
+    type PageView = 'default' | 'settings' | 'graph' | 'account'
     let pageView = writable<PageView>('default')
 
     function setView(event: CustomEvent) {
@@ -57,21 +58,26 @@
 </script>
 
 {#if $log && $user}
-    <main class="relative -z-100 bg-cyan-200 flex flex-col pt-0 w-[280px] mx-auto h-full">
-        <Nav view={$pageView} on:view={setView} />
+    <main id="main" class="relative -z-100 bg-cyan-200 flex flex-col pt-0 w-[280px] mx-auto h-full" style="max-height: 400px">
+        <div class="static w-full">
+            <Nav view={$pageView} on:view={setView} />
+        </div>
+
         <Modal />
 
         <LoginUI />
 
-        <Celebrate party={party} />
+        <!-- <Celebrate party={party} /> -->
 
-        <div class="flex w-full h-full">
+        <div class="relative flex h-min overflow-y-auto sm:mt-4">
             {#if $pageView == 'default'}
                 <DefaultView />
             {:else if $pageView == 'settings'}
                 <SettingsView messaging={messaging} />
-            {:else}
+            {:else if $pageView == 'graph'}
                 <GraphView log={$log} />
+            {:else}
+                <AccountView />
             {/if}
         </div>
     </main>

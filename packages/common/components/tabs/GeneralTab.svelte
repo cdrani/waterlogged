@@ -16,9 +16,9 @@
     <!-- /> -->
 <!-- </div> -->
 
-<div class="flex flex-col w-full mx-auto">
-    <div class="flex w-full justify-between items-center bg-cyan-400 p-4 rounded-md my-4">
-        <p class="font-bold text-md">{VERSION}</p>
+<div class="flex flex-col w-full h-full mx-auto">
+    <div class="flex w-full justify-between items-center bg-cyan-400 p-4 rounded-md mt-4 mb-5">
+        <p class="font-bold text-lg">{VERSION}</p>
         <a
             target="_blank"
             href="https://github.com/cdrani/waterlogged"
@@ -29,13 +29,13 @@
     </div>
 
     <div class="flex-col w-full justify-between items-center bg-cyan-400 p-4 rounded-md">
-        <p class="font-bold text-md text-center">Questions | Suggestions</p>
+        <p class="font-bold text-lg text-center">Questions | Suggestions</p>
 
         <div class="flex w-full justify-between items-center bg-cyan-400 rounded-md my-4">
             <a
                 target="_blank"
                 href="https://forms.gle/SR72HpB9PawZLpjv7"
-                class="inline-flex text-sm justify-center self-center items-center w-28 h-10 bg-white rounded-md"
+                class="inline-flex text-sm justify-center self-center items-center w-24 xs:w-28 h-10 bg-white rounded-md"
             >
                 <span class="underline underline-offset-4 tracking-wide font-bold text-center text-black w-full">Feedback</span>
             </a>
@@ -43,7 +43,7 @@
             <a
                 target="_blank"
                 href="mailto:charlesdrani@gmai.com"
-                class="inline-flex text-sm justify-center self-center items-center w-28 h-10 bg-cyan-800 rounded-md"
+                class="inline-flex text-sm justify-center self-center items-center w-24 xs:w-28 h-10 bg-cyan-800 rounded-md"
             >
                 <span class="underline underline-offset-4 tracking-wide font-bold text-center text-white w-full">Send Email</span>
             </a>

@@ -13,7 +13,7 @@
     import AccountView from './account/AccountView.svelte'
 	import LoginUI from 'common/components/LoginUI.svelte'
     import SettingsView from 'common/views/Settings.svelte'
-    import Celebrate from 'common/components/Celebrate.svelte'
+    // import Celebrate from 'common/components/Celebrate.svelte'
 
     import { playAlarm } from 'common/utils/alarm'
     import type { ALERT, SETTINGS } from 'common/types'
@@ -102,15 +102,17 @@
 </script>
 
 {#if $log && $user}
-    <section class="absolute w-full h-screen flex flex-col rounded-md">
-        <div class="static top-10">
+    <main id="main" class="absolute mx-auto h-full flex flex-col rounded-md">
+        <div class="static w-full">
             <Nav view={$pageView} on:view={setView} />
         </div>
+
+        <Modal />
 
         <LoginUI />
         <!-- <Celebrate party={party} /> -->
 
-        <div class="flex flex-col w-full h-screen overflow-y-hidden">
+        <div class="relative flex flex-col w-full overflow-y-auto">
             {#if $pageView == 'default'}
                 <DefaultView />
             {:else if $pageView == 'settings'}
@@ -121,18 +123,5 @@
                 <AccountView />
             {/if}
         </div>
-    </section>
-
-    <Modal />
-
-    <section class="hidden top-0 w-full lg:flex relative lg:h-screen xl:max-w-3xl 2xl:max-w-5xl lg:mt-[4rem] lg:pb-[11rem]">
-        <GraphView log={$log} />
-    </section>
-
-    <div 
-        id="tooltip"
-        class="items-center justify-center fixed z-[2000] hidden h-5 w-full max-w-[120px] rounded-[4px] top-4 border-gray-400 bg-white border-sm py-0.5 px-1 text-[12px]"
-    >
-        <span></span>
-    </div>
+    </main>
 {/if}
