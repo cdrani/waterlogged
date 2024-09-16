@@ -24,7 +24,7 @@ pub fn init(app: &mut App) -> Result<() , Box<dyn Error>> {
     });
 
     let window = app.get_webview_window(MAIN).unwrap();
-    window.set_size(LogicalSize { width: 320.0, height: 500.0 }).unwrap();
+    window.set_size(LogicalSize { width: 280.0, height: 430.0 }).unwrap();
 
     Ok(())
 }
