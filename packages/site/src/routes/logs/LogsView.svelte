@@ -10,7 +10,7 @@
     import AccountView from 'common/views/Account.svelte'
 	import LoginUI from 'common/components/LoginUI.svelte'
     import SettingsView from 'common/views/Settings.svelte'
-    import Celebrate from 'common/components/Celebrate.svelte'
+    // import Celebrate from 'common/components/Celebrate.svelte'
 
     import WebNotification from '$lib/notification'
     import { type Messaging } from 'common/messaging'
@@ -107,11 +107,4 @@
     <section class="hidden top-0 sm:flex sm:flex-1 w-full md:w-2/3 relative justify-center items-center md:my-[6rem] md:h-[80dvh]">
         <GraphView log={$log} />
     </section>
-
-    <div 
-        id="tooltip"
-        class="items-center justify-center fixed z-[2000] hidden h-5 w-full max-w-[120px] rounded-[4px] top-4 border-gray-400 bg-white border-sm py-0.5 px-1 text-[12px]"
-    >
-        <span></span>
-    </div>
 {/if}

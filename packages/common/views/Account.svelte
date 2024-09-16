@@ -19,9 +19,9 @@
     }
 </script>
 
-<section class="flex relative left-0 flex-col mx-auto w-full pb-6 xs:h-full bg-cyan-200">
+<section class="flex relative left-0 flex-col mx-auto w-full pb-6 xs:h-full bg-cyan-200 overflow-y-hidden">
     <div class="relative flex flex-col w-full mx-auto">
-        <div class="flex mx-auto w-full px-6">
+        <div class="flex mx-auto w-full px-4 xs:px-6">
             <TabList {tabs} />
         </div>
     </div>

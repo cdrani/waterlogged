@@ -30,20 +30,18 @@
             class="absolute flex flex-col items-center mx-auto w-full h-full p-4 md:p-8 gap-2 md:gap-4"
         >
             <h1 class="align-left font-bold text-lg md:text-xl lg:text-2xl capitalize">{ui.title}</h1>
-            <h3 class="text-[15px] md:text-lg font-semibold w-full leading-tight">
+            <h3 class="text-[14px] md:text-lg font-medium w-full leading-tight">
                 {#if ui.type == 'otp'}
                     Look for an email sent from <b class="underline">Dexie Cloud</b>
                 {:else if ui.type == 'email'}
-                    We support passwordless authentication. Just
-                    enter an email, paste the verification code
-                    and you are logged in!
+                    Passwordless login available. Enter your email, verify with the code, and you're in!
                 {/if}
             </h3>
 
             {#if ui.alerts.length > 0}
                 <div class="md:p-0 space-y-2 w-full">
                     {#each ui.alerts as alert}
-                        <p class="font-semibold text-black w-full text-[14px] md:text-lg" class:text-red-500={alert.type == 'error'}>
+                        <p class="font-medium text-black w-full text-[14px] md:text-lg" class:text-red-500={alert.type == 'error'}>
                             {resolveText(alert)}
                         </p>
                     {/each}
@@ -67,13 +65,11 @@
                 {/each}
             </div>
 
-            <div class="absolute bottom-8 right-8 flex w-full justify-end">
-                <FormActions 
-                    onClose={handleCancel}
-                    submitLabel={ui.submitLabel}
-                    cancelLabel={ui.cancelLabel}
-                />
-            </div>
+            <FormActions 
+                onClose={handleCancel}
+                submitLabel={ui.submitLabel}
+                cancelLabel={ui.cancelLabel}
+            />
         </form>
     </PopUp>
 {/if}

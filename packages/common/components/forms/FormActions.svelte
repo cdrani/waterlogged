@@ -20,6 +20,5 @@
         >
             <span class="font-semibold text-[14px] md:text-[16px] text-black">{submitLabel}</span>
         </button>
-
     </div>
 </div>
