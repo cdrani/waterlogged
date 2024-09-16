@@ -6,28 +6,28 @@
     import LogsView from './components/LogsView.svelte'
     import Spinner from 'common/components/Spinner.svelte'
 
- //    db.open()
+    db.open()
 
- //    let loading = writable<boolean>(false)
- //    const syncState = db.cloud.syncState
+    let loading = writable<boolean>(false)
+    const syncState = db.cloud.syncState
 
- //    const sync = async () => {
-	// 	if ($syncState?.status === 'connected') {
-	// 		try { await db.cloud.sync({ purpose: 'pull', wait: true }) }
-	// 		catch (error) { console.log(error) }
-	// 	    finally { loading.set(false) }
-	// 	} 
+    const sync = async () => {
+		if ($syncState?.status === 'connected') {
+			try { await db.cloud.sync({ purpose: 'pull', wait: true }) }
+			catch (error) { console.log(error) }
+		    finally { loading.set(false) }
+		} 
 
- //        if ($syncState?.status === 'offline') loading.set(false)
-	// }
+        if ($syncState?.status === 'offline') loading.set(false)
+	}
 
-	// $: $syncState?.status, sync()
+	$: $syncState?.status, sync()
 
-	// onMount(sync)
+	onMount(sync)
 </script>
 
-<!-- {#if $loading} -->
+{#if $loading}
     <Spinner />
-<!-- {:else} -->
-    <!-- <LogsView /> -->
-<!-- {/if} -->
+{:else}
+    <LogsView />
+{/if}
