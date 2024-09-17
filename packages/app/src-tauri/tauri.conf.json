@@ -12,7 +12,9 @@
     "windows": [
       {
         "title": "waterlogged",
-        "resizable": false
+        "resizable": false,
+        "width": 280,
+        "height": 480
       }
     ],
     "security": {
