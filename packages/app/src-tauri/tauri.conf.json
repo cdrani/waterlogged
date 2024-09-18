@@ -1,35 +1,47 @@
 {
-  "productName": "waterlogged",
-  "version": "0.1.0",
-  "identifier": "com.app.waterlogged",
-  "build": {
-    "beforeDevCommand": "bun run dev",
-    "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "bun run build",
-    "frontendDist": "../build"
-  },
-  "app": {
-    "windows": [
-      {
-        "title": "waterlogged",
-        "resizable": false,
-        "width": 280,
-        "height": 480
-      }
-    ],
-    "security": {
-      "csp": null
+    "productName": "waterlogged",
+    "version": "0.0.1",
+    "identifier": "app.waterlogged",
+    "build": {
+        "beforeDevCommand": "bun run dev",
+        "devUrl": "http://localhost:1420",
+        "beforeBuildCommand": "bun run build",
+        "frontendDist": "../build"
+    },
+    "app": {
+        "windows": [
+            {
+                "title": "waterlogged",
+                "resizable": false,
+                "width": 280,
+                "height": 480
+            }
+        ],
+        "security": {
+            "csp": null
+        }
+    },
+    "bundle": {
+        "active": true,
+        "targets": "all",
+        "createUpdaterArtifacts": true,
+        "icon": [
+            "icons/32x32.png",
+            "icons/128x128.png",
+            "icons/128x128@2x.png",
+            "icons/icon.icns",
+            "icons/icon.ico"
+        ]
+    },
+    "plugins": {
+        "updater": {
+            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDFGNjcyOUZGNjY4NTRDNTMKUldSVFRJVm0veWxuSDhzMktZcG1xcjBIY1VrZXlWdmJGNm9lclVYaTUzSUZ3ZnRDR2h1RVhkL3IK",
+            "endpoints": [
+                "https://github.com/cdrani/waterlogged/releases/latest/download/latest.json"
+            ],
+            "windows": {
+                "installMode": "passive"
+            }
+        }
     }
-  },
-  "bundle": {
-    "active": true,
-    "targets": "all",
-    "icon": [
-      "icons/32x32.png",
-      "icons/128x128.png",
-      "icons/128x128@2x.png",
-      "icons/icon.icns",
-      "icons/icon.ico"
-    ]
-  }
 }
