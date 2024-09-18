@@ -1,5 +1,4 @@
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
-
 use tauri_plugin_autostart::MacosLauncher;
 
 mod app;

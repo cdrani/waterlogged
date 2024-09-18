@@ -1,22 +1,28 @@
+use chrono::{Local, NaiveDateTime, NaiveTime, TimeZone, Timelike};
+use serde::{Deserialize, Serialize};
 use std::sync::Arc;
-use serde::{Serialize, Deserialize};
+use tauri::{
+    async_runtime::{channel, spawn, JoinHandle, Mutex, Receiver, Sender},
+    AppHandle, Emitter,
+};
 use tokio::time::{self, Duration, Instant};
-use chrono::{Timelike, Local, NaiveTime, NaiveDateTime, TimeZone};
-use tauri::{Emitter, AppHandle, async_runtime::{JoinHandle, Mutex, spawn, channel, Receiver, Sender}};
 
-use crate::config::{Config, settings::{Alert, SettingsConfig}, ConfigUpdateAction};
+use crate::config::{
+    settings::{Alert, SettingsConfig},
+    Config, ConfigUpdateAction,
+};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum WorkerEvent {
     StartNotifier,
     ToggleAutoLaunch,
     UpdateSettings(SettingsConfig),
-    UpdateConfig(ConfigUpdateAction)
+    UpdateConfig(ConfigUpdateAction),
 }
 
 #[derive(Debug, Clone)]
 pub struct AsyncWorker {
-    sender: Sender<WorkerEvent>
+    sender: Sender<WorkerEvent>,
 }
 
 impl AsyncWorker {
@@ -28,9 +34,9 @@ impl AsyncWorker {
         let sender = self.sender.clone();
 
         tauri::async_runtime::spawn(async move {
-             if let Err(err) = sender.send(event).await {
+            if let Err(err) = sender.send(event).await {
                 println!("Error sending event: {:?}", err);
-             }
+            }
         });
     }
 }
@@ -58,14 +64,19 @@ pub struct Worker {
 impl Worker {
     pub fn new(app_handle: AppHandle) -> (Self, AsyncWorker) {
         let (sender, receiver) = channel::<WorkerEvent>(32);
-        let worker = Self { app_handle, receiver: Arc::new(Mutex::new(receiver)), notifier: Arc::new(Mutex::new(None)) };
+        let worker = Self {
+            app_handle,
+            receiver: Arc::new(Mutex::new(receiver)),
+            notifier: Arc::new(Mutex::new(None)),
+        };
         let async_worker = AsyncWorker::new(sender);
 
         (worker, async_worker)
     }
 
     fn parse_time_values(start_time: &str, end_time: &str) -> TimeValues {
-        let start_time_parts: Vec<u32> = start_time.split(':').map(|x| x.parse().unwrap()).collect();
+        let start_time_parts: Vec<u32> =
+            start_time.split(':').map(|x| x.parse().unwrap()).collect();
         let end_time_parts: Vec<u32> = end_time.split(':').map(|x| x.parse().unwrap()).collect();
 
         let start_hour = start_time_parts[0];
@@ -73,7 +84,12 @@ impl Worker {
         let end_hour = end_time_parts[0];
         let end_minute = end_time_parts[1];
 
-        TimeValues { end_hour, start_hour, end_minute, start_minute }
+        TimeValues {
+            end_hour,
+            start_hour,
+            end_minute,
+            start_minute,
+        }
     }
 
     pub async fn stop_notifier(&mut self) {
@@ -85,18 +101,30 @@ impl Worker {
     pub async fn start_notifier(&mut self) {
         self.stop_notifier().await;
 
-        let SettingsConfig { enabled, start_time, end_time, interval, .. } = Config::get_config().settings;
+        let SettingsConfig {
+            enabled,
+            start_time,
+            end_time,
+            interval,
+            ..
+        } = Config::get_config().settings;
 
         if !enabled {
-            return
+            return;
         }
 
-        let TimeValues { end_hour, start_hour, end_minute, start_minute } = Self::parse_time_values(&start_time, &end_time);
+        let TimeValues {
+            end_hour,
+            start_hour,
+            end_minute,
+            start_minute,
+        } = Self::parse_time_values(&start_time, &end_time);
 
         let shared_self = self.clone();
         let notifier = spawn(async move {
             // let mut next_notification_time = Instant::now();
-            let mut next_notification_time = Instant::now() + Duration::from_secs((interval as u64) * 60);
+            let mut next_notification_time =
+                Instant::now() + Duration::from_secs((interval as u64) * 60);
 
             time::sleep_until(next_notification_time).await;
 
@@ -107,19 +135,31 @@ impl Worker {
                 let end_minutes = end_hour * 60 + end_minute;
 
                 if now_minutes >= start_minutes && now_minutes <= end_minutes {
-                    let SettingsConfig { sound, alert_type, .. } = Config::get_config().settings;
+                    let SettingsConfig {
+                        sound, alert_type, ..
+                    } = Config::get_config().settings;
 
                     match Alert::from(alert_type.to_string()) {
                         Alert::Both | Alert::Alarm => {
-                            shared_self.app_handle.emit("send_alert", Payload { sound: sound.to_string(), alert_type: Alert::from(alert_type).to_string() }).unwrap();
-                        },
+                            shared_self
+                                .app_handle
+                                .emit(
+                                    "send_alert",
+                                    Payload {
+                                        sound: sound.to_string(),
+                                        alert_type: Alert::from(alert_type).to_string(),
+                                    },
+                                )
+                                .unwrap();
+                        }
                         _ => {}
                     }
 
-                    next_notification_time = Instant::now() + Duration::from_secs((interval as u64) * 60);
+                    next_notification_time =
+                        Instant::now() + Duration::from_secs((interval as u64) * 60);
                 } else {
                     // Sleep until the start time the next day
-                    
+
                     let today = Local::now().date_naive();
                     let start_time = NaiveTime::from_hms_opt(start_hour, start_minute, 0).unwrap();
                     let naive_datetime = NaiveDateTime::new(today, start_time);
@@ -140,7 +180,8 @@ impl Worker {
                         let next_start_time_tomorrow = Local
                             .from_local_datetime(&naive_datetime_tomorrow)
                             .unwrap()
-                            .timestamp() as u64;
+                            .timestamp()
+                            as u64;
 
                         next_start_time_tomorrow - now_timestamp
                     };
@@ -170,12 +211,8 @@ impl Worker {
                             let mut worker = shared_worker.clone();
                             worker.start_notifier().await;
                         }
-                        WorkerEvent::UpdateSettings(settings) => {
-                            Config::update_settings(settings)
-                        }
-                        WorkerEvent::UpdateConfig(action) => {
-                            Config::update_config(action)
-                        }
+                        WorkerEvent::UpdateSettings(settings) => Config::update_settings(settings),
+                        WorkerEvent::UpdateConfig(action) => Config::update_config(action),
                     }
                 }
             }

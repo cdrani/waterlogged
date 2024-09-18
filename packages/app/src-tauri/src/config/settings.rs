@@ -5,7 +5,7 @@ pub enum Measurement {
     #[serde(rename = "cup")]
     Cup,
     #[serde(rename = "ml")]
-    ML
+    ML,
 }
 
 impl From<String> for Measurement {
@@ -13,7 +13,7 @@ impl From<String> for Measurement {
         match s.as_str() {
             "cup" => Measurement::Cup,
             "ml" => Measurement::ML,
-            _ => Measurement::ML,  // Handle unknown cases
+            _ => Measurement::ML, // Handle unknown cases
         }
     }
 }
@@ -27,7 +27,7 @@ pub enum Alert {
     #[serde(rename = "both")]
     Both,
     #[serde(rename = "none")]
-    None
+    None,
 }
 
 impl ToString for Alert {
@@ -63,5 +63,5 @@ pub struct SettingsConfig {
     pub end_time: String,
     pub alert_type: Alert,
     pub start_time: String,
-    pub measurement: Measurement
+    pub measurement: Measurement,
 }

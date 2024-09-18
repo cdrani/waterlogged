@@ -1,14 +1,14 @@
 use std::error::Error;
-use tauri::{Manager, App, LogicalSize};
+use tauri::{App, LogicalSize, Manager};
 
-use crate::app::tray;
 use crate::app::launcher;
 use crate::app::shortcut;
+use crate::app::tray;
 use crate::app::worker::Worker;
 
 pub const MAIN: &str = "main";
 
-pub fn init(app: &mut App) -> Result<() , Box<dyn Error>> {
+pub fn init(app: &mut App) -> Result<(), Box<dyn Error>> {
     tray::init(app)?;
     shortcut::init(app)?;
     launcher::init(app)?;
@@ -24,7 +24,12 @@ pub fn init(app: &mut App) -> Result<() , Box<dyn Error>> {
     });
 
     let window = app.get_webview_window(MAIN).unwrap();
-    window.set_size(LogicalSize { width: 280.0, height: 480.0 }).unwrap();
+    window
+        .set_size(LogicalSize {
+            width: 280.0,
+            height: 480.0,
+        })
+        .unwrap();
 
     Ok(())
 }
