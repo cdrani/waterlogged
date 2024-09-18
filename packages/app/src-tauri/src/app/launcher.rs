@@ -1,5 +1,5 @@
-use tauri::{State, App, AppHandle};
-use tauri_plugin_autostart::{ManagerExt, AutoLaunchManager};
+use tauri::{App, AppHandle, State};
+use tauri_plugin_autostart::{AutoLaunchManager, ManagerExt};
 
 use crate::config::Config;
 

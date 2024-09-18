@@ -1,7 +1,7 @@
 use tauri::{
-    menu::{MenuBuilder, MenuItemBuilder, MenuEvent},
+    menu::{MenuBuilder, MenuEvent, MenuItemBuilder},
     tray::TrayIconBuilder,
-    App, Error as TauriError, Manager, AppHandle
+    App, AppHandle, Error as TauriError, Manager,
 };
 
 use crate::app::launcher::Launcher;
@@ -52,7 +52,7 @@ fn handle_event(app: &AppHandle, event: MenuEvent, worker: &AsyncWorker) {
         "show" => window.show().unwrap(),
         "hide" => window.hide().unwrap(),
         "quit" => std::process::exit(0),
-        "auto_launch" =>  {
+        "auto_launch" => {
             let launcher = Launcher::new(app);
             launcher.toggle();
 

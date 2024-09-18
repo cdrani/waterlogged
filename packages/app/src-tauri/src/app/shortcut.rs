@@ -8,8 +8,8 @@ pub fn init(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
             .with_shortcuts(["ctrl+\\", "cmd+\\"])?
             .with_handler(|app, shortcut, event| {
                 if event.state == ShortcutState::Pressed
-                    && (shortcut.matches(Modifiers::CONTROL, Code::Backslash) ||
-                        (shortcut.matches(Modifiers::SUPER, Code::Backslash)))
+                    && (shortcut.matches(Modifiers::CONTROL, Code::Backslash)
+                        || (shortcut.matches(Modifiers::SUPER, Code::Backslash)))
                 {
                     let window = app.get_webview_window(MAIN).unwrap();
 

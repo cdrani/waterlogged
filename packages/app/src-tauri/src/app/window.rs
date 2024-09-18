@@ -1,16 +1,15 @@
-use crate::config::Config;
-use tauri::{Window, WindowEvent, LogicalSize, PhysicalSize, Manager};
 use crate::app::setup::MAIN;
+use crate::config::Config;
+use tauri::{LogicalSize, Manager, PhysicalSize, Window, WindowEvent};
 
 fn resize_webview(window: &Window, dimensions: PhysicalSize<u32>, scale_f: f64) {
     let main = window.get_webview_window(MAIN).unwrap();
 
-    main
-        .set_size(LogicalSize {
-            width: (dimensions.width as f64 / scale_f),
-            height: (dimensions.height as f64 / scale_f),
-        })
-        .unwrap();
+    main.set_size(LogicalSize {
+        width: (dimensions.width as f64 / scale_f),
+        height: (dimensions.height as f64 / scale_f),
+    })
+    .unwrap();
 }
 
 pub fn init(window: &Window, event: &WindowEvent) {
@@ -24,7 +23,7 @@ pub fn init(window: &Window, event: &WindowEvent) {
             } else {
                 std::process::exit(0);
             }
-        },
+        }
         WindowEvent::ScaleFactorChanged {
             scale_factor,
             new_inner_size,
