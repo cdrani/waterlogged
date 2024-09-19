@@ -43,6 +43,11 @@ jobs:
         # You can remove the one that doesn't apply to your app to speed up the workflow a bit.
 
       - name: install frontend dependencies
+        uses: oven-sh/setup-bun@v2
+        with:
+            bun-version: 'latest' # or "latest", "canary", <sha>
+
+      - name: install frontend dependencies
         run: bun install # change this to npm, pnpm or bun depending on which one you use.
 
       # If tagName and releaseId are omitted tauri-action will only build the app and won't try to upload any assets.
