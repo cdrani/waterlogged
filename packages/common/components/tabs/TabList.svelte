@@ -1,7 +1,7 @@
 <script lang="ts">
     import { writable } from 'svelte/store'
 
-    type Tab = { title: string, content: any }
+    type Tab = { title: string, content: any, props?: any }
     export let tabs: Tab[] = []
 
     let activeTab = writable<string>(tabs[0].title)
@@ -25,7 +25,8 @@
 <div class="flex-col w-full mx-auto items-center">
     <div role="tablist" class="flex w-full justify-between gap-x-0.5 items-center mx-auto">
         {#each tabs as tab (tab.title)}
-            <a role="tab" 
+            <button 
+                role="tab" 
                 class="{getStyles(tab.title)}"
                 class:active={$activeTab == tab.title}
                 on:click|preventDefault={() => setActiveTab(tab.title)}
@@ -35,13 +36,13 @@
                 <span class="font-semibold text-base text-white">
                     {tab.title}
                 </span>
-            </a>
+            </button>
         {/each}
     </div>
 
     {#each tabs as tab (tab.title)}
         {#if $activeTab === tab.title}
-            <svelte:component this={tab.content} />
+            <svelte:component this={tab.content} {...tab?.props ?? {}} />
         {/if}
     {/each}
 </div>
