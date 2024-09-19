@@ -1,8 +1,10 @@
-export async function getAppVersion() {
-    const VERSION = 'v0.1.0'
-    const app = await import('@tauri-apps/api/app')
+export const VERSION = 'v0.1.0'
 
-    if (app) {
+export async function getAppVersion() {
+    const isTauri = 'isTauri' in window && !!window.isTauri
+
+    if (isTauri) {
+        const app = await import('@tauri-apps/api/app')
         const version = await app.getVersion()
         return `v${version}`
     }
