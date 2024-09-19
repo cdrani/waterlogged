@@ -3,6 +3,7 @@
     import { writable } from 'svelte/store'
 
     import { db } from 'common/data/db'
+    import { checkForUpdate } from '../utils/updater'
     import LogsView from '../components/LogsView.svelte'
     import Spinner from 'common/components/Spinner.svelte'
 
@@ -23,7 +24,10 @@
 
 	$: $syncState?.status, sync()
 
-	onMount(sync)
+	onMount(() => {
+        sync()
+        checkForUpdate()
+    })
 </script>
 
 {#if $loading}
