@@ -19,6 +19,10 @@
     "core:menu:default",
     "core:tray:default",
     "shell:allow-open",
-    "notification:default"
+    "notification:default",
+    "updater:default",
+    "updater:allow-check",
+    "updater:allow-download-and-install",
+    "dialog:default"
   ]
 }
