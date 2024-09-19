@@ -1,12 +1,15 @@
 <script lang="ts">
     import { db } from 'common/data/db'
+    import { manualUpdate } from '../../utils/updater'
+
     import AdvancedTab from './AdvancedTab.svelte'
     import TabList from 'common/components/tabs/TabList.svelte'
     import GeneralTab from 'common/components/tabs/GeneralTab.svelte'
     import AccountTab from 'common/components/tabs/AccountTab.svelte'
 
+    let isApp = 'isTauri' in window && !!window.isTauri
     let tabs = [
-        { title: 'General', content: GeneralTab },
+        { title: 'General', content: GeneralTab, props: { isApp, manualUpdate } },
         { title: 'Advanced', content: AdvancedTab }
      ]
 
