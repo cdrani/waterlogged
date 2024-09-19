@@ -1,10 +1,10 @@
 <script lang="ts">
     import { onMount } from 'svelte'
-    import { getAppVersion } from 'common/utils/version'
+    import { VERSION, getAppVersion } from 'common/utils/version'
 
-    let version: string = "v1.0.0"
+    let version: string = VERSION
     export let isApp: boolean = false
-    export let manualUpdate: () => void
+    export let manualUpdate: () => void = null
 
     async function getVersion() {
         version = await getAppVersion()
