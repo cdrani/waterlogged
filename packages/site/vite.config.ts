@@ -26,18 +26,17 @@ export default defineConfig({
         enhancedImages(),
         sveltekit(),
         SvelteKitPWA({
-            srcDir: './src',
+            srcDir: 'src',
             mode: 'development',
             strategies: 'injectManifest',
             filename: 'prompt-sw.ts',
-            scope: 'logs',
-            base: '/',
+            scope: '',
             selfDestroying: process.env.SELF_DESTROYING_SW == 'true',
             manifest: {
                 short_name: 'Water Logged',
                 name: 'WaterLogged: Tracker & Reminder',
                 description: 'Track your progress to meet your hydration goals. Set custom reminders to stay hydrated.',
-                start_url: '/',
+                start_url: '',
                 theme_color: '#ffffff',
                 background_color: '#ffffff',
                 icons: [
