@@ -23,6 +23,8 @@ jobs:
           - platform: 'windows-latest'
             args: ''
 
+    env:
+      APP_DIR: "packages/app"
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
@@ -62,10 +64,9 @@ jobs:
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_SIGNING_PUBLIC_KEY: "${{ secrets.TAURI_SIGNING_PUBLIC_KEY }}"
           TAURI_SIGNING_PRIVATE_KEY: "${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}"
         with:
-          projectPath: "./packages/app/"
+          projectPath: "${{ env.APP_DIR }}"
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
           releaseName: 'App v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'
