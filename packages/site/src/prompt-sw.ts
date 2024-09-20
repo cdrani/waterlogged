@@ -25,7 +25,7 @@ registerRoute(new NavigationRoute(
 // clean old assets
 cleanupOutdatedCaches()
 
-self.addEventListener('message', async (event) => {
+self.addEventListener('message', event => {
     const type = event?.data?.type
     if (type === 'SKIP_WAITING') self.skipWaiting()
 })

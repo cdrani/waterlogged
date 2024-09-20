@@ -8,6 +8,8 @@ import { enhancedImages } from '@sveltejs/enhanced-img'
 
 // const homeDir = os.homedir()
 
+const mode = process.env.NODE_ENV as 'development' | 'production'
+
 export default defineConfig({
     // server: {
     //     https: {
@@ -27,18 +29,21 @@ export default defineConfig({
         sveltekit(),
         SvelteKitPWA({
             srcDir: 'src',
-            mode: 'development',
+            mode,
             strategies: 'injectManifest',
             filename: 'prompt-sw.ts',
-            scope: '',
+            scope: '/',
+            base: '/',
             selfDestroying: process.env.SELF_DESTROYING_SW == 'true',
             manifest: {
+                scope: '/',
+                start_url: '/',
+                display: 'standalone',
+                theme_color: '#ffffff',
+                background_color: '#ffffff',
                 short_name: 'Water Logged',
                 name: 'WaterLogged: Tracker & Reminder',
                 description: 'Track your progress to meet your hydration goals. Set custom reminders to stay hydrated.',
-                start_url: '',
-                theme_color: '#ffffff',
-                background_color: '#ffffff',
                 icons: [
                     {
                         src: '/pwa/pwa-192x192.png',
@@ -50,6 +55,12 @@ export default defineConfig({
                         sizes: '512x512',
                         type: 'image/png',
                     },
+                    {
+                        src: '/pwa/pwa-512x512.png',
+                        sizes: '512x512',
+                        type: 'image/png',
+                        purpose: 'any maskable',
+                    },
                 ],
             },
             injectManifest: {
@@ -59,10 +70,10 @@ export default defineConfig({
                 globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,woff,woff2}']
             },
             devOptions: {
-                enabled: true,
-                suppressWarnings: process.env.SUPPRESS_WARNING === 'true',
+                enabled: mode == 'development',
                 type: 'module',
                 navigateFallback: '/',
+                suppressWarnings: process.env.SUPPRESS_WARNING === 'true',
             },
             kit: {
                 includeVersionFile: true,
