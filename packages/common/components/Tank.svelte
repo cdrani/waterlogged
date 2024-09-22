@@ -14,11 +14,11 @@
     <div class="flex relative z-20 w-full h-full justify-between">
         <CurrentTime />
         <div class="flex flex-col min-w-[100px] max-w-3/5 items-end">
-            <p class="flex gap-x-2 justify-between font-semibold text-base xs:text-lg text-black w-full">
+            <p class="flex gap-x-2 justify-between font-bold text-base text-black w-full">
                 <span class="inline-flex text-left">Total:</span>
                 <span class="inline-flex justify-end">{tank.total}{tank.measurement}</span>
             </p>
-            <p class="flex gap-x-2 justify-between font-semibold text-base xs:text-lg text-black w-full">
+            <p class="flex gap-x-2 justify-between font-bold text-base text-black w-full">
                 <span class="inline-flex text-left">Goal:</span>
                 <span class="inline-flex justify-end">{tank.goal}{tank.measurement}</span>
             </p>
