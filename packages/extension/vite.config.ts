@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import { crx } from '@crxjs/vite-plugin'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 
-import manifest from './manifest.json'
+import manifest from './manifest.chrome.json'
 
 // https://vitejs.dev/config/
 export default defineConfig({
