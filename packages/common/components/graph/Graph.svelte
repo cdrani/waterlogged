@@ -71,7 +71,7 @@
     <span></span>
 </div>
 
-<svg viewBox={`0 0 ${width} ${height}`} class="flex items-center bg-cyan-800" style="width:{width / 1.75}px;">
+<svg viewBox={`0 0 ${width + 24} ${height}`} class="flex items-center bg-cyan-800 p-3 pb-3.5 pr-1.5 md:px-6" style="width:{width / 1.75}px;">
     {#if view === 'monthly'}
         {#each chunks as chunk, index}
             <Month
@@ -98,6 +98,7 @@
                     fill={fontColor}
                     font-family={fontFamily}
                     font-size={fontSize}
+                    font-weight={600}
                     x="0"
                     y={dayLabelPosition(index)}>
                     {label}
@@ -117,10 +118,11 @@
                 />
                 {#if monthLabelHeight > 0 && isNewMonth(chunks, index)}
                     <text
-                        alignment-baseline="hanging"
+                        dominant-baseline="text-before-edge"
                         fill={fontColor}
                         font-family={fontFamily}
                         font-size={fontSize}
+                        font-weight={600}
                         x={cellRect * index}>
                         {monthLabels[chunk[0].date.getMonth()]}
                     </text>

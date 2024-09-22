@@ -60,12 +60,12 @@
                 <div class="text-base xs:text-lg font-semibold">Drank: {waterDrank}ml</div>
             </div>
 
-            <div class="relative px-4 pt-4 xs:px-6 md:px-8">
-                <div class="relative w-[248px] xs:w-full xs:max-h-[180px] xs:max-w-3xl rounded-md bg-cyan-800 overflow-x-auto overflow-y-hidden mx-auto p-3 lg:max-w-none lg:px-6">
+            <div class="relative px-4 py-2.5 md:pt-4 xs:px-6 md:px-8">
+                <div class="relative w-[248px] xs:w-full xs:max-h-[180px] xs:max-w-3xl rounded-md bg-cyan-800 overflow-x-auto overflow-y-hidden mx-auto lg:max-w-none">
                     <Graph 
                         data={$data}
                         view={'yearly'}
-                        fontSize={24}
+                        fontSize={26}
                         fontColor="white"
                         cellGap={8}
                         monthGap={20}
@@ -73,8 +73,8 @@
                         startDate={start}
                         cellSize={28}
                         cellRadius={2}
-                        dayLabelWidth={64}
-                        monthLabelHeight={32}
+                        dayLabelWidth={72}
+                        monthLabelHeight={40}
                         cellClick={handleCellClick}
                         dayLabels={['', 'Mon', '', 'Wed', '', 'Fri', '']}
                         colors={['#404040', '#303030', '#202020', '#101010']}
