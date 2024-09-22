@@ -58,7 +58,7 @@
 </script>
 
 {#if $log && $user}
-    <main id="main" class="relative -z-100 bg-cyan-200 flex flex-col pt-0 w-[280px] mx-auto h-full" style="max-height: 400px">
+    <main id="main" class="relative -z-100 bg-cyan-200 flex flex-col pt-0 w-[280px] mx-auto h-full" style="height: 400px">
         <div class="static w-full">
             <Nav view={$pageView} on:view={setView} />
         </div>
@@ -69,7 +69,7 @@
 
         <!-- <Celebrate party={party} /> -->
 
-        <div class="relative flex h-min overflow-y-auto sm:mt-4">
+        <div class="relative flex h-full overflow-y-auto sm:mt-4">
             {#if $pageView == 'default'}
                 <DefaultView />
             {:else if $pageView == 'settings'}
