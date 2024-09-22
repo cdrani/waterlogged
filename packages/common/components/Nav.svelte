@@ -21,11 +21,11 @@
     $: isAccount = view == 'account'
 </script>
 
-<nav class="relative bg-cyan-200 flex w-full p-4 xs:px-6  md:rounded-t-md">
+<nav class="relative bg-cyan-200 flex w-full py-2.5 px-4 xs:py-4 xs:px-6  md:rounded-t-md">
     <Auth />
 
     <div class="flex w-full justify-end">
-        <ul class="relative flex justify-between items-center gap-x-2 xs:p-2 xs:pr-0">
+        <ul class="relative flex justify-between items-center gap-x-2 xs:px-2 xs:pr-0">
             <li class="w-8 h-8">
                 <button name="default" aria-label="home" on:click={updateView} class="w-8 h-8">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

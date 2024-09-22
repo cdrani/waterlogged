@@ -84,7 +84,7 @@
 
 {#if $log && $user}
     <section class="relative h-full overflow-y-hidden w-[320px] xs:w-full md:w-[320px] flex flex-col justify-center items-center lg:h-[80dvh]">
-        <div class="static top-10 w-full">
+        <div class="static md:top-10 w-full">
             <Nav view={$pageView} on:view={setView} />
         </div>
 
