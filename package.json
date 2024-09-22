@@ -8,6 +8,7 @@
         "app-build": "bun run --filter './packages/app' tauri build",
         "site-build": "bun run --filter './packages/site' build",
         "ext-dev": "bun run --filter './packages/extension' dev",
+        "ext-fox": "bun run --filter './packages/extension' fox",
         "ext-build": "bun run --filter './packages/extension' build"
     },
     "workspaces": [
