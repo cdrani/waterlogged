@@ -12,9 +12,9 @@
     <button 
         on:click|preventDefault={openLogin}
         on:touchend|preventDefault={openLogin}
-        class="inline-flex justify-center self-center items-center {fullWidth ? 'w-full h-12' : 'w-20 h-10'} bg-cyan-800 rounded-md"
+        class="inline-flex justify-center self-center items-center {fullWidth ? 'w-full h-12' : 'w-24 h-9'} bg-cyan-800 rounded-md"
     >
-        <span class="font-bold text-sm text-white w-full">Log In</span>
+        <span class="font-bold text-sm md:text-base text-white w-full">Log In</span>
     </button>
 {:else}
     <LogOutForm {fullWidth} />

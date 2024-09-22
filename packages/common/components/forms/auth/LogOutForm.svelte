@@ -22,9 +22,9 @@
     name="Log Out"
     on:click|preventDefault={onOpen}
     on:touchend|preventDefault={onClose}
-    class="inline-flex justify-center self-center items-center {fullWidth ? 'w-full h-12' : 'w-28 h-10'} bg-cyan-800 rounded-md"
+    class="inline-flex justify-center self-center items-center {fullWidth ? 'w-full h-12' : 'w-24 h-9'} bg-cyan-800 rounded-md"
 >
-    <span class="font-bold {fullWidth ? 'text-md' : 'text-sm'} text-white w-full">Log Out</span>
+    <span class="font-bold {fullWidth ? 'text-base' : 'text-sm'} text-white w-full">Log Out</span>
 </button>
 
 {#if $showModal} 
