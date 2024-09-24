@@ -10,19 +10,17 @@
     import AccountView from 'common/views/Account.svelte'
 	import LoginUI from 'common/components/LoginUI.svelte'
     import SettingsView from 'common/views/Settings.svelte'
-    // import Celebrate from 'common/components/Celebrate.svelte'
+    import Celebrate from 'common/components/Celebrate.svelte'
 
     import { ExtMessaging } from 'common/messaging'
-    import { initModal, openModal } from 'common/stores/modal'
+    import { initModal } from 'common/stores/modal'
+    import { initParty } from 'common/stores/party'
     import { LogsService, UserService } from 'common/data/services'
-    import { initParty, getParty, type PartyStore } from 'common/stores/party'
 
     const PORT = chrome.runtime.connect({ name: 'popup' })
     
     initModal()
     initParty()
-
-    const partyStore = getParty() as PartyStore
 
     type PageView = 'default' | 'settings' | 'graph' | 'account'
     let pageView = writable<PageView>('default')
@@ -45,15 +43,6 @@
 	const user = liveQuery(async () => await UserService.getUser())
     const log = liveQuery(async () => await LogsService.getByDate())
 
-    let party: boolean = false
-
-    $: if ($log) {
-        party = partyStore.canParty($log.complete)
-        if (party) {
-            openModal('complete')
-        }
-    }
-
     const messaging = new ExtMessaging(PORT)
 </script>
 
@@ -67,7 +56,7 @@
 
         <LoginUI />
 
-        <!-- <Celebrate party={party} /> -->
+        <Celebrate />
 
         <div class="relative flex h-full overflow-y-auto sm:mt-4">
             {#if $pageView == 'default'}
