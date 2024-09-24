@@ -1,19 +1,6 @@
 name: Test Release
 
-on:
-  pull_request:
-    branches:
-      - main
-      - develop
-  push:
-    branches:
-      - main
-      - develop
-
-  workflow_dispatch:
-
-  # schedule:
-  #   - cron: 0 2 * * 0
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   test-semantic-latest:
@@ -30,8 +17,8 @@ jobs:
           dry_run: true
           branches: |
             [
-              '+([0-9])?(.{+([0-9]),x}).x',
               'main',
+              'release',
               'develop'
             ]
         env:
@@ -41,4 +28,3 @@ jobs:
         if: steps.semantic.outputs.new_release_published == 'true'
         run: |
           echo ${{ steps.semantic.outputs.new_release_version }}
-          echo ${{ steps.semantic.outputs.new_release_notes }}
