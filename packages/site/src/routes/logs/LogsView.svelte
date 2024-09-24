@@ -5,25 +5,16 @@
 
     import Nav from 'common/components/Nav.svelte'
     import GraphView from 'common/views/Graph.svelte'
-    import Modal from 'common/components/Modal.svelte'
     import DefaultView from 'common/views/Default.svelte'
     import AccountView from 'common/views/Account.svelte'
 	import LoginUI from 'common/components/LoginUI.svelte'
     import SettingsView from 'common/views/Settings.svelte'
-    // import Celebrate from 'common/components/Celebrate.svelte'
 
     import WebNotification from '$lib/notification'
     import { type Messaging } from 'common/messaging'
 	import { initMessageHandler } from 'common/messaging'
-    import { initModal, openModal } from 'common/stores/modal'
 	import { UserService, LogsService } from 'common/data/services'
     import { getToken, isSupported } from '$lib/firebase/messaging'
-    import { type PartyStore, initParty, getParty } from 'common/stores/party'
-
-    initModal()
-    initParty()
-
-    const partyStore = getParty() as PartyStore
 
     type PageView = 'default' | 'settings' | 'graph' | 'account'
     let pageView = writable<PageView>('default')
@@ -67,14 +58,6 @@
 
 	const user = liveQuery(async () => await UserService.getUser())
     let log = liveQuery(async () => await LogsService.getByDate())
-    let party: boolean = false
-
-    $: if ($log) {
-        party = partyStore.canParty($log.complete)
-        if (party) {
-            openModal('complete')
-        }
-    }
 </script>
 
 <svelte:head>
@@ -89,7 +72,6 @@
         </div>
 
         <LoginUI />
-        <!-- <Celebrate party={party} /> -->
 
         {#if $pageView == 'default'}
             <DefaultView />
@@ -101,8 +83,6 @@
             <AccountView />
         {/if}
     </section>
-
-    <Modal />
 
     <section class="hidden top-0 sm:flex sm:flex-1 w-full md:w-2/3 relative justify-center items-center md:my-[6rem] md:h-[80dvh]">
         <GraphView log={$log} />
