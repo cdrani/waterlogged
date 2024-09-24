@@ -1,13 +1,11 @@
 <script lang="ts">
     import { liveQuery } from 'dexie'
+    import { endParty } from 'common/stores/party'
     import { closeModal } from 'common/stores/modal'
     import { LogsService } from 'common/data/services'
-    import { type PartyStore, getParty } from 'common/stores/party'
-
-    const partyStore = getParty() as PartyStore
 
     function handleClose() {
-        partyStore.partied = true 
+        endParty()
         closeModal()
     }
 
