@@ -13,20 +13,18 @@
     import AccountView from './account/AccountView.svelte'
 	import LoginUI from 'common/components/LoginUI.svelte'
     import SettingsView from 'common/views/Settings.svelte'
-    // import Celebrate from 'common/components/Celebrate.svelte'
+    import Celebrate from 'common/components/Celebrate.svelte'
 
     import { playAlarm } from 'common/utils/alarm'
+    import { initModal } from 'common/stores/modal'
+    import { initParty } from 'common/stores/party'
     import type { ALERT, SETTINGS } from 'common/types'
     import AppNotification from '../utils/notification'
-    import { initModal, openModal } from 'common/stores/modal'
 	import { UserService, LogsService } from 'common/data/services'
     import { type Messaging, initMessageHandler  } from 'common/messaging'
-    import { type PartyStore, initParty, getParty } from 'common/stores/party'
 
     initModal()
     initParty()
-
-    const partyStore = getParty() as PartyStore
 
     type PageView = 'default' | 'settings' | 'graph' | 'account'
     let pageView = writable<PageView>('default')
@@ -93,12 +91,6 @@
 
 	const user = liveQuery(async () => await UserService.getUser())
     let log = liveQuery(async () => await LogsService.getByDate())
-    let party: boolean = false
-
-    $: if ($log) {
-        party = partyStore.canParty($log.complete)
-        if (party) openModal('complete')
-    }
 </script>
 
 {#if $log && $user}
@@ -108,9 +100,9 @@
         </div>
 
         <Modal />
+        <Celebrate />
 
         <LoginUI />
-        <!-- <Celebrate party={party} /> -->
 
         <div class="relative flex flex-col w-full overflow-y-auto">
             {#if $pageView == 'default'}
