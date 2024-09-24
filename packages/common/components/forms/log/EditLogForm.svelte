@@ -4,18 +4,15 @@
 
     import Form from  './Form.svelte'
     import PopUp from '../../PopUp.svelte'
+
     import type { INTAKE } from 'common/types'
+    import { openModal } from 'common/stores/modal'
+    import { startParty } from 'common/stores/party'
     import { LogsService } from 'common/data/services'
     import { convertTo24HourFormat, formatTime, getTimeStamp } from 'common/utils/date'
 
     export let intakeId: string
     export let onClose: () => void
-
-    async function editCustomLog() {
-        const { time, amount } = $fields
-        LogsService.editLogIntake({ id: intakeId, time: formatTime(time), amount })
-        onClose()
-    }
 
     const log = liveQuery(async () => await LogsService.getByDate())
     let fields = writable<{ time: string, amount: number }>({ time: getTimeStamp(), amount: $log?.amount ?? 250 })
@@ -27,6 +24,20 @@
             fields.update(() => ({ time, amount: selectedIntake.amount }))
         }
     }
+
+    async function editCustomLog() {
+        const { time, amount } = $fields
+
+        const prevComplete = $log.complete
+        await LogsService.editLogIntake({ id: intakeId, time: formatTime(time), amount })
+        onClose()
+
+        if ($log.complete == prevComplete) return
+
+        openModal('complete')
+        startParty()
+    }
+
 </script>
 
 {#if $log} 
