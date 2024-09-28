@@ -3,6 +3,7 @@
     "name": "WaterLogged: Tracker & Reminder",
     "version": "0.1.0",
     "manifest_version": 3,
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAm+jraIFW9mvVU27Hh8xcK1+G5RYW6oM7ZJNt5wY5HNxrE6PAeumn75KtBDgCML3neHsemTHVINz0YTWrqgzyLvEfiQNTbcYO3MYaU+rxw+H8hdNIApQ67l2iffEQHAP1a3xp8o4Sp1Gh3d1L/pMtggrXNX4H9/D/CTJW/Rv6UJ/KRIVM2dR5a3nxU68W3NWV63RHM5iu6NakiqIeMKv2U6t4+dAyMzyQO6c6njiB6Z693ZFvYDrgM6umV1t7W9XHYgvIrZZA/OpHr4cUo/NhlIbqYbeHCSN2Bwak/MmUkL5Ooyrr9l6r+fHi8B6XxIBTFQD00gLZT/vXYD0rAzWYEwIDAQAB",
     "description": "Track and Review your water logs",
     "action": {
         "default_icon": {
