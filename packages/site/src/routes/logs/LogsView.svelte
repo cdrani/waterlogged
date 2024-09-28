@@ -84,7 +84,7 @@
         {/if}
     </section>
 
-    <section class="hidden top-0 sm:flex sm:flex-1 w-full md:w-2/3 relative justify-center items-center md:my-[6rem] md:h-[80dvh]">
+    <section class="hidden top-0 md:flex md:flex-1 w-full md:w-1/2 relative justify-center rounded-md items-center h-full lg:h-[80dvh]">
         <GraphView log={$log} />
     </section>
 {/if}
