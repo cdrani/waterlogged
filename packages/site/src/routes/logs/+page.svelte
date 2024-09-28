@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte'
+    import { page } from '$app/stores'
     import { writable } from 'svelte/store'
 
     import { db } from 'common/data/db'
@@ -21,9 +22,19 @@
         if ($syncState?.status === 'offline') loading.set(false)
 	}
 
-	$: $syncState?.status, sync()
+    const resync = async () => {
+        if (params.get('payments')) {
+            // @ts-ignore
+            await db.$logins.toCollection().modify({ accessTokenExpiration: new Date() })
+        }
+    }
 
-	onMount(sync)
+	$: $syncState?.status, sync()
+    $: params = $page.url.searchParams
+
+	onMount(() => {
+        sync(); resync()
+    })
 </script>
 
 <svelte:head>
