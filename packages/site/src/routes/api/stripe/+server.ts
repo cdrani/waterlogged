@@ -1,4 +1,6 @@
 import Stripe from 'stripe'
+import { json } from '@sveltejs/kit'
+import type { RequestHandler } from '@sveltejs/kit'
 
 const secret = import.meta.env.VITE_STRIPE_WEBHOOK_SECRET!
 
@@ -8,7 +10,7 @@ const stripe = new Stripe(import.meta.env.VITE_STRIPE_API_KEY!, {
 
 async function getDexieToken() {
     const scopes = ['GLOBAL_READ', 'GLOBAL_WRITE', 'ACCESS_DB']
-    const url = `${import.meta.env.VITEDEXIE_DB_URL}/token`
+    const url = `${import.meta.env.VITE_DEXIE_DB_URL}/token`
 
     const body = {
         scopes,
@@ -51,7 +53,7 @@ async function changeUserType(
     })
 }
 
-export async function POST(request: Request) {
+export const POST: RequestHandler = async ({ request }) => {
 	let event
 
 	const payload = await (await request.blob()).text()
@@ -61,9 +63,7 @@ export async function POST(request: Request) {
 		event = stripe.webhooks.constructEvent(payload, signature, secret)
 	} catch (err) {
 		console.log(err)
-		return Response.json('Webhook signature verification failed', {
-			status: 400,
-		})
+		return Response.json('Webhook signature verification failed', { status: 400 })
 	}
 
 	switch (event.type) {
@@ -72,19 +72,16 @@ export async function POST(request: Request) {
 
 			try {
 				const token = await getDexieToken()
-
 				await changeUserType(
 					'prod',
 					token,
 					paymentIntent.customer_details?.email as string
 				)
 			} catch (error) {
-				console.log(error)
-				await stripe.subscriptions.cancel(
-					paymentIntent.subscription as string
-				)
+				console.error(error)
+				await stripe.subscriptions.cancel(paymentIntent.subscription as string)
 
-				return Response.json(
+				return json(
 					'Could not upgrade user status. A refund has been issued to the payment method used.',
 					{ status: 500 }
 				)
@@ -104,19 +101,18 @@ export async function POST(request: Request) {
 
 			try {
 				const token = await getDexieToken()
-
-				await changeUserType("eval", token, customer.email!)
+				await changeUserType('eval', token, customer.email!)
 			} catch (error) {
-				console.log(error)
+				console.error(error)
 
-				return Response.json(
+				return json(
 					'Could not upgrade user status. A refund has been issued to the payment method used.',
 					{ status: 500 }
-				);
+				)
 			}
 
-			break;
+			break
 	}
 
-	return Response.json({ message: 'Success' }, { status: 200 })
+	return json({ message: 'Success' }, { status: 200 })
 }
