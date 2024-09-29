@@ -22,7 +22,7 @@
     }
 </script>
 
-<section class="flex relative left-0 flex-col mx-auto w-full h-full pb-6 bg-cyan-200 overflow-y-hidden">
+<section class="flex relative left-0 flex-col mx-auto w-full h-full pb-6 bg-cyan-200 overflow-y-scroll">
     <div class="relative flex flex-col w-full mx-auto">
         <div class="flex mx-auto w-full px-4 xs:px-4">
             <TabList {tabs} />
