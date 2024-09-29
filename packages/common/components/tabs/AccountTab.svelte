@@ -23,16 +23,16 @@
     }
 </script>
 
-<div class="relative flex flex-col w-full h-full mx-auto items-center py-4">
+<div class="relative flex flex-col w-full h-screen mx-auto items-center py-4">
     <div class="relative flex w-full justify-between items-center bg-cyan-400 p-4 rounded-md">
-        <h2>Sync Your Data</h2>
+        <h2 class="font-semibold text-lg">Sync Your Data</h2>
         <button 
             disabled={$syncing}
             on:click|preventDefault={sync}
             on:touchend|preventDefault={sync}
-            class="inline-flex justify-center self-center items-center w-20 h-8 bg-cyan-800 rounded-md"
+            class="inline-flex justify-center self-center items-center w-20 xs:w-24 h-10 bg-cyan-800 rounded-md"
         >
-            <span class="font-bold text-sm text-white w-full">{$syncing ? 'Sync...' : 'Sync'}</span>
+            <span class="font-bold text-base text-white w-full">{$syncing ? 'Sync ...' : 'Sync'}</span>
         </button>
     </div>
 
@@ -45,8 +45,8 @@
         </div>
 
         <div class="flex flex-col w-full mx-auto rounded-md bg-cyan-400 p-4">
-            <p class="w-full text-md">Logged in as:<p>
-            <p class="w-full text-md font-bold">{userId}<p>
+            <p class="w-full text-base font-semibold">Logged in as:<p>
+            <p class="w-full text-lg font-bold">{userId}<p>
         </div>
     </div>
 </div>
