@@ -12,7 +12,7 @@
         const rounding = tabs.at(0).title == title 
             ? 'rounded-tl-md' : tabs.at(-1).title == title
             ? 'rounded-tr-md' : ''
-        return `${rounding} flex justify-center w-full text-center py-2 cursor-pointer bg-cyan-800 text-white hover:text-white`
+        return `${rounding} flex justify-center w-full text-center p-2 cursor-pointer bg-cyan-800 text-white hover:text-white`
     }
 </script>
 
@@ -23,7 +23,7 @@
 </style>
 
 <div class="flex-col w-full mx-auto items-center">
-    <div role="tablist" class="flex w-full justify-between gap-x-0.5 items-center mx-auto">
+    <div role="tablist" class="flex w-full justify-between items-center divide-x-2 divide-white mx-auto">
         {#each tabs as tab (tab.title)}
             <button 
                 role="tab" 

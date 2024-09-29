@@ -8,8 +8,8 @@
     const onClose = () => showModal.set(false)
 </script>
 
-<p 
-    class="inline-flex items-center text-sm underline font-semibold cursor-pointer"
+<button 
+    class="inline-flex items-center text-xs underline font-semibold cursor-pointer"
     on:click|preventDefault={onOpen}
     on:touchend|preventDefault={onOpen}
 >
@@ -18,29 +18,30 @@
     </svg>
 
     Eval Days Left: {evalDays}
-</p>
+</button>
 
 {#if $showModal}
     <PopUp onClose={onClose}>
-        <div class="fixed flex flex-col w-full h-full gap-2 md:gap-6 p-4 md:p-10">
-            <h4 class="font-bold leading-none text-xl text-center">
-                What are eval days?
-            </h4>
-            <p>
-                How long you can continue syncing your data for free.
-                Once this period ends, your data will <b>only</b> be
-                available on this device. You can upgrade to Premium to
-                resume syncing between devices.
+        <div class="fixed flex flex-col w-full h-full gap-4 md:gap-6 p-4 md:p-10">
+            <h2 class="font-bold text-white leading-none text-xl md:text-2xl lg:text-3xl text-center">
+                What are Eval Days?
+            </h2>
+
+            <p class="text-base md:text-2xl">
+                Period where <u>cloud</u> data syncing is <b>FREE</b>.
+                After this period, your data will <b><i>only</i></b> be
+                stored on this device. Upgrade to Pro to resume cross-device syncing.
             </p>
 
-
-            <button 
-                on:click|preventDefault={onClose}
-                on:touchend|preventDefault={onClose}
-                class="w-16 h-8 md:w-20 md:h-9 bg-white rounded-md inline-flex self-end justify-center items-center"
-            >
-                <span class="text-center font-semibold text-[14px] md:text-[16px] text-black">Close</span>
-            </button>
+            <div class="fixed bottom-8 right-8 justify-end">
+                <button 
+                    on:click|preventDefault={onClose}
+                    on:touchend|preventDefault={onClose}
+                    class="w-20 h-9 bg-white rounded-md inline-flex self-end justify-center items-center"
+                >
+                    <span class="text-center font-semibold text-[14px] md:text-base text-black">Close</span>
+                </button>
+            </div>
         </div>
     </PopUp>
 {/if}
