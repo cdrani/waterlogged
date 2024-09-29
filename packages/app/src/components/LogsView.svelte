@@ -94,7 +94,7 @@
 </script>
 
 {#if $log && $user}
-    <main id="main" class="absolute mx-auto h-full flex flex-col rounded-md">
+    <main id="main" class="absolute mx-auto w-[280px] h-full flex flex-col rounded-md">
         <div class="static w-full">
             <Nav view={$pageView} on:view={setView} />
         </div>
