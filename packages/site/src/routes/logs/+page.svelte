@@ -14,7 +14,7 @@
 
     const sync = async () => {
 		if ($syncState?.status === 'connected') {
-			try { await db.cloud.sync({ purpose: 'pull', wait: true }) }
+			try { await db.cloud.sync() }
 			catch (error) { console.log(error) }
 		    finally { loading.set(false) }
 		} 
