@@ -1,6 +1,8 @@
 import { error } from '@sveltejs/kit'
 import type { PageLoad } from './$types'
 
+export const prerender = false
+
 export const load: PageLoad = ({ params }) => {
     if (['success', 'cancel'].some(state => params.slug == state)) {
         const success =  params.slug == 'success'
