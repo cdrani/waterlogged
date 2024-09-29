@@ -40,13 +40,13 @@
         <hr class="w-full h-1 bg-cyan-600 my-4" />
 
         <License />
-        <div class="flex justify-center my-4">
-            <Auth fullWidth />
-        </div>
 
         <div class="flex flex-col w-full mx-auto rounded-md bg-cyan-400 p-4">
-            <p class="w-full text-base font-semibold">Logged in as:<p>
             <p class="w-full text-lg font-bold">{userId}<p>
+        </div>
+
+        <div class="flex justify-center my-4">
+            <Auth fullWidth />
         </div>
     </div>
 </div>
