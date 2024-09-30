@@ -1,5 +1,7 @@
 import NotificationBase from 'common/notification'
-import { ensureOffscreenDocument, sendOffscreenMessage } from './offscreen'
+
+const INITIAL_ALARM = 'initialAlarm'
+const INTERVAL_ALARM = 'intervalAlarm'
 
 class ExtensionNotification extends NotificationBase {
     protected async clearAlarms() {
@@ -7,20 +9,20 @@ class ExtensionNotification extends NotificationBase {
     }
 
     protected setupAlarms(delay: number) {
-        chrome.alarms.create('initialAlarm', { delayInMinutes: delay / 60_000, periodInMinutes: 1440 })
+        chrome.alarms.create(INITIAL_ALARM, { delayInMinutes: delay / 60_000, periodInMinutes: 1440 })
 
-        chrome.alarms.create('intervalAlarm', {
+        chrome.alarms.create(INTERVAL_ALARM, {
             periodInMinutes: this.settings.interval,
             when: Date.now() + this.settings.interval * 60 * 1000,
         })
+    }
 
-        chrome.alarms.onAlarm.addListener(async (alarm) => {
-            if (!['initialAlarm', 'intervalAlarm'].includes(alarm.name)) return
+    public async handleAlarm(alarm: chrome.alarms.Alarm) {
+        if (![INITIAL_ALARM, INTERVAL_ALARM].includes(alarm.name)) return
 
-            await this.getSettings()
-            const { nowMS, startMS, endMS } = this.getTimeBoundaries()
-            if (nowMS >= startMS && nowMS < endMS) await this.notifyAlert()
-        })
+        await this.getSettings()
+        const { nowMS, startMS, endMS } = this.getTimeBoundaries()
+        if (nowMS >= startMS && nowMS < endMS) await this.notifyAlert()
     }
 
     protected async createNotification({ id, title, message }: { id: string, title: string, message: string }) {
@@ -47,8 +49,11 @@ class ExtensionNotification extends NotificationBase {
     }
 
     protected async playSound(sound: string) {
-        await ensureOffscreenDocument()
-        await sendOffscreenMessage(sound)
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (!tabs[0]?.id) return
+            
+            chrome.tabs.sendMessage(tabs[0].id, { type: 'playSound', sound })
+        })
     }
 }
 
