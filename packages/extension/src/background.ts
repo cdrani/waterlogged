@@ -18,15 +18,18 @@ chrome.runtime.onInstalled.addListener(async details => {
     }
 })
 
-    await notificationManager.startTimer()
-    keepAlive()
+chrome.alarms.onAlarm.addListener(async alarm => {
+    await notificationManager.handleAlarm(alarm)
 })
 
-chrome.runtime.onStartup.addListener(keepAlive)
-chrome.tabs.onActivated.addListener(keepAlive)
-chrome.tabs.onUpdated.addListener(keepAlive)
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+    if (message.type == 'playSound') {
+        chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+            if (!tabs[0]?.id) return
 
-chrome.runtime.onMessage.addListener((_message, _sender, sendResponse) => {
+            chrome.tabs.sendMessage(tabs[0].id, { type: 'playSound', sound: message.sound })
+        })
+    }
     sendResponse({ status: true })
     return true
 })
