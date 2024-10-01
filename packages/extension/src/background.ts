@@ -1,26 +1,10 @@
 import { db } from 'common/data/db'
-import { sendMessage } from './utils/messages'
 import { setBadgeInfo } from 'common/utils/badge'
 import { initMessageHandler } from 'common/messaging'
 import { SettingsService } from 'common/data/services'
 import { notificationManager } from './utils/notification'
-import { ensureOffscreenDocument } from './utils/offscreen'
 
-let keepAliveTimer: Timer | null = null
-
-function keepAlive() {
-    if (keepAliveTimer) return
-
-    keepAliveTimer = setInterval(async () => {
-        const message = { data: null, type: 'keepalive', target: 'offscreen' }
-        await ensureOffscreenDocument()
-        await sendMessage(message)
-    }, 29_500)
-}
-
-keepAlive()
-
-chrome.runtime.onInstalled.addListener(async (details) => {
+chrome.runtime.onInstalled.addListener(async details => {
     const isOpen = db.isOpen()
 
     if (!isOpen) await db.open()
@@ -32,16 +16,20 @@ chrome.runtime.onInstalled.addListener(async (details) => {
         const settings = await SettingsService.load()
         setBadgeInfo(settings?.enabled ?? true)
     }
-
-    await notificationManager.startTimer()
-    keepAlive()
 })
 
-chrome.runtime.onStartup.addListener(keepAlive)
-chrome.tabs.onActivated.addListener(keepAlive)
-chrome.tabs.onUpdated.addListener(keepAlive)
+chrome.alarms.onAlarm.addListener(async alarm => {
+    await notificationManager.handleAlarm(alarm)
+})
 
-chrome.runtime.onMessage.addListener((_message, _sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+    if (message.type == 'playSound') {
+        chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+            if (!tabs[0]?.id) return
+
+            chrome.tabs.sendMessage(tabs[0].id, { type: 'playSound', sound: message.sound })
+        })
+    }
     sendResponse({ status: true })
     return true
 })

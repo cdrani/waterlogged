@@ -17,6 +17,13 @@
         "64": "src/icons/icon64.png",
         "128": "src/icons/icon128.png"
     },
+    "content_scripts": [
+        {
+            "run_at": "document_idle",
+            "js": ["src/content.ts"],
+            "matches": ["<all_urls>"]
+        }
+    ],
     "background": {
         "type": "module",
         "scripts": ["src/background.ts"]
