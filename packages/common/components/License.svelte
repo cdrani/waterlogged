@@ -22,11 +22,7 @@
             const url = await response.json()
             if (!url) return
 
-            if (typeof chrome !== 'undefined' && chrome.runtime) {
-                chrome.tabs.create({ url })
-            } else {
-                window.location.assign(url)
-            }
+            isCRX() ? chrome.tabs.create({ url }) : window.location.assign(url)
         } catch (error) {
             console.error('Error in handleUpgrade: ', error)
         }
