@@ -1,216 +1,215 @@
 name: 'release'
 
 on:
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
+    pull_request:
+        branches:
+            - main
+    workflow_dispatch:
 
 jobs:
-  semver:
-    runs-on: ubuntu-latest
-    environment:
-      name: Semver
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          persisted-credentials: false
+    semver:
+        runs-on: ubuntu-latest
+        environment:
+            name: Semver
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  persisted-credentials: false
 
-      - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@v4
-        id: semantic
+            - name: Semantic Release
+              uses: cycjimmy/semantic-release-action@v4
+              id: semantic
+              env:
+                  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+            - name: Update Versions
+              if: steps.semantic.outputs.new_release_version != steps.semantic.outputs.previous_release_version
+              run: |
+                  NEW_VERSION="${{ steps.semantic.outputs.new_release_version }}"
+
+                  # Tauri
+                  jq --arg version "$NEW_VERSION" \
+                  '.version = $version' \
+                  packages/app/src-tauri/tauri.conf.json > tmp && mv tmp packages/app/src-tauri/tauri.conf.json
+
+                  # Update the VERSION constant in the util file
+                  sed -i "s/^export const VERSION = 'v.*'/export const VERSION = 'v$NEW_VERSION'/" packages/common/utils/version.ts
+
+                  # Chrome
+                  jq --arg version "$NEW_VERSION" \
+                    '.version = $version' \
+                    packages/extension/manifest.chrome.json > tmp && mv tmp packages/extension/manifest.chrome.json
+
+                  # FireFox
+                  jq --arg version "${{ steps.semantic.outputs.new_release_version }}" \
+                    '.version = $version' \
+                    packages/extension/manifest.firefox.json > tmp && mv tmp packages/extension/manifest.firefox.json
+
+            - name: Commit Changes
+              if: steps.semantic.outputs.new_release_published == 'true'
+              run: |
+                  git config --local user.name "Github Action"
+                  git config --local user.email "action@github.com"
+                  git diff --quiet || git commit -a -m "docs: bump version to ${{ steps.semantic.outputs.new_release_git_tag }}"
+
+            - name: Push Changes
+              if: steps.semantic.outputs.new_release_published == 'true'
+              uses: ad-m/github-push-action@master
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  branch: ${{ github.ref }}
+                  tags: true
+
+            - name: Nightly Merge
+              if: steps.semantic.outputs.new_release_published == 'true'
+              uses: robotology/gh-action-nightly-merge@v1.5.2
+              with:
+                  allow_ff: true
+                  ff_only: true
+                  stable_branch: 'main'
+                  development_branch: 'develop'
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    tauri-release:
+        needs: semver
+        if: needs.semver.outputs.new_release_version != needs.semver.outputs.previous_release_version
+        permissions:
+            contents: write
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    - platform: 'macos-latest' # for Arm based macs (M1 and above).
+                      args: '--target aarch64-apple-darwin'
+                    - platform: 'macos-latest' # for Intel based macs.
+                      args: '--target x86_64-apple-darwin'
+                    - platform: 'ubuntu-22.04'
+                      args: ''
+                    - platform: 'windows-latest'
+                      args: ''
+
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+            APP_DIR: 'packages/app'
+        runs-on: ${{ matrix.platform }}
+        steps:
+            - uses: actions/checkout@v4
 
-      - name: Update Versions
-        if: steps.semantic.outputs.new_release_version != steps.semantic.outputs.previous_release_version
-        run: |
-          NEW_VERSION = "${{ steps.semantic.outputs.new_release_version }}"
+            - name: install dependencies (ubuntu only)
+              if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
-          # Tauri
-          jq --arg version "$NEW_VERSION" \
-          '.version = $version' \
-          packages/app/src-tauri/tauri.conf.json > tmp && mv tmp packages/app/src-tauri/tauri.conf.json 
+            - name: setup node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: lts/*
+                  cache: 'bun' # Set this to npm, yarn or pnpm.
 
-          # Update the VERSION constant in the util file
-          sed -i "s/^export const VERSION = 'v.*'/export const VERSION = 'v$NEW_VERSION'/" packages/common/utils/version.ts
+            - name: install Rust stable
+              uses: dtolnay/rust-toolchain@stable # Set this to dtolnay/rust-toolchain@nightly
+              with:
+                  # Those targets are only used on macos runners so it's in an `if` to slightly speed up windows and linux builds.
+                  targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
-          # Chrome
-          jq --arg version "$NEW_VERSION" \
-            '.version = $version' \
-            packages/extension/manifest.chrome.json > tmp && mv tmp packages/extension/manifest.chrome.json
+            - name: Rust cache
+              uses: swatinem/rust-cache@v2
+              with:
+                  workspaces: './src-tauri -> target'
 
-          # FireFox
-          jq --arg version "${{ steps.semantic.outputs.new_release_version }}" \
-            '.version = $version' \
-            packages/extension/manifest.firefox.json > tmp && mv tmp packages/extension/manifest.firefox.json
+            - name: install frontend dependencies
+              uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: 'latest' # or "latest", "canary", <sha>
 
-      - name: Commit Changes
-        if: semantic.outputs.new_release_published == 'true' 
-        run: |
-          git config --local user.name "Github Action"
-          git config --local user.email "action@github.com"
-          git diff --quiet || git commit -a -m "docs: bump version to ${{ steps.semantic.outputs.new_release_git_tag }}"
+            - name: install frontend dependencies
+              # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
+              run: bun install # change this to npm or pnpm depending on which one you use.
 
-      - name: Commit Changes
-        if: semantic.outputs.new_release_published == 'true' 
-        run: |
-            git config --local user.name "Github Action"
-            git config user.email "action@github.com"
-            git diff --quiet || git commit -a -m "docs: bump version to ${{ steps.semver.outputs.git_tag }}"
+            - uses: tauri-apps/tauri-action@v0
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  TAURI_SIGNING_PRIVATE_KEY: '${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}'
+                  TAURI_SIGNING_PUBLIC_KEY: '${{ secrets.TAURI_SIGNING_PUBLIC_KEY }}'
+                  TAURI_SIGNING_PRIVATE_KEY_PASSWORD: '${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}'
+              with:
+                  projectPath: '${{ env.APP_DIR }}'
+                  releaseId: '${{ github.run_id }}'
 
-      - name: Push Changes
-        if: steps.semantic.outputs.new_release_published == 'true' 
-        uses: ad-m/github-push-action@master
-        with:
-          branch: ${{ github.ref }}
-          tags: true
+            - name: Upload Tauri App Release
+              uses: actions/upload-artifact@v4
+              with:
+                  name: tauri-app
+                  path: packages/app/src-tauri/target/release/bundle/**
 
-      - name: Nightly Merge
-        if: steps.semantic.outputs.new_release_published == 'true' 
-        uses: robotology/gh-action-nightly-merge@v1.5.2
-        with:
-          allow_ff: true
-          ff_only: true
-          stable_branch: 'main'
-          development_branch: 'develop'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    extensions_release:
+        name: Create Extension Releases
+        runs-on: ubuntu-latest
+        needs: semver
+        if: needs.semver.outputs.new_release_version != needs.semver.outputs.previous_release_version
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
 
-  tauri-release:
-    needs: semver
-    if: needs.semantic.outputs.new_release_version != needs.semantic.outputs.previous_release_version
-    permissions:
-      contents: write
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: 'macos-latest' # for Arm based macs (M1 and above).
-            args: '--target aarch64-apple-darwin'
-          - platform: 'macos-latest' # for Intel based macs.
-            args: '--target x86_64-apple-darwin'
-          - platform: 'ubuntu-22.04'
-            args: ''
-          - platform: 'windows-latest'
-            args: ''
+            - name: Install Bun
+              uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: 'latest' # or "latest", "canary", <sha>
 
-    env:
-      APP_DIR: "packages/app"
-    runs-on: ${{ matrix.platform }}
-    steps:
-      - uses: actions/checkout@v4
+            - name: Install Dependencies
+              run: bun install
 
-      - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+            - name: Build Distributable Package
+              run: bun ext-build
 
-      - name: setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
-          cache: 'bun' # Set this to npm, yarn or pnpm.
+            - name: Archive Extensions
+              run: |
+                  cd packages/extension/
 
-      - name: install Rust stable
-        uses: dtolnay/rust-toolchain@stable # Set this to dtolnay/rust-toolchain@nightly
-        with:
-          # Those targets are only used on macos runners so it's in an `if` to slightly speed up windows and linux builds.
-          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
-
-      - name: Rust cache
-        uses: swatinem/rust-cache@v2
-        with:
-          workspaces: './src-tauri -> target'
-
-      - name: install frontend dependencies
-        uses: oven-sh/setup-bun@v2
-        with:
-            bun-version: 'latest' # or "latest", "canary", <sha>
-
-      - name: install frontend dependencies
-        # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
-        run: bun install # change this to npm or pnpm depending on which one you use.
-
-      - uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_SIGNING_PRIVATE_KEY: "${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}"
-          TAURI_SIGNING_PUBLIC_KEY: "${{ secrets.TAURI_SIGNING_PUBLIC_KEY }}"
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: "${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}"
-        with:
-          projectPath: "${{ env.APP_DIR }}"
-          releaseId: "${{ github.run_id }}"
-
-      - name: Upload Tauri App Release
-        uses: actions/upload-artifact@v4
-        with:
-          name: tauri-app
-          path: packages/app/src-tauri/target/release/bundle/**
-
-  extensions_release:
-    name: Create Extension Releases
-    runs-on: ubuntu-latest
-    needs: semver
-    if: needs.semantic.outputs.new_release_version != needs.semantic.outputs.previous_release_version
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Install Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-            bun-version: 'latest' # or "latest", "canary", <sha>
-
-      - name: Install Dependencies
-        run: bun install
-
-      - name: Build Distributable Package
-        run: bun ext-build 
-
-      - name: Archive Extensions
-        run: |
-          cd packages/extension/
-
-          function create_zip {
-            # $1: target browser
-            if [ "$1" == "firefox" ]; then
-              jq '
-                .background = {
-                  "type": "module",
-                  "scripts": ["background.js"]
-                } |
-                .browser_specific_settings = {
-                  "gecko": {
-                    "id": "waterlogged@cdrani.dev",
-                    "strict_min_version": "112.0"
+                  function create_zip {
+                    # $1: target browser
+                    if [ "$1" == "firefox" ]; then
+                      jq '
+                        .background = {
+                          "type": "module",
+                          "scripts": ["background.js"]
+                        } |
+                        .browser_specific_settings = {
+                          "gecko": {
+                            "id": "waterlogged@cdrani.dev",
+                            "strict_min_version": "112.0"
+                          }
+                        }
+                      ' dist/manifest.json > dist/manifest.temp.json && mv dist/manifest.temp.json dist/manifest.json
+                    fi
+                    cd dist && zip -r "../waterlogged-$1-ext.zip" . && cd ..
                   }
-                }
-              ' dist/manifest.json > dist/manifest.temp.json && mv dist/manifest.temp.json dist/manifest.json
-            fi
-            cd dist && zip -r "../waterlogged-$1-ext.zip" . && cd ..
-          }
 
-          create_zip chrome
-          create_zip firefox
+                  create_zip chrome
+                  create_zip firefox
 
-  create_releases:
-    name: Create GitHub Releases
-    needs: [semantic, tauri_release, extensions_release]
-    runs-on: ubuntu-latest
-    if: needs.semantic.outputs.new_release_version != needs.semantic.outputs.previous_release_version
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+    create_releases:
+        name: Create GitHub Releases
+        needs: [semver, tauri-release, extensions-release]
+        runs-on: ubuntu-latest
+        if: needs.semver.outputs.new_release_version != needs.semver.outputs.previous_release_version
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
 
-      - name: Release Artifacts
-        uses: ncipollo/release-action@v1.14.0
-        with:
-          tag: ${{ needs.semantic.outputs.new_release_version }}
-          body: ${{ needs.semantic.outputs.new_release_notes }}
-          artifacts: |
-            tauri-app/**/*
-            waterlogged-chrome-ext.zip
-            waterlogged-firefox-ext.zip
+            - name: Download Artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: tauri-app
+
+            - name: Release Artifacts
+              uses: ncipollo/release-action@v1.14.0
+              with:
+                  tag: ${{ needs.semver.outputs.new_release_version }}
+                  body: ${{ needs.semver.outputs.new_release_notes }}
+                  artifacts: |
+                      tauri-app/**/*
+                      packages/extension/waterlogged-chrome-ext.zip
+                      packages/extension/waterlogged-firefox-ext.zip
