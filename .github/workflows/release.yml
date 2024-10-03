@@ -14,16 +14,16 @@ jobs:
               with:
                   persist-credentials: false
 
-            - name: Semantic Release
-              uses: cycjimmy/semantic-release-action@v4
-              id: semantic
-              env:
-                  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+            # - name: Semantic Release
+            #   uses: cycjimmy/semantic-release-action@v4
+            #   id: semantic
+            #   env:
+            #       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
             - name: Update Versions
-              if: steps.semantic.outputs.new_release_version != steps.semantic.outputs.previous_release_version
+              # if: steps.semantic.outputs.new_release_version != steps.semantic.outputs.previous_release_version
               run: |
-                  NEW_VERSION="${{ steps.semantic.outputs.new_release_version }}"
+                  NEW_VERSION="1.0.0"
 
                   # Tauri
                   jq --arg version "$NEW_VERSION" \
@@ -48,10 +48,10 @@ jobs:
               run: |
                   git config --local user.name "Github Action"
                   git config --local user.email "action@github.com"
-                  git diff --quiet || git commit -a -m "docs: bump version to ${{ steps.semantic.outputs.new_release_git_tag }}"
+                  git diff --quiet || git commit -a -m "docs: bump version to v1.0.0"
 
             - name: Push Changes
-              if: steps.semantic.outputs.new_release_published == 'true'
+              # if: steps.semantic.outputs.new_release_published == 'true'
               uses: ad-m/github-push-action@master
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -59,7 +59,7 @@ jobs:
                   tags: true
 
             - name: Nightly Merge
-              if: steps.semantic.outputs.new_release_published == 'true'
+              # if: steps.semantic.outputs.new_release_published == 'true'
               uses: robotology/gh-action-nightly-merge@v1.5.2
               with:
                   allow_ff: true
@@ -71,7 +71,7 @@ jobs:
 
     tauri_release:
         needs: semver
-        if: needs.semver.outputs.new_release_version != needs.semver.outputs.previous_release_version
+        # if: needs.semver.outputs.new_release_version != needs.semver.outputs.previous_release_version
         permissions:
             contents: write
         strategy:
@@ -145,7 +145,7 @@ jobs:
         name: Create Extension Releases
         runs-on: ubuntu-latest
         needs: semver
-        if: needs.semver.outputs.new_release_version != needs.semver.outputs.previous_release_version
+        # if: needs.semver.outputs.new_release_version != needs.semver.outputs.previous_release_version
         steps:
             - name: Checkout Code
               uses: actions/checkout@v4
@@ -189,9 +189,10 @@ jobs:
 
     create_releases:
         name: Create GitHub Releases
-        needs: [semver, tauri_release, extensions_release]
+        # needs: [semver, tauri_release, extensions_release]
+        needs: [tauri_release, extensions_release]
         runs-on: ubuntu-latest
-        if: needs.semver.outputs.new_release_version != needs.semver.outputs.previous_release_version
+        # if: needs.semver.outputs.new_release_version != needs.semver.outputs.previous_release_version
         steps:
             - name: Checkout Code
               uses: actions/checkout@v4
@@ -204,8 +205,9 @@ jobs:
             - name: Release Artifacts
               uses: ncipollo/release-action@v1.14.0
               with:
-                  tag: ${{ needs.semver.outputs.new_release_version }}
-                  body: ${{ needs.semver.outputs.new_release_notes }}
+                  # tag: ${{ needs.semver.outputs.new_release_version }}
+                  tag: v1.0.0
+                  # body: ${{ needs.semver.outputs.new_release_notes }}
                   artifacts: |
                       tauri-app/**/*
                       packages/extension/waterlogged-chrome-ext.zip
