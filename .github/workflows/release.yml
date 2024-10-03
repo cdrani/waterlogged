@@ -58,16 +58,16 @@ jobs:
                   branch: ${{ github.ref }}
                   tags: true
 
-            - name: Nightly Merge
-              # if: steps.semantic.outputs.new_release_published == 'true'
-              uses: robotology/gh-action-nightly-merge@v1.5.2
-              with:
-                  allow_ff: true
-                  ff_only: true
-                  stable_branch: 'main'
-                  development_branch: 'develop'
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            # - name: Nightly Merge
+            #   # if: steps.semantic.outputs.new_release_published == 'true'
+            #   uses: robotology/gh-action-nightly-merge@v1.5.2
+            #   with:
+            #       allow_ff: true
+            #       ff_only: true
+            #       stable_branch: 'main'
+            #       development_branch: 'develop'
+            #   env:
+            #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     tauri_release:
         needs: semver
